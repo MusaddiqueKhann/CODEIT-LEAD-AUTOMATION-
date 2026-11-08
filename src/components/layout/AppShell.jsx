@@ -1,21 +1,25 @@
 import { useEffect, useState } from 'react'
-import { useLocation } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import Icon from '../Icon.jsx'
 import { Avatar } from '../ui/Avatar.jsx'
-import { cx } from '../../lib/cx.js'
 import { Sidebar } from './Sidebar.jsx'
 import { Toasts } from './Toasts.jsx'
-import { user } from '../../data/mockData.js'
+import { useAuth } from '../../controllers/shared/AuthContext.jsx'
+import { useConfig } from '../../controllers/shared/ConfigContext.jsx'
+import { useLang } from '../../controllers/shared/LangContext.jsx'
+import { useAlertToasts } from '../../controllers/shared/useAlertToasts.js'
+import { useCounts } from '../../controllers/shared/useCounts.js'
+import { ROUTES } from '../../routes/paths.js'
+import { initials } from '../../models/rules/time.js'
 
-/**
- * The frame: rail, mobile drawer, content card, toast stack.
- *
- * Nothing else — the popovers, the page header and the toast rendering each
- * have their own module. This file was 372 lines holding five concerns; it is
- * now only the layout, so a change to the drawer can't touch search behaviour.
- */
+/** The frame: the floating sidebar, the mobile drawer, the page column and the toast stack. */
 export function AppShell({ children }) {
+  const { brand } = useConfig()
+  const { t } = useLang()
   const [drawerOpen, setDrawerOpen] = useState(false)
+  const { profile } = useAuth()
+  const counts = useCounts(profile.id)
+  useAlertToasts(profile.id)
   const { pathname } = useLocation()
 
   // Close the mobile drawer whenever the route changes.
@@ -34,35 +38,30 @@ export function AppShell({ children }) {
         <button
           type="button"
           onClick={() => setDrawerOpen(true)}
-          aria-label="Open navigation"
+          aria-label={t('layout.openNav')}
           className="rounded-lg p-2 text-ink transition hover:bg-surface-2"
         >
           <Icon name="menu" className="size-5" />
         </button>
         <div className="flex items-center gap-2">
-          <img src="/CompanyLogo/Codeit-flat.png" alt="CODEIT" className="h-10 w-auto" />
+          <img src="/CompanyLogo/Codeit-flat.png" alt={brand.app} className="h-10 w-auto" />
         </div>
-        <Avatar initials={user.initials} size="sm" className="ml-auto" />
+        <Link to={ROUTES.alerts} aria-label={counts.unread ? t('layout.alertsLabel', { n: counts.unread }) : t('layout.nav.alerts')} className="relative ms-auto rounded-lg p-2 text-ink transition hover:bg-surface-2">
+          <Icon name="bell" className="size-5" />
+          {counts.unread > 0 && (
+            <span className="absolute -top-0.5 -end-0.5 grid h-4.5 min-w-4.5 place-items-center rounded-full bg-brand-700 px-1 text-[10px] font-medium text-white">
+              {counts.unread}
+            </span>
+          )}
+        </Link>
+        <Avatar initials={initials(profile.name)} src={profile.avatarUrl} size="sm" />
       </header>
 
-      <div className="flex">
-        {/* Desktop sidebar. The rail is a brand-700 panel now, so its own fill
-            does the separating — the border-line hairline it wore while white
-            would just dirty the card's edge against the dark fill.
-
-            Inset by the same lg:p-3 gutter the content already sits in, so all
-            four sides clear the viewport edge and the panel reads as a floating
-            card rather than a flush column.
-
-            The radius lives on the wrapper, not on Sidebar itself — that
-            component also renders as the mobile drawer, an overlay with its own
-            shadow-2xl over a scrim, where a rounded corner would draw against
-            the backdrop. overflow-hidden clips the rail's own scroll container
-            to the radius. */}
-        <aside className="sticky top-0 hidden h-screen w-68 shrink-0 lg:block lg:p-3 lg:pr-0">
-          <div className="h-full overflow-hidden rounded-[26px]">
-            <Sidebar />
-          </div>
+      {/* The design's frame: a 16px gutter all round, the sidebar a floating 268px card that stays
+          put while the page scrolls, and the page a column of white cards up to 1440px wide. */}
+      <div className="flex items-start gap-4 lg:p-4">
+        <aside className="sticky top-4 hidden h-[calc(100vh-2rem)] w-62 shrink-0 overflow-hidden rounded-[28px] lg:block">
+          <Sidebar counts={counts} />
         </aside>
 
         {/* Mobile drawer */}
@@ -70,33 +69,17 @@ export function AppShell({ children }) {
           <div className="fixed inset-0 z-40 lg:hidden">
             <button
               type="button"
-              aria-label="Close navigation"
+              aria-label={t('layout.closeNav')}
               onClick={() => setDrawerOpen(false)}
               className="absolute inset-0 bg-black/45 backdrop-blur-sm"
             />
-            <div className="absolute inset-y-0 left-0 w-72 max-w-[85vw] overflow-y-auto bg-shell shadow-2xl">
-              <Sidebar onNavigate={() => setDrawerOpen(false)} />
+            <div className="absolute inset-y-0 start-0 w-72 max-w-[85vw] overflow-y-auto bg-shell shadow-2xl">
+              <Sidebar counts={counts} onNavigate={() => setDrawerOpen(false)} />
             </div>
           </div>
         )}
 
-        {/* The card is inset from the shell on desktop only — on mobile the
-            gutter would eat too much of a narrow viewport, so it goes flush.
-            Full p-3 now, including the left: the rail no longer runs flush to
-            the content, so pl-0 would butt the page straight against the
-            sidebar's new border instead of leaving it a gutter to sit in. */}
-        <main className="min-w-0 flex-1 lg:p-3">
-          <div
-            className={cx(
-              // Flat white, same as the shell behind it — the Cards inside are
-              // separated by their own hairline rather than by a change in fill.
-              'bg-canvas px-5 py-8 sm:px-8',
-              'lg:min-h-[calc(100vh-1.5rem)] lg:rounded-[26px] lg:px-14 lg:py-11',
-            )}
-          >
-            <div className="max-w-[1440px]">{children}</div>
-          </div>
-        </main>
+        <main className="flex min-w-0 max-w-360 flex-1 flex-col gap-4 p-4 lg:min-h-[calc(100vh-2rem)] lg:p-0">{children}</main>
       </div>
 
       <Toasts />

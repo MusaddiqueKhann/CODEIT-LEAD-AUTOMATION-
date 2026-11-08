@@ -1,0 +1,6 @@
+<!-- Links to our own page with the token hash, not to Supabase's verify URL: mail scanners that
+     pre-open links can't use up the token, and it works when opened on another device. -->
+<h2>Reset your password</h2>
+<p>Someone asked to reset the Lead Codeit password for {{ .Email }}.</p>
+<p><a href="{{ .SiteURL }}/set-password?token_hash={{ .TokenHash }}&amp;type=recovery">Choose a new password</a></p>
+<p>The link works for one hour. If you didn't ask for this, you can ignore this email.</p>

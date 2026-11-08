@@ -1,49 +1,18 @@
-import { useId } from 'react'
-import { cx } from '../../lib/cx.js'
+import { cx } from '../cx.js'
 
-/**
- * An on/off preference.
- *
- * Built on role="switch" rather than a styled checkbox: the label sits beside
- * the control and describes a setting, not an item being selected, and screen
- * readers announce "on/off" instead of "checked".
- *
- * The track is brand-700 when on (3.9:1 against the panel, clearing the 3:1
- * WCAG 1.4.11 asks of a control boundary) and --line when off. The knob is
- * white in both states so the affordance never disappears.
- */
-export function Switch({ checked, onChange, label, description, disabled }) {
-  const id = useId()
-
+/** The design's on/off switch: teal with the knob right when on, grey when off. */
+export function Switch({ on, onChange, label, disabled = false, className }) {
   return (
-    <div className="flex items-start justify-between gap-4 py-3.5">
-      <div className="min-w-0">
-        <label htmlFor={id} className="text-[14px] font-medium text-ink">
-          {label}
-        </label>
-        {description && <p className="mt-0.5 text-[13px] text-muted">{description}</p>}
-      </div>
-
-      <button
-        id={id}
-        type="button"
-        role="switch"
-        aria-checked={checked}
-        disabled={disabled}
-        onClick={() => onChange(!checked)}
-        className={cx(
-          'relative mt-0.5 h-6 w-11 shrink-0 rounded-full transition',
-          'disabled:pointer-events-none disabled:opacity-45',
-          checked ? 'bg-brand-700' : 'bg-line',
-        )}
-      >
-        <span
-          className={cx(
-            'absolute top-0.5 left-0.5 size-5 rounded-full bg-white shadow-sm transition-transform',
-            checked && 'translate-x-5',
-          )}
-        />
-      </button>
-    </div>
+    <button
+      type="button"
+      role="switch"
+      aria-checked={on}
+      aria-label={label}
+      disabled={disabled}
+      onClick={() => onChange(!on)}
+      className={cx('relative h-6 w-10 shrink-0 rounded-full transition-colors disabled:cursor-default', on ? 'bg-brand-700' : 'bg-[#d5dae2]', className)}
+    >
+      <span className={cx('absolute top-0.75 size-4.5 rounded-full bg-white shadow-[0_1px_3px_rgb(20_30_50/0.25)] transition-all', on ? 'start-4.75' : 'start-0.75')} />
+    </button>
   )
 }

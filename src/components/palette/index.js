@@ -1,7 +1,0 @@
-export { InProduct } from './InProduct.jsx'
-export { PaletteHero } from './PaletteHero.jsx'
-export { RoleCard } from './RoleCard.jsx'
-export { SectionLabel } from './SectionLabel.jsx'
-export { ShadeCard } from './ShadeCard.jsx'
-export { TextPairings } from './TextPairings.jsx'
-export { TokenTable } from './TokenTable.jsx'

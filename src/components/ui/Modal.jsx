@@ -2,12 +2,16 @@ import { useEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import Icon from '../Icon.jsx'
 import { Button } from './Button.jsx'
-import { cx } from '../../lib/cx.js'
+import { useLang } from '../../controllers/shared/LangContext.jsx'
+import { cx } from '../cx.js'
 
 const WIDTHS = {
   sm: 'max-w-sm',
   md: 'max-w-md',
   lg: 'max-w-lg',
+  xl: 'max-w-140',
+  /* The email editor: two languages side by side. */
+  wide: 'max-w-3xl',
 }
 
 /**
@@ -21,9 +25,17 @@ const WIDTHS = {
  * Focus moves to the panel on open and returns to the trigger on close, which
  * is what keyboard users need to not be dumped at the top of the document.
  */
-export function Modal({ open, onClose, title, description, footer, size = 'md', children }) {
+export function Modal({ open, onClose, title, description, media, footer, size = 'md', children }) {
+  const { t } = useLang()
   const panelRef = useRef(null)
   const restoreRef = useRef(null)
+  // The latest onClose, so the effect below runs only when the dialog opens or closes. Depending on
+  // onClose itself (a new function on every render) re-focused the panel on each keystroke, so a
+  // field in the dialog lost the cursor after one letter.
+  const closeRef = useRef(onClose)
+  useEffect(() => {
+    closeRef.current = onClose
+  })
 
   useEffect(() => {
     if (!open) return
@@ -31,7 +43,7 @@ export function Modal({ open, onClose, title, description, footer, size = 'md', 
     restoreRef.current = document.activeElement
     panelRef.current?.focus()
 
-    const onKey = (e) => e.key === 'Escape' && onClose()
+    const onKey = (e) => e.key === 'Escape' && closeRef.current()
     document.addEventListener('keydown', onKey)
 
     /* Locking the body prevents the page behind from scrolling under the
@@ -45,7 +57,7 @@ export function Modal({ open, onClose, title, description, footer, size = 'md', 
       document.body.style.overflow = prevOverflow
       restoreRef.current?.focus?.()
     }
-  }, [open, onClose])
+  }, [open])
 
   if (!open) return null
 
@@ -53,9 +65,9 @@ export function Modal({ open, onClose, title, description, footer, size = 'md', 
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <button
         type="button"
-        aria-label="Close dialog"
+        aria-label={t('common.closeDialog')}
         onClick={onClose}
-        className="absolute inset-0 bg-black/45 backdrop-blur-sm"
+        className="absolute inset-0 bg-[rgb(20_30_40/0.32)]"
       />
 
       <div
@@ -65,32 +77,34 @@ export function Modal({ open, onClose, title, description, footer, size = 'md', 
         aria-label={title}
         tabIndex={-1}
         className={cx(
-          'relative w-full rounded-2xl border border-line bg-panel outline-none',
+          // Scrolls inside rather than past the viewport on short screens.
+          'relative max-h-[92vh] w-full overflow-auto rounded-tile bg-panel outline-none',
           // Popovers and dialogs keep a shadow where the cards no longer do —
-          // they float over content rather than sitting in the layout, so the
-          // border alone would let them blend into whatever is behind them.
-          'shadow-xl shadow-black/10',
+          // they float over content rather than sitting in the layout.
+          'shadow-[0_30px_60px_-20px_rgb(17_24_39/0.4)]',
           WIDTHS[size],
         )}
       >
-        <div className="flex items-start justify-between gap-4 px-6 pt-6">
-          <div>
-            <h2 className="text-[17px] font-bold tracking-tight text-ink">{title}</h2>
-            {description && <p className="mt-1.5 text-sm text-muted">{description}</p>}
+        <div className="flex items-start gap-3.5 px-6.5 pt-6 pb-2">
+          {/* `media` is an optional leading tile — the lead's initials, say. */}
+          {media}
+          <div className="min-w-0 flex-1">
+            <h2 className="text-lg tracking-[-0.02em] text-ink">{title}</h2>
+            {description && <p className="truncate text-sm text-muted">{description}</p>}
           </div>
           <button
             type="button"
             onClick={onClose}
-            aria-label="Close"
-            className="-mr-1 rounded-lg p-1.5 text-muted transition hover:bg-surface hover:text-ink"
+            aria-label={t('common.close')}
+            className="flex size-10 shrink-0 items-center justify-center rounded-full bg-surface text-ink transition hover:bg-surface-hover"
           >
-            <Icon name="close" className="size-4.5" />
+            <Icon name="close" className="size-3.5" strokeWidth={2.2} />
           </button>
         </div>
 
-        {children && <div className="px-6 pt-5">{children}</div>}
+        {children && <div className="px-6.5 pt-4 pb-5">{children}</div>}
 
-        <div className="flex justify-end gap-3 px-6 pt-6 pb-6">{footer}</div>
+        {footer && <div className="flex justify-end gap-2 px-6.5 pt-1 pb-6">{footer}</div>}
       </div>
     </div>,
     document.body,
@@ -108,21 +122,22 @@ export function ConfirmDialog({
   onConfirm,
   title,
   description,
-  confirmLabel = 'Confirm',
-  cancelLabel = 'Never mind',
+  confirmLabel,
+  cancelLabel,
   tone = 'danger',
 }) {
+  const { t } = useLang()
   return (
+    // The message goes in the body: the header's description line truncates.
     <Modal
       open={open}
       onClose={onClose}
       title={title}
-      description={description}
       size="sm"
       footer={
         <>
-          <Button variant="outline" onClick={onClose}>
-            {cancelLabel}
+          <Button variant="soft" onClick={onClose}>
+            {cancelLabel ?? t('common.neverMind')}
           </Button>
           <Button
             variant={tone === 'danger' ? 'danger' : 'primary'}
@@ -131,10 +146,12 @@ export function ConfirmDialog({
               onClose()
             }}
           >
-            {confirmLabel}
+            {confirmLabel ?? t('common.confirm')}
           </Button>
         </>
       }
-    />
+    >
+      {description && <p className="text-sm text-muted">{description}</p>}
+    </Modal>
   )
 }

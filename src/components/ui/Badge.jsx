@@ -1,9 +1,9 @@
-import { cx } from '../../lib/cx.js'
-import { TONE_DOT, TONES } from '../../lib/tones.js'
+import { cx } from '../cx.js'
+import { TONE_DOT, TONES } from '../tones.js'
 
 const SIZES = {
-  sm: 'px-2.5 py-0.5 text-[12px]',
-  md: 'px-3 py-1 text-[13px]',
+  sm: 'h-6.5 px-2.5 text-xs',
+  md: 'h-8 px-3.5 text-[13px]',
 }
 
 /**
@@ -21,7 +21,7 @@ export function Badge({ tone = 'neutral', size = 'md', dot = false, className, c
   return (
     <span
       className={cx(
-        'inline-flex shrink-0 items-center gap-2 rounded-full font-medium whitespace-nowrap',
+        'inline-flex shrink-0 items-center gap-2 rounded-full whitespace-nowrap',
         SIZES[size],
         dot ? 'bg-surface-2 text-ink' : cx(t.fill, t.text),
         className,

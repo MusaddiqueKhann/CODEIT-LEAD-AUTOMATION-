@@ -1,23 +1,18 @@
 import { useId } from 'react'
 import Icon from '../Icon.jsx'
-import { cx } from '../../lib/cx.js'
+import { cx } from '../cx.js'
 
-/* Fields are recessed against the white panel, so they take --surface rather
-   than a border-only treatment: on a Card the box has to read as "you can type
-   here" before it is focused. --canvas is step 50 and sits *above* --surface in
-   the background order (see index.css), which is why the field fill is the grey
-   and not the tint — a tinted field on a tinted canvas reads as raised. */
+/* The design's field: a borderless grey box that turns white with a teal inset ring on focus. */
 const CONTROL = cx(
-  'w-full rounded-xl border bg-surface px-4 py-2.5 text-sm text-ink transition',
-  'placeholder:text-faint',
-  'focus:border-brand-500 focus:bg-panel focus:outline-none',
-  'disabled:cursor-not-allowed disabled:opacity-60',
+  'w-full rounded-[14px] bg-field px-4 text-sm text-ink outline-none transition',
+  'placeholder:text-ghost',
+  'focus:bg-panel focus:ring-[1.5px] focus:ring-brand-700 focus:ring-inset',
+  'disabled:cursor-not-allowed disabled:bg-surface-2 disabled:text-ghost',
 )
 
-const OK = 'border-line'
-/* The error border is the full-strength danger, not the /35 used by soft-filled
-   chips: this is a control boundary, and WCAG 1.4.11 asks 3:1 of it. */
-const BAD = 'border-danger'
+const OK = ''
+/* An error rings the box in red, the control boundary WCAG 1.4.11 asks 3:1 of. */
+const BAD = 'ring-[1.5px] ring-danger ring-inset'
 
 /**
  * Label + control + hint/error, wired together.
@@ -35,9 +30,9 @@ export function Field({ label, hint, error, required, action, children, classNam
   const describedBy = error || hint ? `${id}-desc` : undefined
 
   const heading = (
-    <label htmlFor={id} className="text-[13px] font-semibold text-ink">
+    <label htmlFor={id} className="text-[13px] text-soft">
       {label}
-      {required && <span className="ml-0.5 text-danger">*</span>}
+      {required && <span className="ms-0.5 text-danger">*</span>}
     </label>
   )
 
@@ -55,7 +50,7 @@ export function Field({ label, hint, error, required, action, children, classNam
       {children({ id, 'aria-describedby': describedBy, 'aria-invalid': error ? true : undefined })}
 
       {(error || hint) && (
-        <p id={describedBy} className={cx('text-xs', error ? 'text-danger' : 'text-muted')}>
+        <p id={describedBy} className={cx('text-xs', error ? 'text-danger-ink' : 'text-muted')}>
           {error || hint}
         </p>
       )}
@@ -71,7 +66,7 @@ export function Field({ label, hint, error, required, action, children, classNam
  */
 export function Input({ icon, trailing, error, className, ...rest }) {
   const control = (
-    <input className={cx(CONTROL, error ? BAD : OK, icon && 'pl-10', className)} {...rest} />
+    <input className={cx(CONTROL, 'h-11', error ? BAD : OK, icon && 'ps-10', className)} {...rest} />
   )
 
   if (!icon && !trailing) return control
@@ -81,7 +76,7 @@ export function Input({ icon, trailing, error, className, ...rest }) {
       {icon && (
         <Icon
           name={icon}
-          className="pointer-events-none absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-faint"
+          className="pointer-events-none absolute top-1/2 start-3.5 size-4 -translate-y-1/2 text-faint"
         />
       )}
       {control}
@@ -92,26 +87,32 @@ export function Input({ icon, trailing, error, className, ...rest }) {
 
 /** The multi-line control. `rows` sets the resting height; the user can drag it taller. */
 export function Textarea({ error, rows = 4, className, ...rest }) {
-  return <textarea rows={rows} className={cx(CONTROL, error ? BAD : OK, 'resize-y', className)} {...rest} />
+  return <textarea rows={rows} className={cx(CONTROL, 'py-3 leading-normal', error ? BAD : OK, 'resize-y', className)} {...rest} />
 }
 
 /**
- * A native <select> with the platform arrow suppressed and our own chevron
- * drawn on top — the OS arrow does not follow the type ramp and looked pasted
- * on next to the Icon set everywhere else.
+ * A native <select> with the platform arrow suppressed and our own chevron drawn on top.
+ * `pill` is the design's filter look (a soft grey pill, 14px) for selects that sit in a header
+ * or toolbar rather than in a form.
  */
-export function Select({ error, className, children, ...rest }) {
+export function Select({ error, pill = false, className, children, ...rest }) {
   return (
     <div className="relative">
       <select
-        className={cx(CONTROL, error ? BAD : OK, 'cursor-pointer appearance-none pr-10', className)}
+        className={cx(
+          pill ? 'h-10 w-full rounded-full bg-surface ps-4 text-[13px] text-ink outline-none transition hover:bg-surface-hover' : cx(CONTROL, 'h-11'),
+          error ? BAD : OK,
+          'cursor-pointer appearance-none pe-10',
+          className,
+        )}
         {...rest}
       >
         {children}
       </select>
       <Icon
         name="chevronDown"
-        className="pointer-events-none absolute top-1/2 right-3.5 size-4 -translate-y-1/2 text-muted"
+        strokeWidth={2.2}
+        className="pointer-events-none absolute top-1/2 end-4 size-3.5 -translate-y-1/2 text-soft"
       />
     </div>
   )

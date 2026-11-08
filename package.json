@@ -1,5 +1,5 @@
 {
-  "name": "codeit-training-client",
+  "name": "lead-codeit",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -7,9 +7,12 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "oxlint",
-    "preview": "vite preview"
+    "check": "node --test \"src/**/*.check.js\"",
+    "preview": "vite preview",
+    "create-admin": "node scripts/create-admin.mjs"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.118.0",
     "@tailwindcss/vite": "^4.3.3",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",

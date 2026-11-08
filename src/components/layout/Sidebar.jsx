@@ -1,197 +1,205 @@
-import { NavLink, useNavigate } from 'react-router-dom'
+import { useState } from 'react'
+import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom'
 import Icon from '../Icon.jsx'
-import { Avatar } from '../ui/Avatar.jsx'
-import { cx } from '../../lib/cx.js'
-import { useAuth } from '../../context/AuthContext.jsx'
-import { useBookings } from '../../context/BookingContext.jsx'
-import { useToast } from '../../context/ToastContext.jsx'
-import { user } from '../../data/mockData.js'
-import { PRIMARY_NAV, ROUTES } from '../../lib/nav.js'
+import { cx } from '../cx.js'
+import { useAuth } from '../../controllers/shared/AuthContext.jsx'
+import { useConfig } from '../../controllers/shared/ConfigContext.jsx'
+import { useLang } from '../../controllers/shared/LangContext.jsx'
+import { useToast } from '../../controllers/shared/ToastContext.jsx'
+import { listMembers } from '../../models/data/members.js'
+import { useRows } from '../../controllers/shared/useRows.js'
+import { dayKey, riyadhNow } from '../../models/rules/format.js'
+import { PUBLIC, ROUTES, SECTIONS, navFor } from '../../routes/paths.js'
+import { initials } from '../../models/rules/time.js'
+import { LanguageSwitch } from './LanguageSwitch.jsx'
+import { sidebarTree, trailTo } from '../../routes/sidebar.js'
+
+/* The sidebar is a teal card, so every state is a white wash over it: hover white/12, the
+   current page white/20. Rows sit on a black/8 box. The focus ring flips to white, or it would
+   vanish into the panel. Sizes are the design's: 46px rows, 40px sub-rows, 20px counts. */
+const ROW = 'flex h-10 w-full items-center gap-2.5 rounded-[11px] px-3 text-sm text-white transition hover:bg-white/12 focus-visible:outline-white'
+const SUB_ROW = 'flex h-8.5 items-center gap-2 rounded-[10px] ps-3 pe-2 text-[13px] text-white transition hover:bg-white/10 focus-visible:outline-white'
+const BADGE = 'grid h-5 min-w-5 place-items-center rounded-full bg-white/16 px-1.5 text-[11px] text-white/90'
+const RULE = 'border-white/18'
+
+function Chevron({ className }) {
+  return <Icon name="chevronDown" strokeWidth={2} className={cx('size-3 shrink-0', className)} />
+}
 
 /**
- * A rail destination.
- *
- * NavLink rather than a button, so these are real anchors — middle-click and
- * "open in new tab" work, and the active state comes from the router instead of
- * being compared against a page string by hand.
+ * One node of the sidebar tree. A group only opens or closes its list (the chevron turns); a page
+ * is a real link, so middle-click works, and a page with a list (All members) shows it beneath.
+ * `depth` 0 is a top row with its icon and badge.
  */
-function NavItem({ item, badge, onSelect }) {
-  return (
-    <NavLink
-      to={item.path}
-      // `end` only on "/" — without it the root route matches every path and
-      // Overview would render as active on every page.
-      end={item.path === ROUTES.overview}
-      onClick={onSelect}
-      className={({ isActive }) =>
-        cx(
-          'group relative flex w-full items-center gap-3.5 rounded-xl py-2.5 pr-3 pl-4 text-[15px] transition',
-          // The rail is a brand-700 panel, so states are carried by white
-          // washes over the fill rather than by ramp steps — a step fill here
-          // would read as a second panel, not a state. Labels take pure white:
-          // the index.css note on 700 (soft white computes to 4.499:1) applies
-          // to every small run of text in this column.
-          //
-          // The active pill is the one deliberate trade against that note —
-          // white/15 lightens the fill under the label to ~3.6:1, which is
-          // what the mock shows. The marker, the weight change and the icon
-          // going full white all carry the state redundantly, so the pill is
-          // never the only signal.
-          'focus-visible:outline-white',
-          isActive
-            ? 'bg-white/15 font-semibold text-white'
-            : 'font-medium text-white hover:bg-white/10',
-        )
-      }
-    >
-      {({ isActive }) => (
-        <>
-          {/* Active marker, seated on the button's own left edge rather than out
-              at the panel edge — sitting 14px clear of the pill it read as a
-              stray tick belonging to nothing. inset-y-3 holds it inside the 12px
-              corner radius, so it lands on the fill instead of poking past the
-              curve, and leaves it roughly the height of the icon beside it.
-              brand-200, the mint the badge also wears — the light accents on
-              this panel all come from the same step. */}
-          <span
-            className={cx(
-              'absolute inset-y-3 left-0 w-[3px] rounded-full bg-brand-200 transition-opacity',
-              isActive ? 'opacity-100' : 'opacity-0',
-            )}
-          />
-          <Icon
-            name={item.icon}
-            strokeWidth={1.8}
-            className={cx(
-              'size-5 shrink-0 transition',
-              // brand-100 rest, white on hover/active — one visible notch below
-              // the label, mirroring the muted→ink pairing the light rail used.
-              isActive ? 'text-white' : 'text-brand-100 group-hover:text-white',
-            )}
-          />
-          <span className="flex-1 truncate text-left">{item.label}</span>
-          {badge > 0 && (
-            <span
-              // Mint disc, deep ink count — steps 50–600 carry ink, and
-              // brand-200 holds 3.8:1 against the 700 panel, so the disc
-              // itself clears the 3:1 a UI shape needs.
-              className="inline-flex h-6 min-w-6 items-center justify-center rounded-full bg-brand-200 px-1.5 text-[12px] font-semibold text-on-brand-dark"
-            >
-              {badge}
-            </span>
-          )}
-        </>
-      )}
-    </NavLink>
-  )
-}
-
-function NavSection({ label, children }) {
-  return (
-    <div>
-      {/* MENU names the group below it, so it takes the panel's muted tier —
-          brand-100, the same step the metadata lines and resting icons use. */}
-      <p className="eyebrow mb-2 px-4 text-brand-100">{label}</p>
-      <div className="flex flex-col gap-1">{children}</div>
+function Node({ node, depth, open, toggle, here, counts, onSelect }) {
+  const top = depth === 0
+  const badge = top && node.badge ? counts[node.badge] : 0
+  const row = cx(top ? ROW : SUB_ROW, 'w-full text-start')
+  const list = (children) => (
+    <div className={cx('relative flex flex-col gap-0.5 pt-0.5 pb-1', top ? 'ps-9' : 'ps-3.5')}>
+      <span aria-hidden="true" className={cx('absolute top-1 bottom-2 w-px bg-white/22', top ? 'inset-s-5.25' : 'inset-s-1.75')} />
+      {children.map((child) => (
+        <Node key={child.key} node={child} depth={depth + 1} open={open} toggle={toggle} here={here} counts={counts} onSelect={onSelect} />
+      ))}
     </div>
   )
-}
 
-export function Sidebar({ onNavigate }) {
-  const { awaitingFeedback } = useBookings()
-  const { toast } = useToast()
-  const { signOut } = useAuth()
-  const navigate = useNavigate()
-
-  const handleSignOut = () => {
-    onNavigate?.() // close the mobile drawer before we leave the shell
-    signOut()
-    navigate('/login', { replace: true })
-    toast('You have been signed out.', 'success')
+  if (node.children && !node.to) {
+    const isOpen = open.has(node.key)
+    return (
+      <>
+        <button type="button" aria-expanded={isOpen} onClick={() => toggle(node.key)} className={cx(row, isOpen && top && 'bg-white/12')}>
+          {top && <Icon name={node.icon} strokeWidth={1.7} className="size-4.5 shrink-0 opacity-95" />}
+          <span className="min-w-0 flex-1 truncate">{node.label}</span>
+          {badge > 0 && <span className={BADGE}>{badge}</span>}
+          <Chevron className={cx('opacity-80 transition-transform', isOpen && 'rotate-180')} />
+        </button>
+        {isOpen && list(node.children)}
+      </>
+    )
   }
 
-  /* The rail is sized to fit a 768px-tall viewport without scrolling — roughly
-     650px of content against ~744px of room. overflow-y-auto is kept as a
-     fallback for very short windows: without it the tail of the nav and Sign
-     out would be unreachable rather than merely off-screen. It should not
-     engage at any normal window size.
-
-     bg-brand-700 — the "Deep #347c81" panel from the design. Everything inside
-     follows from that one choice: text is pure white (the 700 rule in
-     index.css), secondary text is brand-100, dividers and state fills are
-     white washes, and the focus ring flips to white because the default
-     brand-700 ring would vanish into its own panel. */
+  // A top page is current under its own path too (/team/… is still Team); a sub-page only exactly.
+  const [path] = node.to.split('?')
+  const current = here === node.to || (top && path !== ROUTES.overview && here.split('?')[0].startsWith(`${path}/`))
   return (
-    <div className="scrollbar-slim flex h-full flex-col overflow-y-auto bg-brand-700 px-3.5 py-5">
-      {/* Centred to match the identity block below it — the two are the rail's
-          header, and the nav's left-aligned icon column starts under them. */}
-      <div className="mb-8 flex items-center justify-center px-2">
-        {/* One asset, two colours: the PNG is the seed aqua on transparent, and
-            brightness-0 + invert flattens every opaque pixel to pure white for
-            the dark panel — the mobile header keeps the aqua original on its
-            white bar. max-w-full caps growth by width, not just height: the
-            rail's usable interior is ~228px (w-68 less px-3.5 and px-2), so a
-            wordmark this wide is closer to that ceiling than the height
-            suggests. */}
-        <img
-          src="/CompanyLogo/Codeit-flat.png"
-          alt="CODEIT"
-          className="h-16 w-auto max-w-full object-contain brightness-0 invert"
-        />
+    <>
+      <Link to={node.to} onClick={onSelect} aria-current={current ? 'page' : undefined} className={cx(row, current ? (top ? 'bg-white/20' : 'bg-white/16') : !top && 'opacity-88')}>
+        {top && <Icon name={node.icon} strokeWidth={1.7} className="size-4.5 shrink-0 opacity-95" />}
+        <span className="min-w-0 flex-1 truncate">{node.label}</span>
+        {badge > 0 && <span className={BADGE}>{badge}</span>}
+        {top && <Chevron className="opacity-25" />}
+      </Link>
+      {node.children?.length > 0 && list(node.children)}
+    </>
+  )
+}
+
+export function Sidebar({ onNavigate, counts = {} }) {
+  const { toast } = useToast()
+  const { profile, role, signOut } = useAuth()
+  const { label, meta, leave, active, brand } = useConfig()
+  const { t } = useLang()
+  const navigate = useNavigate()
+  const { pathname, search } = useLocation()
+  const here = pathname + search
+  // The members opened this visit, newest first, show in the sidebar with their tabs.
+  // ponytail: kept for this visit only and capped at 5; save them to the profile if people want them back.
+  const opening = /^\/members\/([^/]+)$/.exec(pathname)?.[1]
+  const [codes, setCodes] = useState([])
+  if (opening && codes[0] !== opening) setCodes([opening, ...codes.filter((c) => c !== opening)].slice(0, 5))
+  const { data: members, reload } = useRows(listMembers, 'sidebar')
+  // A member added since the list loaded has no name yet: load the list again, once per code.
+  const missing = members && codes.find((c) => !members.some((m) => m.code === c))
+  const [asked, setAsked] = useState(null)
+  if (missing && missing !== asked) {
+    setAsked(missing)
+    reload()
+  }
+  const opened = codes.map((c) => (members ?? []).find((m) => m.code === c)).filter(Boolean)
+  const primary = navFor(role).find((item) => item.section === 'primary')
+  const tree = sidebarTree({ role, me: profile.id, opened, label, meta, t, types: active('business_type') })
+
+  // The groups leading to this page open on arrival (or once the member it shows is listed);
+  // any group opens or closes on a click.
+  const trail = trailTo(tree, here) ?? []
+  const [open, setOpen] = useState(() => new Set(trail))
+  const [seen, setSeen] = useState(trail.join('>'))
+  if (seen !== trail.join('>')) {
+    setSeen(trail.join('>'))
+    setOpen((o) => new Set([...o, ...trail]))
+  }
+  const toggle = (key) =>
+    setOpen((o) => {
+      const next = new Set(o)
+      if (next.has(key)) next.delete(key)
+      else {
+        // Company settings' sub-menus open one at a time, so the sidebar stays short.
+        if (key.startsWith('set:company:')) for (const k of o) if (k.startsWith('set:company:')) next.delete(k)
+        next.add(key)
+      }
+      return next
+    })
+  const today = dayKey(riyadhNow())
+  const onLeave = leave.some((l) => l.personId === profile.id && l.startsOn <= today && l.endsOn >= today)
+
+  const handleSignOut = async () => {
+    onNavigate?.() // close the mobile drawer before we leave the shell
+    await signOut()
+    navigate(PUBLIC.login, { replace: true })
+    toast(t('layout.signedOut'), 'success')
+  }
+
+  /* Header and your card stay put; the groups between them scroll on a short window. */
+  return (
+    <div className="flex h-full flex-col overflow-hidden bg-brand-700 px-3.5 pt-5.5 pb-3.5 text-white">
+      {/* Whose panel this is: the logo, then the role's portal name from Settings → Lists. The PNG
+          is teal on transparent; brightness-0 + invert turns it white for the panel. */}
+      <div className={cx('flex shrink-0 flex-col items-center gap-2.5 border-b pb-4', RULE)}>
+        <img src="/CompanyLogo/Codeit-flat.png" alt={brand.app} className="h-15 w-auto brightness-0 invert" />
+        <span className="inline-flex h-7 items-center gap-1.5 rounded-full bg-white/14 px-3 text-[11px] tracking-[0.14em] whitespace-nowrap uppercase">
+          <Icon name="shield" strokeWidth={2} className="size-3" />
+          {meta('role', role, 'portal') || label('role', role)}
+        </span>
       </div>
 
-      {/* Identity block. The avatar is a white wash so it lifts off the panel
-          without introducing a second colour. The whole block is a shortcut to
-          Profile. */}
-      <button
-        type="button"
-        onClick={() => {
-          navigate(ROUTES.profile)
-          onNavigate?.()
-        }}
-        className="group flex flex-col items-center border-b border-white/20 px-2 pt-1 pb-5 text-center focus-visible:outline-white"
-      >
-        <Avatar initials={user.initials} size="lg" tone="deep" />
-        {/* No hover fill on the block — at this size the wash read as a panel
-            sitting on the rail rather than as a hover state. The name carrying
-            the colour instead keeps the affordance without the box. */}
-        <span className="mt-3 block max-w-full truncate text-[17px] font-semibold tracking-tight text-white transition group-hover:text-brand-200">
-          {user.name}
-        </span>
-        <span className="mt-1.5 block max-w-full truncate text-[13px] text-brand-100">
-          {user.email}
-        </span>
-        <span className="mt-0.5 block text-[13px] text-brand-100">{user.phone}</span>
-      </button>
+      {primary && (
+        <NavLink
+          to={primary.path}
+          onClick={onNavigate}
+          className="my-3.5 flex h-11 shrink-0 items-center justify-center gap-2 rounded-[14px] bg-white text-sm text-brand-700 shadow-[0_8px_18px_-12px_rgb(0_0_0/0.4)] transition hover:bg-brand-50 focus-visible:outline-white"
+        >
+          <Icon name={primary.icon} strokeWidth={1.8} className="size-4.5" />
+          {t(`layout.nav.${primary.key}`)}
+        </NavLink>
+      )}
 
-      <nav className="mt-5">
-        <NavSection label="Menu">
-          {PRIMARY_NAV.map((item) => (
-            <NavItem
-              key={item.key}
-              item={item}
-              badge={item.key === 'feedback' ? awaitingFeedback.length : 0}
-              onSelect={onNavigate}
-            />
-          ))}
-        </NavSection>
+      {/* The rule under Add a member; without that button the logo's rule is the only one. */}
+      <nav className={cx('scrollbar-slim flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto', primary ? cx('border-t pt-3', RULE) : 'pt-4')}>
+        {SECTIONS.map((section, i) => (
+          <div key={section.key} className="flex flex-col gap-2.5">
+            {/* The first group goes without a heading, as in the design. */}
+            {i > 0 && <p className="px-3 text-[11px] tracking-[0.16em] uppercase opacity-75">{t(`layout.sections.${section.key}`)}</p>}
+            <div className="flex flex-col gap-0.5 rounded-2xl bg-black/8 p-1.5">
+              {tree
+                .filter((node) => node.section === section.key)
+                .map((node) => (
+                  <Node key={node.key} node={node} depth={0} open={open} toggle={toggle} here={here} counts={counts} onSelect={onNavigate} />
+                ))}
+            </div>
+          </div>
+        ))}
       </nav>
 
-      {/* Sign out sits apart from the nav, so it is centred rather than aligned
-          to the icon column — it is not another destination in the list. The
-          wash is carried at rest instead of only on hover: as the last thing in
-          the rail it needs a shape of its own to land on. Neutral white rather
-          than danger — on the dark panel the mock treats it as a quiet footer
-          control, and a red fill would be the loudest thing in the column. */}
-      <div className="mt-auto border-t border-white/20 pt-4">
-        <button
-          type="button"
-          onClick={handleSignOut}
-          className="flex w-full items-center justify-center gap-3 rounded-xl bg-white/12 py-3 text-[15px] font-semibold text-white transition hover:bg-white/20 focus-visible:outline-white"
-        >
-          <Icon name="logout" strokeWidth={1.8} className="size-5" />
-          Sign out
-        </button>
+      {/* Who is signed in: opens their own settings. The language and Sign out sit beside it. */}
+      <div className={cx('mt-3 flex shrink-0 flex-col gap-2.5 border-t pt-3', RULE)}>
+        <div className="flex items-center gap-2 rounded-2xl bg-white/12 p-1.75">
+          <NavLink to={ROUTES.settings} onClick={onNavigate} className="flex min-w-0 flex-1 items-center gap-2.5 rounded-[14px] focus-visible:outline-white">
+            {profile.avatarUrl ? (
+              <img src={profile.avatarUrl} alt="" className="size-10 shrink-0 rounded-xl object-cover" />
+            ) : (
+              <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-white text-sm text-brand-700">{initials(profile.name)}</span>
+            )}
+            <span className="flex min-w-0 flex-col">
+              {/* An English name stays left to right in Arabic too, so it's cut at its end, not its start. */}
+              <span dir="auto" className="truncate text-sm rtl:text-right">{profile.name}</span>
+              <span className="flex items-center gap-1.5 text-xs">
+                <span className="truncate opacity-80">{label('role', profile.role)}</span>
+                {onLeave && <span className="rounded-full bg-warn px-1.5 py-px text-[11px] text-ink">{t('layout.onLeave')}</span>}
+              </span>
+            </span>
+          </NavLink>
+          <LanguageSwitch short />
+          <button
+            type="button"
+            onClick={handleSignOut}
+            aria-label={t('layout.signOut')}
+            title={t('layout.signOut')}
+            className="grid size-9 shrink-0 place-items-center rounded-[11px] bg-white/14 transition hover:bg-white/24 focus-visible:outline-white"
+          >
+            <Icon name="logout" strokeWidth={1.8} className="size-4.25" />
+          </button>
+        </div>
       </div>
     </div>
   )

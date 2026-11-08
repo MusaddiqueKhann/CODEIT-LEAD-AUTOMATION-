@@ -1,0 +1,11 @@
+# Supabase
+.branches
+.temp
+
+# dotenvx
+.env.keys
+.env.local
+.env.*.local
+
+# Google sign-in client ID and secret for `supabase start` / `config push` (README → Google sign-in).
+.env

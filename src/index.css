@@ -1,93 +1,54 @@
-@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@200..1000&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&family=IBM+Plex+Sans+Arabic:wght@300;400;500&display=swap');
 @import 'tailwindcss';
 
-/* Viewports too short to hold a full-height page: the booking rail drops
-   its hint lines and tightens up rather than scrolling. */
-@custom-variant short (@media (max-height: 860px));
-
-/* Semantic tokens for the Aqua·Mist system, imported from the Claude Design
-   project "Premium Color Palette Guide" (Palette.dc.html). Light-only by
-   design. The hexes are mirrored from src/lib/palette.js — that module is the
-   source of truth; change it there first.
-
-   This REPLACES the previous flat-brand mode, in which every brand step was
-   literally #7ECED3 and the brand could never carry text. Aqua·Mist is a real
-   eleven-step ramp, so the brand now spans 1.80:1 (step 400 on white, still
-   fill-only) through 14.03:1 (step 950 on white, a text colour). The seed
-   #7ECED3 did not change value — it moved position, from step 500 to step 400.
-
-   The load-bearing rule is now a *split* rather than a blanket ban: steps
-   50–600 carry deep ink (#0D2B2E), steps 700–950 carry soft white (#EAFAFA).
-   The flip happens between 600 and 700. Nothing carries the opposite. */
+/* Tokens from the Claude Design project "CODEIT Lead" (Sidebar, Members, Member Overview, Team,
+   Person Overview, Calendar, Alerts, Settings). The hexes are the design's own; every screen
+   takes its colours from here, never a hex of its own. Light only, as in the design. */
 :root {
   color-scheme: light;
 
   --app: #ffffff;
   --panel: #ffffff;
-  /* The sidebar rail and the gutter the content card floats on. */
-  --shell: #ffffff;
-  /* The content card: plain white, same value as the shell it sits on and the
-     panels that sit on it.
+  /* The page behind the floating sidebar and the white cards. */
+  --shell: #eef1f6;
+  --canvas: #eef1f6;
 
-     This was step 50, a brand wash a hair off white. It is flat white now, so
-     the canvas contributes no tone of its own and a Card is separated from it
-     by its --line hairline alone rather than by a 1.04:1 difference in fill.
-     Nothing else moves: --muted (4.86:1) and --faint stay usable on it, since
-     white is the surface every text token in this file was tuned against.
+  /* Fills, lightest first: inner panels, soft buttons and selects, fields, segmented tracks. */
+  --surface-2: #f6f8fa;
+  --surface: #f3f5f9;
+  --field: #f3f6f6;
+  --track: #f1f4f7;
+  --surface-hover: #e9edf3;
+  --chip: #e6eaef;
 
-     One consequence worth knowing — the 26px radius the content card carries
-     in AppShell no longer shows, because the shell behind it is the same
-     white. Restore a visible card by giving this a value that differs from
-     --shell. */
-  --canvas: #ffffff;
+  /* Rules: rows, the faint grid lines, and the inset ring of outline buttons. */
+  --line: #eef1f4;
+  --line-soft: #f1f3f6;
+  --edge: #e2e7ef;
 
-  /* Neutrals, taken on-hue from the design file rather than left slate, so
-     greys sit in the same teal family as the ramp. */
-  --surface: #f7f9fb;
-  --surface-2: #f2f7f7;
-  --line: #e6efef;
-  --line-soft: #eef4f4;
+  --ink: #1e2330;
+  /* Table headings and hour labels. */
+  --ink-2: #3a4150;
+  /* Secondary text and the icons on soft buttons. */
+  --soft: #5b6270;
+  /* Sub lines under titles. */
+  --muted: #7b8291;
+  /* Tiny labels: eyebrows, day names, roles above names. */
+  --faint: #8a91a0;
+  /* Switched-off or not-yet text. */
+  --ghost: #a3a9b4;
 
-  /* Ink is the Ink role (step 950) — 14.03:1 on white. */
-  --ink: #123033;
-  /* Body copy at 4.86:1 on white. */
-  --muted: #5c7679;
-  /* Decorative and label-only. #8AA0A1 is 2.75:1 on white — anything that
-     *names* data (stat labels, table headers) must use --muted instead. */
-  --faint: #8aa0a1;
+  --tint: #eaf4f4;
+  /* A row under the pointer, and an unread alert. */
+  --wash: #f8fbfb;
 
-  /* Brand surface and its border — the Surface Tint and Border roles. These
-     are two different steps again, so a tinted panel reads as outlined
-     rather than as one flat block. */
-  --tint: #f2fbfb;
-  --tint-line: #c5ecee;
-
-  /* Always-dark surfaces (hero cards, balance panels). Step 950, carrying
-     soft white at 13.07:1. */
-  --deep: #123033;
-  /* Rules on a dark panel: step 800, which reads as a divider against 950
-     without dropping to a neutral. */
-  --deep-line: #2c6266;
-  /* Muted copy on a dark panel, 7.48:1 on --deep. */
-  --deep-muted: #9fc4c6;
-
-  /* The two text colours, exposed as tokens so call sites never re-type them.
-     Deliberately not pure black / white — see palette.js. */
   --on-brand-dark: #0d2b2e;
-  --on-brand-light: #eafafa;
 }
 
 @theme inline {
-  --font-sans: 'Cairo', ui-sans-serif, system-ui, sans-serif;
-  /* Cairo is the app's body typeface. --font-mono stays defined so the many
-     `font-mono` call sites (eyebrows, IBANs, the palette page) keep working,
-     but it resolves to Cairo too. */
-  --font-mono: 'Cairo', ui-sans-serif, system-ui, sans-serif;
-  /* The display face — Manrope, the face every header in the Claude Design
-     project is set in. Worn only by the PageHeader title; Cairo trails it so a
-     heading that ever carries Arabic still renders in the body face. */
-  --font-display: 'Manrope', 'Cairo', ui-sans-serif, system-ui, sans-serif;
+  --font-sans: 'Geist', 'IBM Plex Sans Arabic', ui-sans-serif, system-ui, sans-serif;
+  /* Titles wear the same face as the body in the design; kept as a name so headings say so. */
+  --font-display: 'Geist', 'IBM Plex Sans Arabic', ui-sans-serif, system-ui, sans-serif;
 
   --color-app: var(--app);
   --color-panel: var(--panel);
@@ -95,63 +56,100 @@
   --color-canvas: var(--canvas);
   --color-surface: var(--surface);
   --color-surface-2: var(--surface-2);
+  --color-surface-hover: var(--surface-hover);
+  --color-field: var(--field);
+  --color-track: var(--track);
+  --color-chip: var(--chip);
   --color-line: var(--line);
   --color-line-soft: var(--line-soft);
+  --color-edge: var(--edge);
 
   --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-soft: var(--soft);
   --color-muted: var(--muted);
   --color-faint: var(--faint);
+  --color-ghost: var(--ghost);
 
   --color-tint: var(--tint);
-  --color-tint-line: var(--tint-line);
-
-  --color-deep: var(--deep);
-  --color-deep-line: var(--deep-line);
-  --color-deep-muted: var(--deep-muted);
+  --color-wash: var(--wash);
 
   --color-on-brand-dark: var(--on-brand-dark);
-  --color-on-brand-light: var(--on-brand-light);
 }
 
 @theme {
-  /* The Aqua·Mist ramp, 50 → 950. Eleven tuned steps; the seed #7ECED3 is
-     step 400. Contrast against its own paired text colour, per step:
-
-       50  14.2:1 AAA ink    500  6.4:1 AA  ink
-       100 13.4:1 AAA ink    600  4.5:1 AA  ink
-       200 11.8:1 AAA ink    700  4.5:1 --- white  (see note below)
-       300 10.2:1 AAA ink    800  6.4:1 AA  white
-       400  8.3:1 AAA ink    900  8.4:1 AAA white
-                             950 13.1:1 AAA white
-
-     Note on 700: soft white on #347C81 computes to 4.4990:1 — it misses AA by
-     one thousandth. The design's own reference page flags this step as low.
-     Small text on a 700 fill therefore uses pure white (4.83:1) rather than
-     soft white; soft white is kept for large text, where 3:1 applies and the
-     anti-glare argument actually bites. See BUTTON_VARIANTS in
-     components/ui/Button.jsx. */
-  --color-brand-50: #f2fbfb;
-  --color-brand-100: #e2f6f6;
-  --color-brand-200: #c5ecee;
-  --color-brand-300: #a6dfe2;
-  --color-brand-400: #7eced3; /* the seed */
+  /* The teal ramp. 700 is the design's primary (#367b7f), 800 its hover, 900 the dark
+     avatar fill, 100 the soft brand wash behind member initials and Sales badges. */
+  --color-brand-50: #f2f8f8;
+  --color-brand-100: #eaf4f4;
+  --color-brand-200: #d7e6e6;
+  --color-brand-300: #9cc7c5;
+  --color-brand-400: #7eced3;
   --color-brand-500: #5bb7bd;
-  --color-brand-600: #419aa0;
-  --color-brand-700: #347c81; /* Primary role */
-  --color-brand-800: #2c6266;
-  --color-brand-900: #274f53;
-  --color-brand-950: #123033; /* Ink role */
+  --color-brand-600: #3f8a8e;
+  --color-brand-700: #367b7f;
+  --color-brand-800: #2c6a6e;
+  --color-brand-900: #2c5f62;
+  --color-brand-950: #123033;
 
-  /* Accent is the seed. Its hover and active steps move *down* the ramp
-     (lighter → darker) rather than up: accent is a light fill carrying deep
-     ink, so going darker on press keeps ink legible on it. */
-  --color-accent: #7eced3;
-  --color-accent-hover: #5bb7bd;
-  --color-accent-active: #419aa0;
+  --color-success: #1f9d55;
+  --color-success-ink: #1a7f46;
+  --color-success-bg: #e9f6ef;
+  --color-success-wash: #f3f8f5;
+  --color-warn: #e0892b;
+  --color-warn-ink: #b36a1a;
+  --color-warn-bg: #fff3e6;
+  --color-warn-wash: #fff8ef;
+  --color-danger: #d93025;
+  --color-danger-ink: #c5221f;
+  --color-danger-bg: #fdecea;
+  /* Step hues: Setup is indigo, Integration violet. */
+  --color-indigo: #3b5bdb;
+  --color-indigo-ink: #3b4fb3;
+  --color-indigo-bg: #eef1fd;
+  --color-violet: #7c4ddb;
+  --color-violet-ink: #6b3fc4;
+  --color-violet-bg: #f3ecfe;
 
-  --color-success: #1fa35d;
-  --color-warn: #e89613;
-  --color-danger: #e23144;
+  /* The type scale. The design's sizes read too big on a laptop at 100%, so each heading size
+     sits a step below them there and grows a little on a wide screen (clamp: smallest,
+     preferred, largest). Body text is 14px; tune the whole app here. */
+  --text-page: clamp(1.375rem, 1.05rem + 0.55vw, 1.75rem);
+  --text-page--line-height: 1.2;
+  --text-page--letter-spacing: -0.025em;
+  --text-h2: clamp(1.125rem, 0.9rem + 0.4vw, 1.375rem);
+  --text-h2--line-height: 1.25;
+  --text-h2--letter-spacing: -0.02em;
+  --text-tile: clamp(0.9375rem, 0.8rem + 0.25vw, 1.125rem);
+  --text-tile--line-height: 1.3;
+  --text-tile--letter-spacing: -0.015em;
+  --text-stat: clamp(1.75rem, 1.2rem + 0.9vw, 2.375rem);
+  --text-stat--line-height: 1;
+  --text-stat--letter-spacing: -0.035em;
+
+  --radius-card: 26px;
+  --radius-tile: 22px;
+
+  --shadow-card: 0 20px 40px -28px rgb(30 50 80 / 0.22), 0 2px 6px -2px rgb(30 50 80 / 0.05);
+  --shadow-lift: 0 28px 50px -28px rgb(30 50 80 / 0.3), 0 2px 6px -2px rgb(30 50 80 / 0.06);
+  --shadow-pop: 0 20px 40px -16px rgb(17 24 39 / 0.3), 0 0 0 1px rgb(20 30 50 / 0.06);
+  --shadow-tab: 0 4px 10px -6px rgb(30 50 80 / 0.3);
+
+  --animate-rise: rise 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  --animate-drop: drop 0.18s ease-out both;
+  --animate-grow: grow 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: none; }
+  }
+  @keyframes drop {
+    from { opacity: 0; transform: translateY(-6px) scale(0.98); }
+    to { opacity: 1; transform: none; }
+  }
+  @keyframes grow {
+    from { transform: scaleY(0); }
+  }
 }
 
 @layer base {
@@ -163,10 +161,6 @@
     @apply bg-app font-sans text-ink antialiased;
   }
 
-  /* The focus ring can be brand again. Under flat-brand mode the only brand
-     value was 1.80:1 on white — below the 3:1 a focus indicator must clear —
-     so this had to fall back to ink. Step 700 is 4.83:1 on white and clears
-     it comfortably. */
   :focus-visible {
     @apply outline-brand-700 outline-2 outline-offset-2;
   }
@@ -178,36 +172,23 @@
 }
 
 @layer utilities {
-  /* Small uppercase label used across the design. Set in Cairo like everything
-     else; the weight sits at semibold because Cairo's regular cut reads thin at
-     this size where the old mono held its own. */
+  /* The small spaced capitals the design puts over lists and sections. */
   .eyebrow {
-    @apply font-sans text-[11px] font-semibold tracking-[0.16em] uppercase;
-  }
-
-  /* A step panel eases in rather than popping. Kept short: it should read as
-     the page settling, not as an animation. */
-  .fade-in {
-    animation: fade-in 220ms ease-out both;
-  }
-  @keyframes fade-in {
-    from {
-      opacity: 0;
-      transform: translateY(4px);
-    }
-    to {
-      opacity: 1;
-      transform: none;
-    }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .fade-in {
-      animation: none;
-    }
+    @apply font-sans text-xs tracking-[0.12em] uppercase;
   }
 
   .scrollbar-slim {
     scrollbar-width: thin;
-    scrollbar-color: var(--line) transparent;
+    scrollbar-color: #d5dae2 transparent;
+  }
+}
+
+/* The design's entrance and hover motion, off for anyone who asked for less. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
   }
 }

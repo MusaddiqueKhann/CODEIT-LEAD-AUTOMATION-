@@ -1,0 +1,48 @@
+/* Words for the Alerts page. Same keys in both languages. The alerts' own texts come from the server. */
+export default {
+  en: {
+    title: 'Alerts',
+    sub: { one: '{unread} unread · kept for {n} days', other: '{unread} unread · kept for {n} days' },
+    tabs: { all: 'All', unread: 'Unread' },
+    markAll: 'Mark all read',
+    allMarked: 'All marked read.',
+    columns: { alert: 'Alert', member: 'Member', when: 'When', action: 'Action' },
+    empty: { title: 'You’re all caught up', sub: 'New alerts will show here.' },
+    unread: 'Unread',
+    cta: {
+      open: 'Open',
+      viewFeedback: 'View feedback',
+      pickSomeone: 'Pick someone',
+      seeWhy: 'See why',
+      bookAgain: 'Book again',
+      openTeam: 'Open team',
+      readNote: 'Read note',
+    },
+  },
+  ar: {
+    title: 'التنبيهات',
+    sub: {
+      zero: '{unread} غير مقروءة · لا تُحفظ',
+      one: '{unread} غير مقروءة · تُحفظ ليوم واحد',
+      two: '{unread} غير مقروءة · تُحفظ ليومين',
+      few: '{unread} غير مقروءة · تُحفظ لمدة {n} أيام',
+      many: '{unread} غير مقروءة · تُحفظ لمدة {n} يوماً',
+      other: '{unread} غير مقروءة · تُحفظ لمدة {n} يوم',
+    },
+    tabs: { all: 'الكل', unread: 'غير المقروءة' },
+    markAll: 'تعليم الكل كمقروء',
+    allMarked: 'تم تعليم الكل كمقروء.',
+    columns: { alert: 'التنبيه', member: 'العضو', when: 'الوقت', action: 'الإجراء' },
+    empty: { title: 'لا جديد لديك', sub: 'ستظهر التنبيهات الجديدة هنا.' },
+    unread: 'غير مقروء',
+    cta: {
+      open: 'فتح',
+      viewFeedback: 'عرض التقييم',
+      pickSomeone: 'اختر شخصاً',
+      seeWhy: 'عرض السبب',
+      bookAgain: 'احجز مجدداً',
+      openTeam: 'فتح الفريق',
+      readNote: 'قراءة الملاحظة',
+    },
+  },
+}
