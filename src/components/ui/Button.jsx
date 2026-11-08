@@ -52,6 +52,8 @@ export function Button({
     <Tag
       type={rest.href ? undefined : type}
       className={cx(
+        'ui-button',
+        `ui-button--${variant}`,
         !bare && BASE,
         !bare && VARIANTS[variant],
         !bare && SIZES[size],

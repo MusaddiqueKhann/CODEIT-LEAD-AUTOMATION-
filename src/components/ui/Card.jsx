@@ -44,6 +44,7 @@ export function Card({
   return (
     <Tag
       className={cx(
+        'ui-card',
         radius,
         bordered && 'border',
         surface,

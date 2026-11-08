@@ -3,10 +3,10 @@ import { useAuth } from './AuthContext.jsx'
 import { useLang } from './LangContext.jsx'
 import { brandOf, loadConfig } from '../../models/data/settings.js'
 import { useRows } from './useRows.js'
-import { Button } from '../../components/ui/index.js'
-import { FullScreenMessage } from '../../components/layout/FullScreenMessage.jsx'
 
 const ConfigContext = createContext(null)
+/* Whether the config is loading, ready, failed, or the session ended (RequireConfig shows the screen). */
+const ConfigStatus = createContext(null)
 
 /**
  * Settings, option lists, texts, holidays and the team, loaded once after sign-in. Every page and
@@ -18,14 +18,19 @@ export function useConfig() {
   return ctx
 }
 
+/** { status: 'loading' | 'ready' | 'error' | 'ended', error, reload }, for the guard that shows the screens. */
+export function useConfigStatus() {
+  return useContext(ConfigStatus)
+}
+
 export function ConfigProvider({ children }) {
   const { data, error, reload } = useRows(loadConfig, 'config')
   const { endSession } = useAuth()
-  const { lang, t, errorText } = useLang()
+  const { lang } = useLang()
   const ended = error?.sessionEnded
 
   useEffect(() => {
-    if (ended) endSession(error.message)
+    if (ended) endSession(error)
   }, [ended, error, endSession])
 
   const app = data?.settings.company.app_name
@@ -58,13 +63,11 @@ export function ConfigProvider({ children }) {
     }
   }, [data, reload, lang])
 
-  if (ended) return <FullScreenMessage title={t('common.config.signingOut')} />
-  if (error)
-    return (
-      <FullScreenMessage title={t('common.config.couldntLoad')} text={errorText(error)}>
-        <Button onClick={reload}>{t('common.tryAgain')}</Button>
-      </FullScreenMessage>
-    )
-  if (!value) return <FullScreenMessage title={t('common.loading')} />
-  return <ConfigContext.Provider value={value}>{children}</ConfigContext.Provider>
+  const status = ended ? 'ended' : error ? 'error' : value ? 'ready' : 'loading'
+  const state = useMemo(() => ({ status, error, reload }), [status, error, reload])
+  return (
+    <ConfigStatus.Provider value={state}>
+      <ConfigContext.Provider value={value}>{children}</ConfigContext.Provider>
+    </ConfigStatus.Provider>
+  )
 }

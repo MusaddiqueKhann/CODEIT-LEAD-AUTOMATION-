@@ -1,6 +1,9 @@
 import { useState } from 'react'
+import { Notice } from '../ui/Notice.jsx'
 import { useLang } from '../../controllers/shared/LangContext.jsx'
-import { Button, Modal, cx } from '../ui/index.js'
+import { Button } from '../ui/Button.jsx'
+import { Modal } from '../ui/Modal.jsx'
+import { cx } from '../cx.js'
 import { formatShort, fromDay } from '../../models/rules/format.js'
 import { initials } from '../../models/rules/time.js'
 import { TONES } from '../tones.js'
@@ -11,7 +14,7 @@ import { TONES } from '../tones.js'
  */
 function reasonText(code, t) {
   const [what, value = ''] = code.split(/:(.*)/s)
-  return t(`team.picker.reasons.${what}`, { n: value, date: value && what === 'leave' ? formatShort(fromDay(value)) : value, time: value })
+  return t(`shared.components.picker.reasons.${what}`, { n: value, date: value && what === 'leave' ? formatShort(fromDay(value)) : value, time: value })
 }
 
 /**
@@ -39,13 +42,13 @@ export function PersonPicker({ open, onClose, title, options, current, onPick })
   }
 
   return (
-    <Modal open={open} onClose={onClose} title={title} size="md">
+    <Modal id="person-picker-loading" open={open} onClose={onClose} title={title} size="md">
       {!options ? (
-        <p className="py-6 text-center text-sm text-muted">{t('common.loading')}</p>
+        <p className="py-6 text-center text-sm text-muted">{t('shared.common.loading')}</p>
       ) : (
         <div className="flex flex-col gap-1.5">
           {options.map((p) => (
-            <Button
+            <Button id={`person-picker-pick-${p.id}`}
               key={p.id}
               variant="bare"
               disabled={saving || p.id === current}
@@ -63,13 +66,13 @@ export function PersonPicker({ open, onClose, title, options, current, onPick })
                 <span className="truncate text-sm text-ink">{p.name}</span>
                 <span className={cx('truncate text-xs', p.free ? TONES.success.text : 'text-muted')}>{reasonText(p.reason, t)}</span>
               </span>
-              {p.id === current && <span className="text-xs text-brand-800">{t('team.picker.hasIt')}</span>}
+              {p.id === current && <span className="text-xs text-brand-800">{t('shared.components.picker.hasIt')}</span>}
             </Button>
           ))}
           {busyPick && (
-            <p role="alert" className={cx('mt-2 rounded-xl px-3.5 py-3 text-sm', TONES.warn.fill, TONES.warn.text)}>
-              {t('team.picker.busy', { name: busyPick.name, reason: reasonText(busyPick.reason, t) })}
-            </p>
+            <Notice tone="warn" icon={null} role="alert" className="mt-2">
+              {t('shared.components.picker.busy', { name: busyPick.name, reason: reasonText(busyPick.reason, t) })}
+            </Notice>
           )}
         </div>
       )}

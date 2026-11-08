@@ -111,6 +111,53 @@
   --color-violet-ink: #6b3fc4;
   --color-violet-bg: #f3ecfe;
 
+  /* The dashboard rings and bars. */
+  --color-chart-teal-1: #b8dbd9;
+  --color-chart-teal-2: #7fbab7;
+  --color-chart-teal-3: #4f9995;
+  --color-chart-warm: #e9b27a;
+  --color-chart-late: #f3a8a0;
+  --color-chart-pending: #f3d6b3;
+
+  /* Words on the teal greeting cards. */
+  --color-on-brand-muted: #cfe5e4;
+  --color-on-brand-soft: #d9ecea;
+
+  /* Switched off, empty or not yet: switches, stars, unticked boxes, zero counts, empty bars. */
+  --color-off: #d5dae2;
+  --color-off-ring: #c9ced8;
+  --color-off-bar: #dfe5ea;
+  --color-off-icon: #c3cbd2;
+  --color-off-text: #b5bac3;
+  --color-off-disabled: #b7bec7;
+  --color-off-stripe: #e3e7ec;
+
+  /* Pale teal: tags, busy blocks, rings, hovers, today, bubbles, dashed boxes. */
+  --color-brand-150: #e6f2f1;
+  --color-brand-100-hover: #e1efef;
+  --color-brand-bar: #cfe3e2;
+  --color-brand-ring: #c6dfdd;
+  --color-brand-ring-2: #c9dcdc;
+  --color-brand-load-ring: #c9d6d6;
+  --color-brand-stripe: #eef3f3;
+  --color-brand-line: #dfe7e7;
+  --color-brand-dash: #d9e3e3;
+  --color-brand-glow-from: #d7e8e7;
+  --color-brand-glow-to: #b9d8d6;
+  --color-brand-wash: #f6faf9;
+  --color-brand-wash-2: #fafcfc;
+  --color-brand-mist: #f3f8f8;
+  --color-brand-bubble: #eef6f5;
+
+  /* A done note (the account is made, the recording is sent). */
+  --color-success-note: #eef7f1;
+  --color-success-note-ink: #3a5a48;
+
+  /* A file still to come, and leave on the busy chart. */
+  --color-warn-line: #f0c48f;
+  --color-warn-stripe: #fde3c4;
+  --color-warn-stripe-2: #eba45c;
+
   /* The type scale. The design's sizes read too big on a laptop at 100%, so each heading size
      sits a step below them there and grows a little on a wide screen (clamp: smallest,
      preferred, largest). Body text is 14px; tune the whole app here. */

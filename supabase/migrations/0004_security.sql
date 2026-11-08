@@ -76,9 +76,10 @@ create policy alerts_read on public.alerts for select to authenticated
 
 -- ── Storage ────────────────────────────────────────────────────────────────
 
-insert into storage.buckets (id, name, public) values
-  ('documents', 'documents', false),
-  ('avatars', 'avatars', true)
+-- documents: 50 MB is the hard ceiling; the setting max_upload_mb (default 10) is the everyday limit.
+insert into storage.buckets (id, name, public, file_size_limit) values
+  ('documents', 'documents', false, 52428800),
+  ('avatars', 'avatars', true, null)
 on conflict (id) do nothing;
 
 -- Documents sit at <member_id>/<kind>/<uuid>.<ext>. The folder is compared as text, so a stray

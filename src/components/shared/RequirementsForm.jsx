@@ -26,22 +26,22 @@ export function RequirementsForm({ draft, set, openFile, onRemove, n = 3, aside 
   const featureKeys = featuresFor(active('feature'), draft.plan)
 
   return (
-    <Section id="requirements" n={n} title={t('shared.requirements.title')} sub={t('shared.requirements.sub')} aside={aside}>
-      <Row title={t('shared.requirements.type')} sub={t('shared.requirements.typeSub')}>
-        <Chips list="business_type" items={active('business_type')} isOn={(k) => draft.plan === k} onPick={(k) => set({ plan: toggle(draft.plan, k) })} />
+    <Section id="requirements" n={n} title={t('shared.components.requirements.title')} sub={t('shared.components.requirements.sub')} aside={aside}>
+      <Row title={t('shared.components.requirements.type')} sub={t('shared.components.requirements.typeSub')}>
+        <Chips id="requirements-form-set" list="business_type" items={active('business_type')} isOn={(k) => draft.plan === k} onPick={(k) => set({ plan: toggle(draft.plan, k) })} />
       </Row>
-      <Row title={t('shared.requirements.counts')} sub={t('shared.requirements.countsSub')}>
+      <Row title={t('shared.components.requirements.counts')} sub={t('shared.components.requirements.countsSub')}>
         <Pair>
-          <TextField label={t('shared.requirements.branches')} type="number" inputMode="numeric" min={1} {...bind(draft, set, 'branches')} />
-          <TextField label={t('shared.requirements.users')} type="number" inputMode="numeric" min={1} {...bind(draft, set, 'users')} />
+          <TextField id="requirements-form-branches" label={t('shared.components.requirements.branches')} type="number" inputMode="numeric" min={1} {...bind(draft, set, 'branches')} />
+          <TextField id="requirements-form-users" label={t('shared.components.requirements.users')} type="number" inputMode="numeric" min={1} {...bind(draft, set, 'users')} />
         </Pair>
       </Row>
       {featureKeys.length > 0 && (
-        <Row title={t('shared.requirements.features')} sub={t('shared.requirements.featuresSub')}>
+        <Row title={t('shared.components.requirements.features')} sub={t('shared.components.requirements.featuresSub')}>
           <FeaturesList keys={featureKeys} values={draft.features} onChange={(k, v) => set({ features: { ...draft.features, [k]: v } })} />
         </Row>
       )}
-      <Row title={t('shared.requirements.integrations')} sub={t('shared.requirements.integrationsSub')}>
+      <Row title={t('shared.components.requirements.integrations')} sub={t('shared.components.requirements.integrationsSub')}>
         <IntegrationsBox
           picked={draft.integrations}
           onPick={(k) =>
@@ -49,11 +49,11 @@ export function RequirementsForm({ draft, set, openFile, onRemove, n = 3, aside 
           }
         />
       </Row>
-      <Row title={t('shared.requirements.hardware')} sub={t('shared.requirements.hardwareSub')}>
+      <Row title={t('shared.components.requirements.hardware')} sub={t('shared.components.requirements.hardwareSub')}>
         <HardwareField value={draft.hardware} onChange={(hardware) => set({ hardware })} />
       </Row>
-      <Row title={t('shared.requirements.documents')} sub={t('shared.requirements.documentsSub')}>
-        <DocumentsPanel
+      <Row title={t('shared.components.requirements.documents')} sub={t('shared.components.requirements.documentsSub')}>
+        <DocumentsPanel id="requirements-form-documents"
           keys={docs}
           files={draft.files}
           onFile={(k, f) => set({ files: { ...draft.files, [k]: f } })}
@@ -61,11 +61,11 @@ export function RequirementsForm({ draft, set, openFile, onRemove, n = 3, aside 
           due={draft.due}
           onDue={(k, days) => set({ due: { ...draft.due, [k]: days } })}
           openFile={openFile}
-          empty={t('shared.requirements.noDocs')}
+          empty={t('shared.components.requirements.noDocs')}
         />
       </Row>
       {docs.length > 0 && (
-        <Row title={t('shared.requirements.readyBy')} sub={t('shared.requirements.readyBySub')}>
+        <Row title={t('shared.components.requirements.readyBy')} sub={t('shared.components.requirements.readyBySub')}>
           <ReadyBy keys={docs} state={docState(draft.files, draft.due, docs)} />
         </Row>
       )}

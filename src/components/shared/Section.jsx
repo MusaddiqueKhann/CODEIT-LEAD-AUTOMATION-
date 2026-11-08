@@ -1,4 +1,4 @@
-import { Card } from '../ui/index.js'
+import { Card } from '../ui/Card.jsx'
 
 /**
  * A form card: the title and its line over a rule, then its rows. `n` puts a numbered badge

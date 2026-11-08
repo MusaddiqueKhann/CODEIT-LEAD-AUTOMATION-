@@ -1,9 +1,6 @@
 import { useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
-import Icon from '../../../components/Icon.jsx'
-import { PageHeader } from '../../../components/layout/PageHeader.jsx'
-import { SearchBox } from '../../../components/shared/index.js'
-import { Card, cx } from '../../../components/ui/index.js'
+import { Card, Icon, ListHead, PageHeader, SearchBox } from '@/components'
 import { useAuth } from '../../../controllers/shared/AuthContext.jsx'
 import { useConfig } from '../../../controllers/shared/ConfigContext.jsx'
 import { useLang } from '../../../controllers/shared/LangContext.jsx'
@@ -50,42 +47,42 @@ export function MembersPage() {
   return (
     <div className="flex flex-col gap-4 lg:h-[calc(100vh-2rem)]">
       <PageHeader
-        title={t('members.list.title')}
-        sub={t(show ? 'members.list.subMine' : 'members.list.subAll', { date: formatLong(riyadhNow()) })}
+        title={t('shared.members.list.title')}
+        sub={t(show ? 'shared.members.list.subMine' : 'shared.members.list.subAll', { date: formatLong(riyadhNow()) })}
         actions={
           canAdd && (
-            <Link
+            <Link id="members-page-add-member"
               to={ROUTES.addMember}
-              className="flex h-11 items-center gap-2 rounded-full bg-brand-700 px-5 text-sm whitespace-nowrap text-white transition hover:bg-brand-800"
+              className="v-members-page__add-member flex h-11 items-center gap-2 rounded-full bg-brand-700 px-5 text-sm whitespace-nowrap text-white transition hover:bg-brand-800"
             >
               <Icon name="plus" className="size-4" strokeWidth={2.2} />
-              {t('layout.nav.addMember')}
+              {t('shared.layout.nav.addMember')}
             </Link>
           )
         }
       >
-        <SearchBox value={query} onChange={setQuery} placeholder={t('members.list.search')} label={t('members.list.searchLabel')} />
+        <SearchBox id="members-page-search-label" value={query} onChange={setQuery} placeholder={t('shared.members.list.search')} label={t('shared.members.list.searchLabel')} />
       </PageHeader>
 
       <Card padding="none" clip className="flex animate-rise flex-col [animation-delay:.08s] lg:min-h-0 lg:flex-1">
         <div className="scrollbar-slim min-h-0 flex-1 overflow-auto">
           <div className="min-w-160">
             <div className="sticky top-0 z-2 bg-panel px-3 pt-3 pb-1.5">
-              <div className={cx(COLUMNS, 'h-12 rounded-2xl bg-field text-[13px] font-medium text-ink-2')}>
-                <span className="ps-13.5">{t('members.list.member')}</span>
-                <span>{t('members.list.step')}</span>
-                <span>{t('members.list.withNow')}</span>
+              <ListHead columns={COLUMNS}>
+                <span className="ps-13.5">{t('shared.members.list.member')}</span>
+                <span>{t('shared.members.list.step')}</span>
+                <span>{t('shared.members.list.withNow')}</span>
                 <span />
-              </div>
+              </ListHead>
             </div>
             {shown.map((m, i) => (
               <MemberRow key={m.id} member={m} index={i} />
             ))}
-            {error && <p className="px-6 py-12 text-center text-sm text-muted">{t('members.list.loadError', { error: errorText(error) })}</p>}
-            {!members && !error && <p className="px-6 py-12 text-center text-sm text-muted">{t('members.list.loading')}</p>}
+            {error && <p className="px-6 py-12 text-center text-sm text-muted">{t('shared.members.list.loadError', { error: errorText(error) })}</p>}
+            {!members && !error && <p className="px-6 py-12 text-center text-sm text-muted">{t('shared.members.list.loading')}</p>}
             {members && shown.length === 0 && (
               <p className="px-6 py-12 text-center text-sm text-muted">
-                {t(q || show || Object.values(filters).some(Boolean) ? 'members.list.noMatch' : 'members.list.none')}
+                {t(q || show || Object.values(filters).some(Boolean) ? 'shared.members.list.noMatch' : 'shared.members.list.none')}
               </p>
             )}
           </div>

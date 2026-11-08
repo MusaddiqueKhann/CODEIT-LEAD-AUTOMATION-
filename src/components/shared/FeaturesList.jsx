@@ -1,7 +1,8 @@
 import { useConfig } from '../../controllers/shared/ConfigContext.jsx'
 import { useLang } from '../../controllers/shared/LangContext.jsx'
 import { TONES } from '../tones.js'
-import { Button, cx } from '../ui/index.js'
+import { Button } from '../ui/Button.jsx'
+import { cx } from '../cx.js'
 
 /** Each feature with a Yes / No switch; an unanswered one has neither picked. */
 export function FeaturesList({ keys, values, onChange, readOnly = false }) {
@@ -14,12 +15,12 @@ export function FeaturesList({ keys, values, onChange, readOnly = false }) {
           <span className="min-w-0 flex-1 text-sm text-ink">{label('feature', k)}</span>
           <div role="group" aria-label={label('feature', k)} className="flex shrink-0 gap-1 rounded-xl bg-surface-2 p-1">
             {[
-              [t('common.yes'), true],
-              [t('common.no'), false],
+              [t('shared.common.yes'), true],
+              [t('shared.common.no'), false],
             ].map(([word, v]) => {
               const on = values[k] === v
               return (
-                <Button
+                <Button id={`features-list-${k}-${v ? 'yes' : 'no'}`}
                   key={word}
                   variant="bare"
                   aria-pressed={on}

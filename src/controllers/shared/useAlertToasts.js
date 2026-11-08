@@ -11,7 +11,7 @@ export function useAlertToasts(personId) {
   useEffect(
     () =>
       onAlertsChange(personId, async (e) => {
-        if (e.eventType === 'INSERT') toast(pick(lang, e.new.text, e.new.text_ar), 'brand', { label: t('common.open'), to: await alertPath(e.new) })
+        if (e.eventType === 'INSERT') toast(pick(lang, e.new.text, e.new.text_ar), 'brand', { label: t('shared.common.open'), to: await alertPath(e.new) })
       }),
     [personId, toast, lang, t],
   )

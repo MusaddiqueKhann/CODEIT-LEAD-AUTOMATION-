@@ -1,15 +1,11 @@
 import { Link } from 'react-router-dom'
-import Icon from '../../components/Icon.jsx'
-import { Card, cx } from '../../components/ui/index.js'
+import { Card, cx, Icon, TONES } from '@/components'
 import { useConfig } from '../../controllers/shared/ConfigContext.jsx'
 import { useLang } from '../../controllers/shared/LangContext.jsx'
-import { listRecentActivity } from '../../models/data/members.js'
 import { useCounts } from '../../controllers/shared/useCounts.js'
-import { useRows } from '../../controllers/shared/useRows.js'
 import { ago, dayKey, formatShort, fromDay, fromServer, riyadhNow, startOfDay, weekdayShort } from '../../models/rules/format.js'
 import { ROUTES, memberPath } from '../../routes/paths.js'
-import { addDays, initials, workingDaysUntil } from '../../models/rules/time.js'
-import { TONES } from '../../components/tones.js'
+import { initials, startOfWeek, workingDaysUntil } from '../../models/rules/time.js'
 import { CardHead } from '../shared/overview/CardHead.jsx'
 import { Hero } from '../shared/overview/Hero.jsx'
 import { IconTile } from '../shared/overview/IconTile.jsx'
@@ -17,8 +13,9 @@ import { RingCard } from '../shared/overview/OverviewRings.jsx'
 import { RecentActivity } from '../shared/overview/RecentActivity.jsx'
 import { WeekChart } from '../shared/overview/WeekChart.jsx'
 import { dayDate, open } from '../../models/rules/when.js'
+import { useRecentActivity } from '../../controllers/shared/useActivity.js'
 
-/* What Recent activity counts, from the activity lines' kind (named in overview.integration.counters). A Transfer of one of their members reached them. */
+/* What Recent activity counts, from the activity lines' kind (named in integration.overview.counters). A Transfer of one of their members reached them. */
 const counters = (mine) => [
   ['received', (l) => l.kind === 'transferred' && mine.has(l.memberId)],
   ['connected', (l) => l.kind === 'connected'],
@@ -35,14 +32,14 @@ const check = (m, k) => m.integrationChecks?.[k] ?? {}
 export function IntegrationOverview({ members, me, title, sub }) {
   const { label, settings, holidays, person } = useConfig()
   const { t } = useLang()
-  const g = (key, values) => t(`overview.integration.${key}`, values)
-  const counts = useCounts(me)
+  const g = (key, values) => t(`integration.overview.${key}`, values)
+  const counts = useCounts()
   const { dueSoonDays, aheadDays, recentDays } = settings
-  const activity = useRows(() => listRecentActivity(new Date(Date.now() - recentDays * 864e5).toISOString()), `activity:${recentDays}d`)
+  const activity = useRecentActivity()
   const now = riyadhNow()
   const today = startOfDay(now)
   const off = new Set(holidays.map((h) => h.day))
-  const weekStart = addDays(today, -today.getDay())
+  const weekStart = startOfWeek(today)
   const monthStart = new Date(now.getFullYear(), now.getMonth(), 1)
   const monthAgo = new Date(now - recentDays * 864e5)
   const M = ROUTES.members
@@ -59,10 +56,10 @@ export function IntegrationOverview({ members, me, title, sub }) {
   const finished = mine.filter((m) => m.integrationDoneAt).map((m) => ({ m, at: fromServer(m.integrationDoneAt) }))
   const sessions = [...withMe, ...back].filter((m) => m.session).sort((a, b) => a.session.at - b.session.at)
   const next = withMe[0]
-  const names = (m) => m.integrations.filter((k) => !(check(m, k).connected && check(m, k).tested)).map((k) => label('integration', k)).join(t('overview.sep'))
+  const names = (m) => m.integrations.filter((k) => !(check(m, k).connected && check(m, k).tested)).map((k) => label('integration', k)).join(t('shared.common.listJoin'))
   const daysLeft = (m) => {
     const n = left(m)
-    return m.late.includes('integration') ? g('late') : n == null ? g('noDueDate') : n === 0 ? g('dueToday') : t('overview.left', { days: t('overview.counts.workingDay', { n }) })
+    return m.late.includes('integration') ? g('late') : n == null ? g('noDueDate') : n === 0 ? g('dueToday') : t('shared.overview.left', { days: t('shared.overview.counts.workingDay', { n }) })
   }
 
   // How they're doing, over the integrations finished in the Admin's recent days.
@@ -84,50 +81,50 @@ export function IntegrationOverview({ members, me, title, sub }) {
         title={title}
         sub={sub}
         unread={counts.unread ?? 0}
-        unit={t('overview.units.thisMonth')}
+        unit={t('shared.overview.units.thisMonth')}
         round
         parts={[
-          { key: 'with', label: g('parts.with'), n: withMe.length, color: '#ffffff', to: `${M}?show=mine&step=integration` },
-          { key: 'soon', label: g('parts.soon', { days: t('overview.counts.workingDay', { n: dueSoonDays }) }), n: soon.length, color: '#b8dbd9', to: `${M}?show=mine&step=integration`, ring: false },
-          { key: 'late', label: g('parts.late'), n: late.length, color: '#f3a8a0', to: `${M}?show=mine&step=integration`, ring: false },
-          { key: 'back', label: g('parts.back', { step: label('step', 'sales') }), n: back.length, color: '#e9b27a', to: `${M}?show=mine&step=sales` },
-          { key: 'done', label: g('parts.done'), n: finished.filter((f) => f.at >= monthStart).length, color: '#7fbab7', to: `${M}?show=mine`, tile: false },
+          { key: 'with', label: g('parts.with'), n: withMe.length, color: 'var(--color-white)', to: `${M}?show=mine&step=integration` },
+          { key: 'soon', label: g('parts.soon', { days: t('shared.overview.counts.workingDay', { n: dueSoonDays }) }), n: soon.length, color: 'var(--color-chart-teal-1)', to: `${M}?show=mine&step=integration`, ring: false },
+          { key: 'late', label: g('parts.late'), n: late.length, color: 'var(--color-chart-late)', to: `${M}?show=mine&step=integration`, ring: false },
+          { key: 'back', label: g('parts.back', { step: label('step', 'sales') }), n: back.length, color: 'var(--color-chart-warm)', to: `${M}?show=mine&step=sales` },
+          { key: 'done', label: g('parts.done'), n: finished.filter((f) => f.at >= monthStart).length, color: 'var(--color-chart-teal-2)', to: `${M}?show=mine`, tile: false },
         ]}
       />
 
       <div className="grid grid-cols-[repeat(auto-fit,minmax(240px,1fr))] gap-4">
-        <IconTile
+        <IconTile id="integration-overview-next-due"
           index={0}
           to={next ? `${memberPath(next.code)}?tab=integration` : `${M}?show=mine`}
           icon="clock"
           tone="warn"
           label={g('nextDue')}
           big={next ? `${next.name.split(' ')[0]} · ${next.integrationDue ? dayDate(fromDay(next.integrationDue)) : g('noDate')}` : g('nothingDue')}
-          sub={next ? [names(next), daysLeft(next).toLowerCase()].filter(Boolean).join(' · ') : g('noneWithYou')}
+          sub={next ? [names(next), daysLeft(next)].filter(Boolean).join(' · ') : g('noneWithYou')}
         />
-        <IconTile
+        <IconTile id="integration-overview-waiting"
           index={1}
           to={waiting[0] ? `${memberPath(waiting[0].m.code)}?tab=integration` : `${M}?show=mine`}
           icon="link"
           tone="indigo"
           label={g('waiting')}
-          big={t('overview.counts.integration', { n: waiting.length })}
+          big={t('shared.overview.counts.integration', { n: waiting.length })}
           sub={waiting.length ? waiting.slice(0, 2).map((p) => `${p.m.name.split(' ')[0]} · ${label('integration', p.k)}`).join(' · ') : g('nothingWaiting')}
         />
-        <IconTile
+        <IconTile id="integration-overview-to-test"
           index={2}
           to={toTest[0] ? `${memberPath(toTest[0].m.code)}?tab=integration` : `${M}?show=mine`}
           icon="check"
           tone="success"
           label={g('toTest')}
-          big={t('overview.counts.integration', { n: toTest.length })}
+          big={t('shared.overview.counts.integration', { n: toTest.length })}
           sub={toTest.length ? toTest.slice(0, 2).map((p) => g('connectedLine', { name: p.m.name.split(' ')[0], integration: label('integration', p.k) })).join(' · ') : g('nothingToTest')}
         />
       </div>
 
       <div className="flex flex-wrap items-stretch gap-4">
-        <Card as="section" radius="rounded-tile" padding="none" className="flex min-w-0 flex-[3_1_520px] animate-rise flex-col gap-4 px-6 py-5 [animation-delay:.2s]">
-          <CardHead title={g('mineTitle')} sub={g('mineSub')} to={`${M}?show=mine&step=integration`} label={t('overview.links.viewAll')} />
+        <Card id="integration-overview-view-all" as="section" radius="rounded-tile" padding="none" className="flex min-w-0 flex-[3_1_520px] animate-rise flex-col gap-4 px-6 py-5 [animation-delay:.2s]">
+          <CardHead id="integration-overview-view-all-2" title={g('mineTitle')} sub={g('mineSub')} to={`${M}?show=mine&step=integration`} label={t('shared.overview.links.viewAll')} />
           <div className="flex flex-col gap-2.5">
             {withMe.map((m, i) => {
               const checks = m.integrations.length * 2
@@ -146,9 +143,9 @@ export function IntegrationOverview({ members, me, title, sub }) {
                       <span className="text-xs text-muted">{m.integrationDue ? g('due', { day: formatShort(fromDay(m.integrationDue)) }) : g('noDueYet')}</span>
                       <span className={cx('text-sm', isLate ? TONES.danger.text : n != null && n <= 1 ? TONES.warn.text : 'text-ink')}>{daysLeft(m)}</span>
                     </span>
-                    <Link
+                    <Link id={`integration-overview-open-${m.id}`}
                       to={`${memberPath(m.code)}?tab=integration`}
-                      className="inline-flex h-10 w-30 shrink-0 items-center justify-center rounded-full bg-brand-700 text-sm text-white transition hover:bg-brand-800 hover:text-white"
+                      className="v-integration-overview__open inline-flex h-10 w-30 shrink-0 items-center justify-center rounded-full bg-brand-700 text-sm text-white transition hover:bg-brand-800 hover:text-white"
                     >
                       {g('open')}
                     </Link>
@@ -166,7 +163,7 @@ export function IntegrationOverview({ members, me, title, sub }) {
                     })}
                   </div>
                   <div className="flex items-center gap-2.5">
-                    <span className="h-2 flex-1 overflow-hidden rounded-full bg-[#dfe5ea]">
+                    <span className="h-2 flex-1 overflow-hidden rounded-full bg-off-bar">
                       <span className="block h-full rounded-full bg-brand-700" style={{ width: `${checks ? (100 * done) / checks : 0}%` }} />
                     </span>
                     <span className="text-xs text-muted">{g('checks', { done, total: checks })}</span>
@@ -179,10 +176,10 @@ export function IntegrationOverview({ members, me, title, sub }) {
         </Card>
 
         <div className="flex min-w-0 flex-[2_1_340px] flex-col gap-4">
-          <Card as="section" radius="rounded-tile" padding="none" className="flex animate-rise flex-col gap-3 px-6 py-5 [animation-delay:.25s]">
-            <CardHead title={g('backTitle', { step: label('step', 'sales') })} to={`${M}?show=mine&step=sales`} label={t('overview.links.viewAll')} />
+          <Card id="integration-overview-view-all-3" as="section" radius="rounded-tile" padding="none" className="flex animate-rise flex-col gap-3 px-6 py-5 [animation-delay:.25s]">
+            <CardHead id="integration-overview-view-all-4" title={g('backTitle', { step: label('step', 'sales') })} to={`${M}?show=mine&step=sales`} label={t('shared.overview.links.viewAll')} />
             {back.map((m) => (
-              <Link key={m.id} to={memberPath(m.code)} className="flex items-start gap-3.5 rounded-[22px] bg-warn-wash px-4.5 py-4 text-ink transition-colors hover:bg-warn-bg">
+              <Link id={`integration-overview-member-${m.id}`} key={m.id} to={memberPath(m.code)} className="v-integration-overview__member flex items-start gap-3.5 rounded-[22px] bg-warn-wash px-4.5 py-4 text-ink transition-colors hover:bg-warn-bg">
                 <span className="grid size-11 shrink-0 place-items-center rounded-full bg-brand-900 text-[13px] text-white">{initials(m.name)}</span>
                 <span className="flex min-w-0 flex-1 flex-col gap-1.5">
                   <span className="text-[15px]">{m.name}</span>
@@ -197,17 +194,17 @@ export function IntegrationOverview({ members, me, title, sub }) {
             {back.length === 0 && <p className="py-2 text-[13px] text-muted">{g('backNone')}</p>}
           </Card>
 
-          <Card as="section" radius="rounded-tile" padding="none" className="flex flex-1 animate-rise flex-col gap-3 px-6 py-5 [animation-delay:.3s]">
-            <CardHead title={g('sessionsTitle')} sub={g('sessionsSub')} to={ROUTES.calendar} label={t('overview.links.calendar')} />
+          <Card id="integration-overview-calendar" as="section" radius="rounded-tile" padding="none" className="flex flex-1 animate-rise flex-col gap-3 px-6 py-5 [animation-delay:.3s]">
+            <CardHead id="integration-overview-calendar-2" title={g('sessionsTitle')} sub={g('sessionsSub')} to={ROUTES.calendar} label={t('shared.overview.links.calendar')} />
             <div className="flex flex-col gap-2">
               {sessions.map((m) => {
                 const days = Math.round((m.session.date - today) / 864e5)
                 const soonish = days <= dueSoonDays
                 return (
-                  <Link
+                  <Link id={`integration-overview-member-2-${m.id}`}
                     key={m.id}
                     to={`${memberPath(m.code)}?tab=integration`}
-                    className={cx('flex items-center gap-3.5 rounded-[18px] p-2 text-ink transition-colors', soonish ? 'bg-warn-wash hover:bg-warn-bg' : 'bg-surface-2 hover:bg-surface')}
+                    className={cx('v-integration-overview__member-2', 'flex items-center gap-3.5 rounded-[18px] p-2 text-ink transition-colors', soonish ? 'bg-warn-wash hover:bg-warn-bg' : 'bg-surface-2 hover:bg-surface')}
                   >
                     <span className={cx('flex size-13 shrink-0 flex-col items-center justify-center rounded-[14px]', soonish ? 'bg-warn text-white' : 'bg-panel')}>
                       <span className="text-[10px] tracking-[0.1em] uppercase opacity-80 rtl:tracking-normal">{weekdayShort(m.session.date)}</span>
@@ -224,7 +221,7 @@ export function IntegrationOverview({ members, me, title, sub }) {
                       </span>
                     </span>
                     <span className={cx('inline-flex h-7 w-24 shrink-0 items-center justify-center rounded-full text-xs', soonish ? cx('bg-panel', TONES.warn.text) : 'bg-surface text-soft')}>
-                      {days === 0 ? t('overview.today') : days === 1 ? t('overview.tomorrow') : t('overview.inDays', { days: t('overview.counts.day', { n: days }) })}
+                      {days === 0 ? t('shared.overview.today') : days === 1 ? t('shared.overview.tomorrow') : t('shared.overview.inDays', { days: t('shared.overview.counts.day', { n: days }) })}
                     </span>
                   </Link>
                 )
@@ -237,9 +234,9 @@ export function IntegrationOverview({ members, me, title, sub }) {
 
       <div className="flex flex-wrap items-stretch gap-4">
         <div className="grid min-w-0 flex-[3_1_520px] grid-cols-[repeat(auto-fit,minmax(160px,1fr))] gap-4">
-          <RingCard index={0} value={onTime ?? 0} total={100} color="#1f9d55" big={onTime == null ? '—' : `${onTime}%`} unit={t('overview.units.onTime')} label={g('finishedOnTime')} />
-          <RingCard index={1} value={firstTest ?? 0} total={100} color="#367b7f" big={firstTest == null ? '—' : `${firstTest}%`} unit={t('overview.units.firstTest')} label={g('firstTest')} />
-          <RingCard index={2} value={average ?? 0} total={aheadDays} color="#e0892b" big={average == null ? '—' : average.toFixed(1)} unit={t('overview.units.days')} label={g('averageToFinish')} />
+          <RingCard index={0} value={onTime ?? 0} total={100} color="var(--color-success)" big={onTime == null ? '—' : `${onTime}%`} unit={t('shared.overview.units.onTime')} label={g('finishedOnTime')} />
+          <RingCard index={1} value={firstTest ?? 0} total={100} color="var(--color-brand-700)" big={firstTest == null ? '—' : `${firstTest}%`} unit={t('shared.overview.units.firstTest')} label={g('firstTest')} />
+          <RingCard index={2} value={average ?? 0} total={aheadDays} color="var(--color-warn)" big={average == null ? '—' : average.toFixed(1)} unit={t('shared.overview.units.days')} label={g('averageToFinish')} />
         </div>
         <WeekChart title={g('finished')} dates={finished.map((f) => f.at)} />
       </div>

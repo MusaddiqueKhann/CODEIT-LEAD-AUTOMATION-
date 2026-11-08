@@ -19,15 +19,15 @@ export function CodeitPassword({ member: m, onNew }) {
     <KeyField
       icon="lock"
       mono={shown}
-      tag={t(fresh ? 'member.password.fresh' : m.accountCreatedAt ? 'member.password.inUse' : 'member.password.auto')}
+      tag={t(fresh ? 'shared.member.password.fresh' : m.accountCreatedAt ? 'shared.member.password.inUse' : 'shared.member.password.auto')}
       actions={
         <>
-          <KeyButton icon={shown ? 'eyeOff' : 'eyeOpen'} label={t(shown ? 'member.password.hide' : 'member.password.show')} onClick={() => setShown(!shown)} />
-          <KeyButton icon="copy" label={t('member.password.copy')} onClick={() => copy(pw, t('member.password.copied'))} />
+          <KeyButton id="codeit-password-set-shown" icon={shown ? 'eyeOff' : 'eyeOpen'} label={t(shown ? 'shared.member.password.hide' : 'shared.member.password.show')} onClick={() => setShown(!shown)} />
+          <KeyButton id="codeit-password-copy" icon="copy" label={t('shared.member.password.copy')} onClick={() => copy(pw, t('shared.member.password.copied'))} />
           {onNew && !m.accountCreatedAt && (
-            <KeyButton
+            <KeyButton id="codeit-password-make-new"
               icon="refresh"
-              label={t('member.password.makeNew')}
+              label={t('shared.member.password.makeNew')}
               onClick={async () => {
                 if (await onNew()) {
                   setFresh(true)

@@ -1,6 +1,6 @@
 // Self-check for the documents and readiness maths: `node src/lib/members.check.js`
 import assert from 'node:assert/strict'
-import { byReadiness, docState, docsFor, extOf, integrationDocs, featuresFor, fileSize, freeAt, inDaysLabel, loadOf, nobodyLabel, readiness, readyOf } from './members.js'
+import { byReadiness, docState, docsFor, extOf, integrationDocs, featuresFor, freeAt, inDaysLabel, loadOf, nobodyLabel, readiness, readyOf } from './members.js'
 import { atStep, stepState, statusOf, tabOfAction } from './stages.js'
 import { translate } from '../../content/index.js'
 
@@ -42,8 +42,6 @@ assert.equal(extOf('CR_certificate.pdf'), 'PDF')
 
 assert.equal(inDaysLabel(choices, 7), '1 week')
 assert.equal(inDaysLabel(choices, 10), '10 days')
-assert.equal(fileSize(245760), '240 KB')
-assert.equal(fileSize(3 * 1048576), '3.0 MB')
 
 assert.ok(atStep({ stage: 'collecting', accountCreatedAt: null }, 'setup'))
 assert.ok(!atStep({ stage: 'collecting', accountCreatedAt: '2030-01-01' }, 'setup'))

@@ -1,15 +1,11 @@
 import { Link } from 'react-router-dom'
-import Icon from '../../components/Icon.jsx'
-import { Card, cx } from '../../components/ui/index.js'
+import { Badge, Card, cx, Icon, TONES } from '@/components'
 import { useConfig } from '../../controllers/shared/ConfigContext.jsx'
 import { useLang } from '../../controllers/shared/LangContext.jsx'
-import { listRecentActivity } from '../../models/data/members.js'
 import { useCounts } from '../../controllers/shared/useCounts.js'
-import { useRows } from '../../controllers/shared/useRows.js'
 import { ago, formatShort, formatStamp, fromServer, isSameDay, riyadhNow, startOfDay, weekdayShort } from '../../models/rules/format.js'
 import { ROUTES, memberPath } from '../../routes/paths.js'
-import { addDays, initials, workdayHours } from '../../models/rules/time.js'
-import { TONES } from '../../components/tones.js'
+import { initials, startOfWeek, workdayHours } from '../../models/rules/time.js'
 import { CardHead } from '../shared/overview/CardHead.jsx'
 import { Hero } from '../shared/overview/Hero.jsx'
 import { IconTile } from '../shared/overview/IconTile.jsx'
@@ -17,8 +13,9 @@ import { RingCard } from '../shared/overview/OverviewRings.jsx'
 import { RecentActivity } from '../shared/overview/RecentActivity.jsx'
 import { WeekChart } from '../shared/overview/WeekChart.jsx'
 import { open } from '../../models/rules/when.js'
+import { useRecentActivity } from '../../controllers/shared/useActivity.js'
 
-/* What Recent activity counts, from the activity lines' kind (named in overview.account.counters). */
+/* What Recent activity counts, from the activity lines' kind (named in account.overview.counters). */
 const COUNTERS = [
   ['handedOver', (l) => l.kind === 'person_account'],
   ['created', (l) => l.kind === 'account_created'],
@@ -34,16 +31,16 @@ const COUNTERS = [
 export function AccountOverview({ members, me, title, sub }) {
   const { label, option, person, settings, active, brand } = useConfig()
   const { t } = useLang()
-  const a = (key, values) => t(`overview.account.${key}`, values)
+  const a = (key, values) => t(`account.overview.${key}`, values)
   // The parts of making an account (Settings → Lists) the Account Member ticks on the Setup tab; Confirmed is "Account created".
   const parts = active('account_part')
   const started = (m) => parts.some((o) => m.accountChecks?.[o.key])
   const { aheadDays, recentDays } = settings
-  const counts = useCounts(me)
-  const activity = useRows(() => listRecentActivity(new Date(Date.now() - recentDays * 864e5).toISOString()), `activity:${recentDays}d`)
+  const counts = useCounts()
+  const activity = useRecentActivity()
   const now = riyadhNow()
   const today = startOfDay(now)
-  const weekStart = addDays(today, -today.getDay())
+  const weekStart = startOfWeek(today)
   const monthStart = new Date(now.getFullYear(), now.getMonth(), 1)
   const monthAgo = new Date(now - recentDays * 864e5)
   const M = ROUTES.members
@@ -74,49 +71,49 @@ export function AccountOverview({ members, me, title, sub }) {
         title={title}
         sub={sub}
         unread={counts.unread ?? 0}
-        unit={t('overview.units.thisMonth')}
+        unit={t('shared.overview.units.thisMonth')}
         round
         parts={[
-          { key: 'waiting', label: a('parts.waiting'), n: waiting.length, color: '#e9b27a', to: `${M}?show=mine&step=setup` },
-          { key: 'creating', label: a('parts.creating'), n: creating.length, color: '#ffffff', to: `${M}?show=mine&step=setup` },
-          { key: 'week', label: a('parts.week'), n: madeWeek.length, color: '#b8dbd9', to: `${M}?show=mine`, ring: false },
-          { key: 'month', label: a('parts.month'), n: madeMonth.length, color: '#7fbab7', to: `${M}?show=mine` },
+          { key: 'waiting', label: a('parts.waiting'), n: waiting.length, color: 'var(--color-chart-warm)', to: `${M}?show=mine&step=setup` },
+          { key: 'creating', label: a('parts.creating'), n: creating.length, color: 'var(--color-white)', to: `${M}?show=mine&step=setup` },
+          { key: 'week', label: a('parts.week'), n: madeWeek.length, color: 'var(--color-chart-teal-1)', to: `${M}?show=mine`, ring: false },
+          { key: 'month', label: a('parts.month'), n: madeMonth.length, color: 'var(--color-chart-teal-2)', to: `${M}?show=mine` },
         ]}
       />
 
       <div className="grid grid-cols-[repeat(auto-fit,minmax(240px,1fr))] gap-4">
-        <IconTile
+        <IconTile id="account-overview-oldest"
           index={0}
           to={oldest ? `${memberPath(oldest.code)}?tab=setup` : `${M}?show=mine`}
           icon="clock"
           tone="warn"
           label={a('oldest')}
-          big={oldest ? `${oldest.name.split(' ')[0]} · ${daysWaiting === 0 ? t('overview.dayWords.today') : t('overview.counts.day', { n: daysWaiting })}` : a('nobodyWaiting')}
+          big={oldest ? `${oldest.name.split(' ')[0]} · ${daysWaiting === 0 ? t('shared.overview.dayWords.today') : t('shared.overview.counts.day', { n: daysWaiting })}` : a('nobodyWaiting')}
           sub={oldest ? a('since', { when: formatStamp(oldest.createdAt) }) : a('noAccounts')}
         />
-        <IconTile
+        <IconTile id="account-overview-needed"
           index={1}
           to={ROUTES.calendar}
           icon="calendar"
           tone="brand"
           label={a('needed')}
-          big={t('overview.counts.account', { n: needed.length })}
+          big={t('shared.overview.counts.account', { n: needed.length })}
           sub={needed.length ? needed.slice(0, 2).map((m) => a('neededLine', { name: m.name.split(' ')[0], day: formatShort(m.session.date) })).join(' · ') : a('noneNeeded')}
         />
-        <IconTile
+        <IconTile id="account-overview-not-signed-in"
           index={2}
           to={`${M}?show=mine`}
           icon="user"
           tone="indigo"
           label={a('notSignedIn')}
-          big={t('overview.counts.customer', { n: notSignedIn.length })}
+          big={t('shared.overview.counts.customer', { n: notSignedIn.length })}
           sub={notSignedIn.length ? a('loginSent') : a('allSignedIn')}
         />
       </div>
 
       <div className="flex flex-wrap items-stretch gap-4">
-        <Card as="section" radius="rounded-tile" padding="none" className="flex min-w-0 flex-[3_1_520px] animate-rise flex-col gap-4 px-6 py-5 [animation-delay:.2s]">
-          <CardHead title={a('queueTitle')} sub={a('queueSub', { product: brand.product })} to={`${M}?show=mine&step=setup`} label={t('overview.links.viewAll')} />
+        <Card id="account-overview-view-all" as="section" radius="rounded-tile" padding="none" className="flex min-w-0 flex-[3_1_520px] animate-rise flex-col gap-4 px-6 py-5 [animation-delay:.2s]">
+          <CardHead id="account-overview-view-all-2" title={a('queueTitle')} sub={a('queueSub', { product: brand.product })} to={`${M}?show=mine&step=setup`} label={t('shared.overview.links.viewAll')} />
           <div className="flex flex-col gap-2.5">
             {todo.map((m, i) => {
               const going = started(m)
@@ -136,15 +133,15 @@ export function AccountOverview({ members, me, title, sub }) {
                             <span dir="ltr">{site}</span>
                           </>
                         )}
-                        {person(m.salesId) && ` · ${t('overview.from', { name: person(m.salesId).name.split(' ')[0] })}`}
+                        {person(m.salesId) && ` · ${t('shared.overview.from', { name: person(m.salesId).name.split(' ')[0] })}`}
                       </span>
                     </span>
                     <span className={cx('inline-flex h-7 w-27.5 shrink-0 items-center justify-center rounded-full text-xs', going ? 'bg-brand-100 text-brand-800' : cx(TONES.warn.fill, TONES.warn.text))}>
                       {going ? a('creating') : a('waiting')}
                     </span>
-                    <Link
+                    <Link id={`account-overview-continue-${m.id}`}
                       to={`${memberPath(m.code)}?tab=setup`}
-                      className="inline-flex h-10 w-37.5 shrink-0 items-center justify-center rounded-full bg-brand-700 text-sm text-white transition hover:bg-brand-800 hover:text-white"
+                      className="v-account-overview__continue inline-flex h-10 w-37.5 shrink-0 items-center justify-center rounded-full bg-brand-700 text-sm text-white transition hover:bg-brand-800 hover:text-white"
                     >
                       {going ? a('continue') : a('create')}
                     </Link>
@@ -152,7 +149,7 @@ export function AccountOverview({ members, me, title, sub }) {
                   <div className="grid grid-cols-4 gap-2">
                     {steps.map(([name, done]) => (
                       <span key={name} className="flex flex-col gap-1.5">
-                        <span className={cx('h-2 rounded-full', done ? 'bg-brand-700' : 'bg-[#dfe5ea]')} />
+                        <span className={cx('h-2 rounded-full', done ? 'bg-brand-700' : 'bg-off-bar')} />
                         <span className={cx('text-xs', done ? 'text-soft' : 'text-muted')}>{name}</span>
                       </span>
                     ))}
@@ -166,7 +163,7 @@ export function AccountOverview({ members, me, title, sub }) {
         </Card>
 
         <div className="flex min-w-0 flex-[2_1_340px] flex-col gap-4">
-          <Card as="section" radius="rounded-tile" padding="none" className="flex animate-rise flex-col gap-3 px-6 py-5 [animation-delay:.25s]">
+          <Card id="account-overview-made-title" as="section" radius="rounded-tile" padding="none" className="flex animate-rise flex-col gap-3 px-6 py-5 [animation-delay:.25s]">
             <div className="flex items-center gap-4">
               <span className="grid size-13 shrink-0 place-items-center rounded-[18px] bg-brand-100 text-brand-700">
                 <Icon name="user" className="size-5.5" strokeWidth={1.8} />
@@ -175,10 +172,10 @@ export function AccountOverview({ members, me, title, sub }) {
                 <span className="text-base text-ink">{a('madeTitle')}</span>
                 <span className="text-[13px] text-muted">{madeWeek.length ? a('madeSub', { product: brand.product }) : a('madeNone')}</span>
               </span>
-              <span className={cx('text-[40px] leading-none tracking-[-0.04em]', madeWeek.length ? TONES.success.text : 'text-[#c9d0d8]')}>{madeWeek.length}</span>
+              <span className={cx('text-[40px] leading-none tracking-[-0.04em]', madeWeek.length ? TONES.success.text : 'text-off-ring')}>{madeWeek.length}</span>
             </div>
             {madeWeek.map(({ m, at }) => (
-              <Link key={m.id} to={`${memberPath(m.code)}?tab=setup`} className="flex flex-col rounded-2xl bg-surface-2 px-3.5 py-2.5 text-ink transition hover:bg-surface">
+              <Link id={`account-overview-made-line-${m.id}`} key={m.id} to={`${memberPath(m.code)}?tab=setup`} className="v-account-overview__made-line flex flex-col rounded-2xl bg-surface-2 px-3.5 py-2.5 text-ink transition hover:bg-surface">
                 <span className="text-sm">{m.name}</span>
                 <span className="truncate text-xs text-muted">
                   {a('madeLine', { product: brand.product, id: m.codeitAccountId, when: formatStamp(at) })}
@@ -187,17 +184,17 @@ export function AccountOverview({ members, me, title, sub }) {
             ))}
           </Card>
 
-          <Card as="section" radius="rounded-tile" padding="none" className="flex flex-1 animate-rise flex-col gap-3 px-6 py-5 [animation-delay:.3s]">
-            <CardHead title={a('sessionsTitle')} sub={a('sessionsSub')} to={ROUTES.calendar} label={t('overview.links.calendar')} />
+          <Card id="account-overview-calendar" as="section" radius="rounded-tile" padding="none" className="flex flex-1 animate-rise flex-col gap-3 px-6 py-5 [animation-delay:.3s]">
+            <CardHead id="account-overview-calendar-2" title={a('sessionsTitle')} sub={a('sessionsSub')} to={ROUTES.calendar} label={t('shared.overview.links.calendar')} />
             <div className="flex flex-col gap-2">
               {needed.map((m) => {
                 const days = Math.round((m.session.date - today) / 864e5)
                 const soon = days <= aheadDays
                 return (
-                  <Link
+                  <Link id={`account-overview-member-${m.id}`}
                     key={m.id}
                     to={`${memberPath(m.code)}?tab=setup`}
-                    className={cx('flex items-center gap-3.5 rounded-[18px] p-2 text-ink transition-colors', soon ? 'bg-warn-wash hover:bg-warn-bg' : 'bg-surface-2 hover:bg-surface')}
+                    className={cx('v-account-overview__member', 'flex items-center gap-3.5 rounded-[18px] p-2 text-ink transition-colors', soon ? 'bg-warn-wash hover:bg-warn-bg' : 'bg-surface-2 hover:bg-surface')}
                   >
                     <span className={cx('flex size-13 shrink-0 flex-col items-center justify-center rounded-[14px]', soon ? 'bg-warn text-white' : 'bg-panel')}>
                       <span className="text-[10px] tracking-[0.1em] uppercase opacity-80 rtl:tracking-normal">{weekdayShort(m.session.date)}</span>
@@ -207,9 +204,9 @@ export function AccountOverview({ members, me, title, sub }) {
                       <span className="truncate text-sm">{m.name}</span>
                       <span className="text-[13px] text-muted">{a('accountFirst')}</span>
                     </span>
-                    <span className={cx('inline-flex h-7 shrink-0 items-center rounded-full px-3 text-xs whitespace-nowrap', soon ? cx('bg-panel', TONES.warn.text) : 'bg-surface text-soft')}>
-                      {days === 0 ? t('overview.today') : days === 1 ? t('overview.tomorrow') : t('overview.inDays', { days: t('overview.counts.day', { n: days }) })}
-                    </span>
+                    <Badge size="row" look={soon ? 'panelWarn' : 'surface'}>
+                      {days === 0 ? t('shared.overview.today') : days === 1 ? t('shared.overview.tomorrow') : t('shared.overview.inDays', { days: t('shared.overview.counts.day', { n: days }) })}
+                    </Badge>
                   </Link>
                 )
               })}
@@ -221,9 +218,9 @@ export function AccountOverview({ members, me, title, sub }) {
 
       <div className="flex flex-wrap items-stretch gap-4">
         <div className="grid min-w-0 flex-[3_1_520px] grid-cols-[repeat(auto-fit,minmax(160px,1fr))] gap-4">
-          <RingCard index={0} value={sameDay ?? 0} total={100} color="#1f9d55" big={sameDay == null ? '—' : `${sameDay}%`} unit={t('overview.units.sameDay')} label={a('sameDay')} />
-          <RingCard index={1} value={signedIn ?? 0} total={100} color="#367b7f" big={signedIn == null ? '—' : `${signedIn}%`} unit={t('overview.units.signedIn')} label={a('signedIn')} />
-          <RingCard index={2} value={hours ?? 0} total={workdayHours(settings.officeHours) || 8} color="#e0892b" big={hours == null ? '—' : hours.toFixed(1)} unit={t('overview.units.hours')} label={a('averageToCreate')} />
+          <RingCard index={0} value={sameDay ?? 0} total={100} color="var(--color-success)" big={sameDay == null ? '—' : `${sameDay}%`} unit={t('shared.overview.units.sameDay')} label={a('sameDay')} />
+          <RingCard index={1} value={signedIn ?? 0} total={100} color="var(--color-brand-700)" big={signedIn == null ? '—' : `${signedIn}%`} unit={t('shared.overview.units.signedIn')} label={a('signedIn')} />
+          <RingCard index={2} value={hours ?? 0} total={workdayHours(settings.officeHours) || 8} color="var(--color-warn)" big={hours == null ? '—' : hours.toFixed(1)} unit={t('shared.overview.units.hours')} label={a('averageToCreate')} />
         </div>
         <WeekChart title={a('created')} dates={made.map((c) => c.at)} />
       </div>

@@ -1,4 +1,4 @@
-import { Card, cx } from '../../../components/ui/index.js'
+import { Card, cx } from '@/components'
 import { useConfig } from '../../../controllers/shared/ConfigContext.jsx'
 import { useLang } from '../../../controllers/shared/LangContext.jsx'
 import { dayKey, formatShort, monthShort, riyadhNow, weekdayShort } from '../../../models/rules/format.js'
@@ -9,7 +9,7 @@ const SPAN = 16
 const at = (h) => `${((h - START) / SPAN) * 100}%`
 const width = (h) => `${(h / SPAN) * 100}%`
 const TICKS = ['06', '08', '10', '12', '14', '16', '18', '20', '22']
-const OFF = 'bg-[repeating-linear-gradient(135deg,#eef1f5_0_6px,#e3e7ec_6px_12px)]'
+const OFF = 'bg-[repeating-linear-gradient(135deg,var(--color-line)_0_6px,var(--color-off-stripe)_6px_12px)]'
 
 /** This week, day by day: the working hours as a free band, sessions on top, and the free time left. */
 export function BusyFree({ person, hours, week, leave, members }) {
@@ -21,24 +21,24 @@ export function BusyFree({ person, hours, week, leave, members }) {
   const nowH = now.getHours() + now.getMinutes() / 60
 
   return (
-    <Card as="section" padding="none" className="flex animate-rise flex-col gap-5 px-6 py-6 [animation-delay:.42s]">
+    <Card id="busy-free-title" as="section" padding="none" className="flex animate-rise flex-col gap-5 px-6 py-6 [animation-delay:.42s]">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div className="flex flex-col gap-0.5">
-          <h2 className="text-h2 text-ink">{t('person.busy.title')}</h2>
-          <p className="text-[13px] text-muted">{t('person.busy.sub', { from: formatShort(week[0]), to: formatShort(week[6]), name: first })}</p>
+          <h2 className="text-h2 text-ink">{t('admin.person.busy.title')}</h2>
+          <p className="text-[13px] text-muted">{t('admin.person.busy.sub', { from: formatShort(week[0]), to: formatShort(week[6]), name: first })}</p>
         </div>
         <div className="flex flex-wrap items-center gap-4 text-xs text-soft">
           <span className="flex items-center gap-2">
             <span className="size-3.5 rounded-[5px] bg-brand-700" />
-            {t('person.busy.session')}
+            {t('admin.person.busy.session')}
           </span>
           <span className="flex items-center gap-2">
-            <span className="size-3.5 rounded-[5px] bg-[#e6f2f1] ring-1 ring-[#c6dfdd] ring-inset" />
-            {t('person.busy.free')}
+            <span className="size-3.5 rounded-[5px] bg-brand-150 ring-1 ring-brand-ring ring-inset" />
+            {t('admin.person.busy.free')}
           </span>
           <span className="flex items-center gap-2">
             <span className={cx('size-3.5 rounded-[5px]', OFF)} />
-            {t('person.busy.off')}
+            {t('admin.person.busy.off')}
           </span>
         </div>
       </div>
@@ -50,7 +50,7 @@ export function BusyFree({ person, hours, week, leave, members }) {
             <span key={t}>{t}</span>
           ))}
         </div>
-        <span className="text-end">{t('person.busy.freeTime')}</span>
+        <span className="text-end">{t('admin.person.busy.freeTime')}</span>
       </div>
 
       <div className="flex flex-col gap-2">
@@ -67,18 +67,18 @@ export function BusyFree({ person, hours, week, leave, members }) {
           const isToday = day === today
           const freeHours = Number.isInteger(free) ? free : free.toFixed(1)
           const text = !on
-            ? (holiday ? holiday.name : t('person.busy.off'))
+            ? (holiday ? holiday.name : t('admin.person.busy.off'))
             : away
-              ? t('person.busy.onLeave')
+              ? t('admin.person.busy.onLeave')
               : sessions.length
-                ? t('person.busy.withSessions', { h: freeHours, n: sessions.length })
-                : t('person.busy.hoursFree', { h: freeHours })
+                ? t('admin.person.busy.withSessions', { h: freeHours, n: sessions.length })
+                : t('admin.person.busy.hoursFree', { h: freeHours })
 
           return (
             <div
               key={day}
               style={{ animationDelay: `${0.5 + i * 0.04}s` }}
-              className={cx('grid animate-rise grid-cols-[80px_minmax(0,1fr)_130px] items-center gap-4 rounded-xl px-1 py-1', isToday && 'bg-[#f6faf9]')}
+              className={cx('grid animate-rise grid-cols-[80px_minmax(0,1fr)_130px] items-center gap-4 rounded-xl px-1 py-1', isToday && 'bg-brand-wash')}
             >
               <span className="flex flex-col">
                 <span className={cx('text-[13px]', on ? 'text-ink' : 'text-ghost', isToday && 'font-medium')}>{weekdayShort(date)}</span>
@@ -90,8 +90,8 @@ export function BusyFree({ person, hours, week, leave, members }) {
                 {on && (
                   <span
                     className={cx(
-                      'absolute inset-y-1 rounded-[7px] ring-1 ring-[#c6dfdd] ring-inset',
-                      away ? 'bg-[repeating-linear-gradient(135deg,#fff3e6_0_6px,#fde3c4_6px_12px)]' : 'bg-[#e6f2f1]',
+                      'absolute inset-y-1 rounded-[7px] ring-1 ring-brand-ring ring-inset',
+                      away ? 'bg-[repeating-linear-gradient(135deg,var(--color-warn-bg)_0_6px,var(--color-warn-stripe)_6px_12px)]' : 'bg-brand-150',
                     )}
                     style={{ insetInlineStart: at(from), width: width(to - from) }}
                   />

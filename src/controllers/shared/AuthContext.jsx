@@ -1,5 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import * as auth from '../../models/data/auth.js'
+import { appError } from '../../models/data/errors.js'
 
 const AuthContext = createContext(null)
 
@@ -33,7 +34,7 @@ export function AuthProvider({ children }) {
         if (!live) return
         if (!p?.active) {
           // Turned off after signing in: leave now, with a reason on the sign-in page.
-          setNotice('Your account is turned off. Ask your Admin.')
+          setNotice(appError('account_off', 'Your account is turned off. Ask your Admin.'))
           auth.signOut()
         }
         setProfile(p)
@@ -52,8 +53,8 @@ export function AuthProvider({ children }) {
 
   const signOut = useCallback(() => auth.signOut(), [])
   /** The server stopped accepting this sign-in: forget it here and say why on the sign-in page. */
-  const endSession = useCallback((message) => {
-    setNotice(message)
+  const endSession = useCallback((reason) => {
+    setNotice(reason)
     auth.signOut('local')
   }, [])
   /** Fetches the profile again and resolves once it is in state (e.g. after a password change). */

@@ -1,15 +1,12 @@
 import { Link } from 'react-router-dom'
-import { cx } from '../../../components/ui/index.js'
-import { useAuth } from '../../../controllers/shared/AuthContext.jsx'
+import { cx } from '@/components'
 import { useConfig } from '../../../controllers/shared/ConfigContext.jsx'
 import { useLang } from '../../../controllers/shared/LangContext.jsx'
-import { teamOverview } from '../../../models/data/team.js'
 import { useCounts } from '../../../controllers/shared/useCounts.js'
-import { useRows } from '../../../controllers/shared/useRows.js'
 import { dayKey, fromDay, fromServer, riyadhNow, startOfDay } from '../../../models/rules/format.js'
 import { loadOf } from '../../../models/rules/members.js'
 import { ROUTES, memberPath } from '../../../routes/paths.js'
-import { addDays } from '../../../models/rules/time.js'
+import { addDays, startOfWeek } from '../../../models/rules/time.js'
 import { Hero } from '../../shared/overview/Hero.jsx'
 import { BusyHours } from './BusyHours.jsx'
 import { FreeSlots } from './FreeSlots.jsx'
@@ -18,13 +15,14 @@ import { TeamNow } from './TeamNow.jsx'
 import { TodayLine } from './TodayLine.jsx'
 import { WorkQueue } from './WorkQueue.jsx'
 import { isToday, open, thisWeek } from '../../../models/rules/when.js'
+import { useTeam } from '../../../controllers/admin/team.js'
 
-function SummaryTile({ to, label, big, sub, warn, index }) {
+function SummaryTile({ id, to, label, big, sub, warn, index }) {
   return (
-    <Link
+    <Link id={id}
       to={to}
       style={{ animationDelay: `${0.12 + index * 0.05}s` }}
-      className="flex min-w-0 animate-rise flex-col gap-2.5 rounded-tile bg-panel px-6 py-5 shadow-card transition hover:-translate-y-0.75 hover:shadow-lift"
+      className="v-admin-overview__{id} flex min-w-0 animate-rise flex-col gap-2.5 rounded-tile bg-panel px-6 py-5 shadow-card transition hover:-translate-y-0.75 hover:shadow-lift"
     >
       <span className="text-[13px] text-soft">{label}</span>
       <span className={cx('text-stat', warn ? 'text-warn-ink' : 'text-ink')}>{big}</span>
@@ -38,13 +36,12 @@ function SummaryTile({ to, label, big, sub, warn, index }) {
  * what is waiting on whom, how busy the week is, who is free, and how the team is doing.
  */
 export function AdminOverview({ members, title, sub }) {
-  const { profile } = useAuth()
   const config = useConfig()
   const { label, settings, holidays, leave } = config
   const { t } = useLang()
-  const q = (key) => t(`overview.admin.queue.${key}`)
-  const counts = useCounts(profile.id)
-  const team = useRows(teamOverview, 'team')
+  const q = (key) => t(`admin.overview.queue.${key}`)
+  const counts = useCounts()
+  const team = useTeam()
   const now = riyadhNow()
   const today = startOfDay(now)
   const daysTo = (day) => (day ? Math.round((fromDay(day) - today) / 864e5) : Infinity)
@@ -61,7 +58,7 @@ export function AdminOverview({ members, title, sub }) {
   const capacity = { places: picked.length * settings.maxOpenMembers, used: picked.reduce((n, p) => n + Math.min(p.load, settings.maxOpenMembers), 0) }
 
   const working = (d) => settings.officeHours[d.getDay()].on && !holidays.some((h) => h.day === dayKey(d))
-  const weekStart = addDays(today, -today.getDay())
+  const weekStart = startOfWeek(today)
   const weekDays = Array.from({ length: 7 }, (_, i) => addDays(weekStart, i)).filter((d) => settings.officeHours[d.getDay()].on)
   const nextDays = Array.from({ length: 14 }, (_, i) => addDays(today, i + 1)).filter(working).slice(0, 3)
 
@@ -159,41 +156,41 @@ export function AdminOverview({ members, title, sub }) {
         title={title}
         sub={sub}
         unread={counts.unread ?? 0}
-        unit={t('overview.units.open')}
+        unit={t('shared.overview.units.open')}
         parts={[
-          ['sales', '#ffffff', collecting.filter((m) => m.accountCreatedAt).length],
-          ['setup', '#b8dbd9', collecting.filter((m) => !m.accountCreatedAt).length],
-          ['integration', '#7fbab7', live.filter((m) => m.stage === 'integration').length],
-          ['onboarding', '#4f9995', onboarding.length],
+          ['sales', 'var(--color-white)', collecting.filter((m) => m.accountCreatedAt).length],
+          ['setup', 'var(--color-chart-teal-1)', collecting.filter((m) => !m.accountCreatedAt).length],
+          ['integration', 'var(--color-chart-teal-2)', live.filter((m) => m.stage === 'integration').length],
+          ['onboarding', 'var(--color-chart-teal-3)', onboarding.length],
         ].map(([s, color, n]) => ({ key: s, label: label('step', s), n, color, to: `${ROUTES.members}?step=${s}` }))}
       />
 
       <div className="grid grid-cols-[repeat(auto-fit,minmax(220px,1fr))] gap-4">
-        <SummaryTile
+        <SummaryTile id="admin-overview-today"
           index={0}
           to={ROUTES.calendar}
-          label={t('overview.admin.today')}
-          big={t('overview.counts.session', { n: todays.length })}
-          sub={todays.map((m) => `${m.firstName} ${m.session.time}`).join(' · ') || t('overview.admin.nothingToday')}
+          label={t('admin.overview.today')}
+          big={t('shared.overview.counts.session', { n: todays.length })}
+          sub={todays.map((m) => `${m.firstName} ${m.session.time}`).join(' · ') || t('admin.overview.nothingToday')}
         />
-        <SummaryTile
+        <SummaryTile id="admin-overview-attention"
           index={1}
           to={late.length === 1 ? memberPath(late[0].code) : ROUTES.members}
-          label={t('overview.admin.attention')}
-          big={t('overview.counts.member', { n: late.length })}
+          label={t('admin.overview.attention')}
+          big={t('shared.overview.counts.member', { n: late.length })}
           warn={late.length > 0}
           sub={
             late.length
-              ? `${late[0].firstName} · ${t(`overview.admin.late.${late[0].late[0]}`)}${late.length > 1 ? ` · ${t('overview.admin.andMore', { count: late.length - 1 })}` : ''}`
-              : t('overview.admin.nothingLate')
+              ? `${late[0].firstName} · ${t(`admin.overview.late.${late[0].late[0]}`)}${late.length > 1 ? ` · ${t('admin.overview.andMore', { count: late.length - 1 })}` : ''}`
+              : t('admin.overview.nothingLate')
           }
         />
-        <SummaryTile
+        <SummaryTile id="admin-overview-capacity"
           index={2}
           to={ROUTES.team}
-          label={t('overview.admin.capacity')}
+          label={t('admin.overview.capacity')}
           big={`${capacity.places ? Math.round((capacity.used / capacity.places) * 100) : 0}%`}
-          sub={t('overview.admin.placesUsed', { used: capacity.used, places: capacity.places })}
+          sub={t('admin.overview.placesUsed', { used: capacity.used, places: capacity.places })}
         />
       </div>
 

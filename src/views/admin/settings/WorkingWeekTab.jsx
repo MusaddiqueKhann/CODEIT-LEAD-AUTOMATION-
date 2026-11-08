@@ -1,9 +1,8 @@
 import { useState } from 'react'
-import { TimeSelect } from '../../../components/shared/index.js'
-import { Switch } from '../../../components/ui/index.js'
+import { Switch, TimeSelect } from '@/components'
 import { useConfig } from '../../../controllers/shared/ConfigContext.jsx'
 import { useLang } from '../../../controllers/shared/LangContext.jsx'
-import { updateSettings } from '../../../models/data/settings.js'
+import { updateSettings } from '../../../controllers/admin/settings.js'
 import { useAction } from '../../../controllers/shared/useAction.js'
 import { weekdayNames } from '../../../models/rules/format.js'
 import { toMinutes } from '../../../models/rules/time.js'
@@ -42,7 +41,7 @@ export function WorkingWeekTab({ after }) {
           {hours.map((d, i) => (
             <span key={names[i]} className="flex flex-col items-center gap-2 text-sm">
               <span className={d.on ? 'text-ink' : 'text-muted'}>{names[i]}</span>
-              <Switch on={d.on} label={names[i]} onChange={(on) => set(i, { on })} />
+              <Switch id={`working-week-tab-${i}-on`} on={d.on} label={names[i]} onChange={(on) => set(i, { on })} />
             </span>
           ))}
 
@@ -56,25 +55,25 @@ export function WorkingWeekTab({ after }) {
           {hours.map((d, i) => (
             <div key={names[i]} className="relative h-82.5 rounded-2xl bg-surface">
               {MARKS.slice(1).map((h) => (
-                <span key={h} style={{ top: pct(h * 60) }} className="absolute inset-x-2.5 h-px bg-[#e9edf1]" />
+                <span key={h} style={{ top: pct(h * 60) }} className="absolute inset-x-2.5 h-px bg-surface-hover" />
               ))}
               {d.on ? (
                 <span
                   style={{ top: pct(toMinutes(d.from)), height: `calc(${pct(toMinutes(d.to))} - ${pct(toMinutes(d.from))})` }}
                   className="absolute inset-x-1.25 flex animate-rise flex-col items-center justify-between rounded-xl bg-brand-700 py-1.5 text-xs text-white"
                 >
-                  <TimeSelect aria-label={t('team.hours.dayFrom', { day: names[i] })} value={d.from} onChange={(e) => set(i, { from: e.target.value })} className={BAR_TIME} />
-                  <span className="text-base">{t('settings.week.hours', { n: +hoursOf(d).toFixed(2) })}</span>
-                  <TimeSelect aria-label={t('team.hours.dayTo', { day: names[i] })} value={d.to} onChange={(e) => set(i, { to: e.target.value })} className={BAR_TIME} />
+                  <TimeSelect id={`working-week-tab-${i}-from`} aria-label={t('shared.components.hours.dayFrom', { day: names[i] })} value={d.from} onChange={(e) => set(i, { from: e.target.value })} className={BAR_TIME} />
+                  <span className="text-base">{t('admin.settings.week.hours', { n: +hoursOf(d).toFixed(2) })}</span>
+                  <TimeSelect id={`working-week-tab-${i}-to`} aria-label={t('shared.components.hours.dayTo', { day: names[i] })} value={d.to} onChange={(e) => set(i, { to: e.target.value })} className={BAR_TIME} />
                 </span>
               ) : (
-                <span className="absolute inset-0 grid place-items-center text-xs text-ghost [writing-mode:vertical-rl]">{t('team.hours.dayOff')}</span>
+                <span className="absolute inset-0 grid place-items-center text-xs text-ghost [writing-mode:vertical-rl]">{t('shared.components.hours.dayOff')}</span>
               )}
             </div>
           ))}
         </div>
       </div>
-      <p className="text-end text-[13px] text-soft">{t('person.hours.perWeek', { hours: +total.toFixed(2) })}</p>
+      <p className="text-end text-[13px] text-soft">{t('admin.person.hours.perWeek', { hours: +total.toFixed(2) })}</p>
     </Section>
   )
 }

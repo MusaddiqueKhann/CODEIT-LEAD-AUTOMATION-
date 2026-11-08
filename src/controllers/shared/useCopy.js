@@ -1,8 +1,9 @@
 import { useCallback } from 'react'
+import { useLang } from './LangContext.jsx'
 import { useToast } from './ToastContext.jsx'
 
 /**
- * Copies text to the clipboard and reports the result through the toast stack.
+ * Copies text to the clipboard and toasts `done` (the whole sentence, e.g. "Password copied to clipboard.").
  *
  * The failure path is real, not defensive padding: navigator.clipboard is
  * undefined on any non-HTTPS origin that isn't localhost, so a device testing
@@ -11,16 +12,17 @@ import { useToast } from './ToastContext.jsx'
  */
 export function useCopy() {
   const { toast } = useToast()
+  const { t } = useLang()
 
   return useCallback(
-    async (text, label = 'Copied') => {
+    async (text, done) => {
       try {
         await navigator.clipboard.writeText(text)
-        toast(`${label} to clipboard.`)
+        toast(done)
       } catch {
-        toast(`Couldn’t copy automatically — the value is ${text}`, 'warn')
+        toast(t('shared.common.copyFailed', { value: text }), 'warn')
       }
     },
-    [toast],
+    [toast, t],
   )
 }

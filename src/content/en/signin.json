@@ -1,0 +1,47 @@
+{
+  "email": "Email",
+  "password": "Password",
+  "forgotLink": "Forgot password?",
+  "signIn": "Sign in",
+  "signingIn": "Signing in…",
+  "welcomeBack": "Welcome back",
+  "welcomeSub": "Use your work Google account, or the email and password your Admin gave you.",
+  "google": "Sign in with Google",
+  "orEmail": "or with your email",
+  "signedIn": "Signed in",
+  "opening": "Opening your dashboard…",
+  "show": "Show",
+  "hide": "Hide",
+  "showPassword": "Show password",
+  "hidePassword": "Hide password",
+  "backToSignIn": "Back to sign in",
+  "forgot": {
+    "title": "Forgot your password?",
+    "sub": "Type your work email and we’ll send you a link to choose a new one.",
+    "send": "Send the link",
+    "sending": "Sending…",
+    "checkTitle": "Check your email",
+    "checkSub": "If {email} is on the team, a link to choose a new password is on its way. It works for one hour."
+  },
+  "newPassword": {
+    "label": "New password",
+    "again": "Type it again",
+    "match": "Both passwords match",
+    "typeTwice": "Type the same password twice",
+    "saveContinue": "Save and continue",
+    "welcome": "Welcome, {name}",
+    "choose": "Choose a new password",
+    "firstSub": "Set your own password before you start. The one your Admin gave you stops working.",
+    "nextSub": "You’ll use it the next time you sign in."
+  },
+  "recovery": {
+    "title": "Reset your password",
+    "sub": "Continue to choose a new password for {app}.",
+    "checking": "Checking the link…",
+    "continue": "Continue",
+    "newLink": "Send a new link"
+  },
+  "devSignIn": "Sign in as · sample data",
+  "emailHint": "you@codeit.sa",
+  "passwordHint": "••••••••"
+}

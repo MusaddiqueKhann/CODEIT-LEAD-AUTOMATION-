@@ -1,12 +1,12 @@
 import { isSameDay, riyadhNow, weekdayShort } from './format.js'
-import { addDays } from './time.js'
+import { addDays, startOfWeek } from './time.js'
 
 /* Small date helpers the role Overviews share. */
 export const isToday = (m) => m.session && isSameDay(m.session.date, riyadhNow())
 /** Within the Sunday-to-Saturday week around today. */
 export const thisWeek = (m) => {
   if (!m.session) return false
-  const start = addDays(riyadhNow(), -riyadhNow().getDay())
+  const start = startOfWeek(riyadhNow())
   return m.session.date >= start && m.session.date < addDays(start, 7)
 }
 export const open = (m) => !m.outcome && m.stage !== 'closed'

@@ -5,12 +5,12 @@ import { Option } from './Option.jsx'
  * Chips over a list of options ({ key, label }). `isOn(key)` marks the picked ones. With `list`
  * (a Settings → Lists name) each chip shows that option's name in the reader's language.
  */
-export function Chips({ items, isOn, onPick, list }) {
+export function Chips({ id, items, isOn, onPick, list }) {
   const { label } = useConfig()
   return (
     <div className="flex flex-wrap gap-2">
       {items.map((o) => (
-        <Option
+        <Option id={`${id ?? `chips-${list}`}-${o.key}`}
           key={o.key}
           on={isOn(o.key)}
           onClick={() => onPick(o.key)}

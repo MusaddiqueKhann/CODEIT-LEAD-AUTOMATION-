@@ -1,4 +1,4 @@
-import { Card } from '../ui/index.js'
+import { Card } from '../ui/Card.jsx'
 
 /**
  * One of the design's tall number cards: a title with a pill or button beside it, a big number
@@ -11,7 +11,7 @@ export function StatTile({ title, aside, big, unit, sub, small = false, index = 
       radius="rounded-tile"
       padding="none"
       style={{ animationDelay: `${0.12 + index * 0.06}s` }}
-      className="flex min-h-38 min-w-0 animate-rise flex-col gap-2 px-5.5 py-5 transition duration-250 hover:-translate-y-0.75 hover:shadow-lift"
+      className="ui-stat-tile flex min-h-38 min-w-0 animate-rise flex-col gap-2 px-5.5 py-5 transition duration-250 hover:-translate-y-0.75 hover:shadow-lift"
     >
       <div className="mb-auto flex min-h-8 items-center justify-between gap-2">
         <span className="text-tile text-ink">{title}</span>

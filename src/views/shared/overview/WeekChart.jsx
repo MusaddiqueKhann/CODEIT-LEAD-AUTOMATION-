@@ -1,7 +1,7 @@
-import { Card, cx } from '../../../components/ui/index.js'
+import { Card, cx } from '@/components'
 import { useLang } from '../../../controllers/shared/LangContext.jsx'
 import { riyadhNow, startOfDay } from '../../../models/rules/format.js'
-import { addDays } from '../../../models/rules/time.js'
+import { addDays, startOfWeek } from '../../../models/rules/time.js'
 import { CardHead } from './CardHead.jsx'
 
 /** "W45": the week of the year a Sunday-to-Saturday week starts in. */
@@ -14,7 +14,7 @@ const weekNo = (d) => {
 export function WeekChart({ title, sub, dates }) {
   const { t } = useLang()
   const today = startOfDay(riyadhNow())
-  const thisWeek = addDays(today, -today.getDay())
+  const thisWeek = startOfWeek(today)
   const weeks = Array.from({ length: 6 }, (_, i) => addDays(thisWeek, (i - 5) * 7)).map((start, i) => ({
     start,
     now: i === 5,
@@ -24,18 +24,18 @@ export function WeekChart({ title, sub, dates }) {
 
   return (
     <Card radius="rounded-tile" padding="none" className="flex min-w-0 flex-[2_1_340px] animate-rise flex-col gap-4 px-6 py-5 [animation-delay:.5s]">
-      <CardHead title={title} sub={sub ?? t('overview.week.last6')} />
+      <CardHead id="week-chart-head" title={title} sub={sub ?? t('shared.overview.week.last6')} />
       <div className="grid min-h-37.5 flex-1 grid-cols-6 items-stretch gap-2.5">
         {weeks.map((w, i) => (
           <div key={+w.start} className="flex min-h-0 flex-col items-center gap-2">
             <span className="flex w-full flex-1 flex-col items-center justify-end gap-1.5">
               <span className="text-[13px] tabular-nums">{w.n}</span>
               <span
-                className={cx('w-full max-w-10 origin-bottom animate-grow rounded-xl', w.now ? 'bg-brand-700' : 'bg-[#cfe3e2]')}
+                className={cx('w-full max-w-10 origin-bottom animate-grow rounded-xl', w.now ? 'bg-brand-700' : 'bg-brand-bar')}
                 style={{ height: `${Math.max(4, (w.n / most) * 80)}%`, animationDelay: `${0.45 + i * 0.05}s` }}
               />
             </span>
-            <span className={cx('text-xs whitespace-nowrap', w.now ? 'text-brand-700' : 'text-muted')}>{w.now ? t('overview.week.thisWeek') : t('overview.week.weekNo', { week: weekNo(w.start) })}</span>
+            <span className={cx('text-xs whitespace-nowrap', w.now ? 'text-brand-700' : 'text-muted')}>{w.now ? t('shared.overview.week.thisWeek') : t('shared.overview.week.weekNo', { week: weekNo(w.start) })}</span>
           </div>
         ))}
       </div>

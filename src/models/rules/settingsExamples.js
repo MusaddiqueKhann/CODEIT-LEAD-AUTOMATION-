@@ -6,12 +6,12 @@ import { addDays, addWorkingDays, toMinutes, toTime } from './time.js'
  * ("Sales can book from Tue 10 Nov"). `v` is every value on the form (numbers, lists as arrays, the
  * phone prefix as text); `today` a Date at midnight, `now` a Date; `officeHours` and `holidays`
  * (a Set of "YYYY-MM-DD") as the working-day maths needs them; `t` gives the words
- * (settings.examples.*) in the reader's language. A value that isn't a number yet gives no line.
+ * (admin.settings.examples.*) in the reader's language. A value that isn't a number yet gives no line.
  */
 export function exampleFor(key, v, { today, now, officeHours, holidays, t }) {
   const n = v[key]
   if (typeof n === 'number' && !Number.isFinite(n)) return ''
-  const say = (k, values) => t(`settings.examples.${k}`, values)
+  const say = (k, values) => t(`admin.settings.examples.${k}`, values)
   const work = (d, k) => addWorkingDays(d, k, officeHours, holidays)
   const session = work(today, 5) // a session a week out, for the deadlines
   // A clock time `h` hours after midnight today: "14:00", "10:00 the next day", "10:00 2 days later".
@@ -19,7 +19,7 @@ export function exampleFor(key, v, { today, now, officeHours, holidays, t }) {
     const time = toTime((h % 24) * 60)
     return h < 24 ? time : h < 48 ? say('atNextDay', { time }) : say('atDaysLater', { time, days: Math.floor(h / 24) })
   }
-  const hours = (list, join) => list.map((h) => say('hours', { n: h })).join(say(join))
+  const hours = (list, join) => list.map((h) => say('hours', { n: h })).join(join)
 
   switch (key) {
     case 'buffer_days':
@@ -30,7 +30,7 @@ export function exampleFor(key, v, { today, now, officeHours, holidays, t }) {
     case 'gap_minutes':
       return say(key, { time: toTime(600 + v.session_minutes + n) })
     case 'slot_step_minutes':
-      return n > 0 ? say(key, { times: [0, 1, 2].map((i) => toTime(toMinutes('09:00') + i * n)).join(', ') }) : ''
+      return n > 0 ? say(key, { times: [0, 1, 2].map((i) => toTime(toMinutes('09:00') + i * n)).join(t('shared.common.listJoin')) }) : ''
     case 'book_ahead_days':
     case 'due_soon_days':
     case 'ahead_days':
@@ -41,6 +41,7 @@ export function exampleFor(key, v, { today, now, officeHours, holidays, t }) {
     case 'integration_due_days':
     case 'setup_due_days':
       return say(key, { session: formatShort(session), date: formatShort(work(session, -n)) })
+    case 'max_upload_mb':
     case 'max_open_members':
     case 'no_show_limit':
     case 'lock_tries':
@@ -56,13 +57,13 @@ export function exampleFor(key, v, { today, now, officeHours, holidays, t }) {
     case 'session_hours':
       return say(key, { at: at(9 + n) })
     case 'reminder_hours':
-      return n.length ? say(key, { list: hours(n, 'and') }) : say('noReminders')
+      return n.length ? say(key, { list: hours(n, t('shared.common.and')) }) : say('noReminders')
     case 'extend_hours':
-      return n.length ? say(key, { list: hours(n, 'or') }) : say('noExtend')
+      return n.length ? say(key, { list: hours(n, say('or')) }) : say('noExtend')
     case 'low_rating_max':
       return n >= 1 ? (n === 1 ? say('lowRatingOne') : say(key, { max: n })) : ''
     case 'phone_min_digits':
-      return say(key, { phone: `${v.phone_prefix.trim() || '+966'} 55 123 4567`, digits: (v.phone_prefix + '551234567').replace(/\D/g, '').length })
+      return say(key, { phone: [v.phone_prefix.trim(), '55 123 4567'].filter(Boolean).join(' '), digits: (v.phone_prefix + '551234567').replace(/\D/g, '').length })
     case 'phone_prefix':
       return n.trim() ? say(key, { prefix: n.trim() }) : say('noPrefix')
     default:

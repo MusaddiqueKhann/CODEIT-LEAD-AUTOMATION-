@@ -565,6 +565,10 @@ begin
      or not exists (select 1 from storage.objects where bucket_id = 'documents' and name = p_path) then
     raise exception 'That file isn’t in this member’s folder.' using hint = 'file_missing';
   end if;
+  if p_size > (private.settings()).max_upload_mb * 1048576 then
+    raise exception 'That file is bigger than % MB.', (private.settings()).max_upload_mb
+      using hint = 'file_too_big', detail = jsonb_build_object('mb', (private.settings()).max_upload_mb)::text;
+  end if;
   insert into public.documents (member_id, kind, path, name, size, uploaded_by)
   values (m.id, p_kind, p_path, p_name, p_size, auth.uid())
   on conflict (member_id, kind) do update set path = excluded.path, name = excluded.name, size = excluded.size,
@@ -1248,7 +1252,7 @@ declare
     'feedback_reminder_hours', 'low_rating_max', 'extend_hours', 'alerts_keep_days', 'session_hours',
     'max_open_members', 'files_ready_days', 'no_show_limit', 'phone_min_digits', 'phone_prefix', 'due_soon_days',
     'ahead_days', 'recent_days', 'lock_tries', 'lock_window_minutes', 'lock_minutes', 'emails_off',
-    'office_hours', 'company'];
+    'office_hours', 'company', 'max_upload_mb'];
   old public.settings;
   x public.settings;
 begin

@@ -72,6 +72,7 @@ create table public.settings (
   lock_tries int not null default 5 check (lock_tries > 0),               -- wrong passwords before a lock
   lock_window_minutes int not null default 15 check (lock_window_minutes > 0),
   lock_minutes int not null default 15 check (lock_minutes > 0),
+  max_upload_mb int not null default 10 check (max_upload_mb between 1 and 50), -- biggest member document (the bucket's ceiling is 50 MB)
   emails_off text[] not null default '{}',                                 -- email templates the Admin turned off
   office_hours jsonb not null,            -- 7 × {on, from, to}; the days that are on are the working days
   company jsonb not null,                 -- {name, name_ar, app_name, product_name, legal_name, legal_name_ar, sender_email, support_phone, app_url}

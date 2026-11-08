@@ -1,14 +1,16 @@
 import { useEffect, useState } from 'react'
+import { IconButton } from '../ui/IconButton.jsx'
 import { createPortal } from 'react-dom'
 import Icon from '../Icon.jsx'
 import { useConfig } from '../../controllers/shared/ConfigContext.jsx'
 import { useLang } from '../../controllers/shared/LangContext.jsx'
-import { formatStamp } from '../../models/rules/format.js'
-import { extOf, fileSize } from '../../models/rules/members.js'
+import { fileSize, formatStamp } from '../../models/rules/format.js'
+import { extOf } from '../../models/rules/members.js'
 import { initials } from '../../models/rules/time.js'
-import { Avatar, Button, cx } from '../ui/index.js'
+import { Avatar } from '../ui/Avatar.jsx'
+import { Button } from '../ui/Button.jsx'
+import { cx } from '../cx.js'
 
-const ROUND = 'grid shrink-0 place-items-center rounded-full bg-white/12 text-white transition hover:bg-white/22 disabled:opacity-30 disabled:hover:bg-white/12'
 const isImage = (file) => (file.type ? file.type.startsWith('image/') : /\.(png|jpe?g|gif|webp)$/i.test(file.name))
 
 /**
@@ -76,43 +78,25 @@ export function FileViewer({ items, start, openFile, onClose, onReplace }) {
         </div>
         {(file.url || (stored && url)) &&
           (file.url ? (
-            <a href={file.url} download={file.name} aria-label={t('shared.viewer.download')} title={t('shared.viewer.download')} className={cx(ROUND, 'size-13')}>
-              <Icon name="download" className="size-5" strokeWidth={1.8} />
-            </a>
+            <IconButton id="file-viewer-download" icon="download" label={t('shared.components.viewer.download')} title href={file.url} size={13} look="glass" iconClassName="size-5" download={file.name} />
           ) : (
-            <Button variant="bare" aria-label={t('shared.viewer.download')} title={t('shared.viewer.download')} onClick={download} className={cx(ROUND, 'size-13')}>
-              <Icon name="download" className="size-5" strokeWidth={1.8} />
-            </Button>
+            <IconButton id="file-viewer-download-2" icon="download" label={t('shared.components.viewer.download')} title size={13} look="glass" iconClassName="size-5" onClick={download} />
           ))}
         {onReplace && (
-          <Button variant="bare" aria-label={t('shared.viewer.replace')} title={t('shared.viewer.replace')} onClick={() => onReplace(key)} className={cx(ROUND, 'size-13')}>
-            <Icon name="upload" className="size-5" strokeWidth={1.8} />
-          </Button>
+          <IconButton id="file-viewer-replace" icon="upload" label={t('shared.components.viewer.replace')} title size={13} look="glass" iconClassName="size-5" onClick={() => onReplace(key)} />
         )}
-        <Button variant="bare" autoFocus aria-label={t('common.close')} title={t('common.close')} onClick={onClose} className={cx(ROUND, 'size-13')}>
-          <Icon name="close" className="size-5" strokeWidth={1.8} />
-        </Button>
+        <IconButton id="file-viewer-close" icon="close" label={t('shared.common.close')} title size={13} look="glass" iconClassName="size-5" autoFocus onClick={onClose} />
       </div>
 
       <div className="relative flex min-h-0 flex-1 items-center justify-center px-6 sm:px-28" onClick={(e) => e.target === e.currentTarget && onClose()}>
         {items.length > 1 && (
           <>
-            <Button variant="bare" aria-label={t('shared.viewer.previous')} disabled={i === 0} onClick={() => go(i - 1)} className={cx(ROUND, 'absolute start-6 top-1/2 z-10 size-14 -translate-y-1/2')}>
-              <Icon name="chevronLeft" className="size-5" strokeWidth={2} />
-            </Button>
-            <Button
-              variant="bare"
-              aria-label={t('shared.viewer.next')}
-              disabled={i === items.length - 1}
-              onClick={() => go(i + 1)}
-              className={cx(ROUND, 'absolute end-6 top-1/2 z-10 size-14 -translate-y-1/2')}
-            >
-              <Icon name="chevronRight" className="size-5" strokeWidth={2} />
-            </Button>
+            <IconButton id="file-viewer-previous" icon="chevronLeft" label={t('shared.components.viewer.previous')} size={14} look="glass" iconClassName="size-5" strokeWidth={2} disabled={i === 0} onClick={() => go(i - 1)} className="absolute start-6 top-1/2 z-10 -translate-y-1/2" />
+            <IconButton id="file-viewer-next" icon="chevronRight" label={t('shared.components.viewer.next')} size={14} look="glass" iconClassName="size-5" strokeWidth={2} disabled={i === items.length - 1} onClick={() => go(i + 1)} className="absolute end-6 top-1/2 z-10 -translate-y-1/2" />
           </>
         )}
         <div key={key} className="flex h-full max-h-full max-w-full animate-rise items-center justify-center">
-          {stored && url === undefined && <span className="text-sm text-white/60">{t('shared.viewer.opening')}</span>}
+          {stored && url === undefined && <span className="text-sm text-white/60">{t('shared.components.viewer.opening')}</span>}
           {url && isImage(file) && <img src={url} alt={label} className="max-h-full max-w-full rounded-2xl object-contain shadow-2xl" />}
           {url && !isImage(file) && <iframe src={url} title={label} className="h-full w-[min(64rem,calc(100vw-14rem))] rounded-2xl bg-panel shadow-2xl" />}
           {!url && !(stored && url === undefined) && (
@@ -122,7 +106,7 @@ export function FileViewer({ items, start, openFile, onClose, onReplace }) {
               {[70, 92, 84, 60, 88, 76].map((w) => (
                 <span key={w} className="h-2.5 rounded-full bg-line-soft" style={{ width: `${w}%` }} />
               ))}
-              <span className="mt-auto text-center text-xs text-muted">{t('shared.viewer.sample')}</span>
+              <span className="mt-auto text-center text-xs text-muted">{t('shared.components.viewer.missing')}</span>
             </div>
           )}
         </div>
@@ -132,7 +116,7 @@ export function FileViewer({ items, start, openFile, onClose, onReplace }) {
         {items.map((it, n) => {
           const link = it.file.url ?? urls[it.key]
           return (
-            <Button
+            <Button id={`file-viewer-go-${it.key}`}
               key={it.key}
               variant="bare"
               aria-label={it.label}

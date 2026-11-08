@@ -6,7 +6,8 @@ import { dayKey, formatShort, riyadhNow, startOfDay } from '../../models/rules/f
 import { docsFor, dueOn } from '../../models/rules/members.js'
 import { addDays, addWorkingDays } from '../../models/rules/time.js'
 import { TONES } from '../tones.js'
-import { Button, cx } from '../ui/index.js'
+import { Button } from '../ui/Button.jsx'
+import { cx } from '../cx.js'
 import { Section } from './Section.jsx'
 import { SlotPicker } from './SlotPicker.jsx'
 
@@ -21,7 +22,7 @@ import { SlotPicker } from './SlotPicker.jsx'
 export function PickTimeSection({ draft, set, value, onChange, memberId = null, open = true, aside, top, bottom }) {
   const { t } = useLang()
   return (
-    <Section id="pick-time" n={4} title={t('shared.pickTime.title')} sub={t('shared.pickTime.sub')} aside={aside}>
+    <Section id="pick-time" n={4} title={t('shared.components.pickTime.title')} sub={t('shared.components.pickTime.sub')} aside={aside}>
       {top}
       {open && <Picker draft={draft} set={set} value={value} onChange={onChange} memberId={memberId} />}
       {open && bottom}
@@ -53,35 +54,35 @@ function Picker({ draft, set, value, onChange, memberId }) {
   }
   const flow = readyOn
     ? [
-        { k: t('shared.pickTime.filesIn'), v: formatShort(readyOn) },
-        { k: t('shared.pickTime.ready'), v: formatShort(addWorkingDays(readyOn, settings.filesReadyDays, settings.officeHours, new Set(holidays.map((h) => h.day)))) },
+        { k: t('shared.components.pickTime.filesIn'), v: formatShort(readyOn) },
+        { k: t('shared.components.pickTime.ready'), v: formatShort(addWorkingDays(readyOn, settings.filesReadyDays, settings.officeHours, new Set(holidays.map((h) => h.day)))) },
       ]
     : [
-        { k: t('shared.pickTime.today'), v: formatShort(today) },
-        { k: t('shared.pickTime.buffer'), v: t('shared.pickTime.bufferDays', { n: settings.bufferDays }) },
+        { k: t('shared.components.pickTime.today'), v: formatShort(today) },
+        { k: t('shared.components.pickTime.buffer'), v: t('shared.components.pickTime.bufferDays', { n: settings.bufferDays }) },
       ]
 
   return (
     <>
       <div className="flex flex-wrap items-center justify-between gap-4 border-b border-line py-5">
         <div className="flex flex-col gap-0.5">
-          <span className="text-[15px] font-medium text-ink">{t('shared.pickTime.filesReady')}</span>
-          <span className="text-[13px] text-muted">{t('shared.pickTime.firstSession', { n: settings.filesReadyDays })}</span>
+          <span className="text-[15px] font-medium text-ink">{t('shared.components.pickTime.filesReady')}</span>
+          <span className="text-[13px] text-muted">{t('shared.components.pickTime.firstSession', { n: settings.filesReadyDays })}</span>
         </div>
         {!draft.plan ? (
-          <span className="text-sm text-muted">{t('shared.pickTime.pickType')}</span>
+          <span className="text-sm text-muted">{t('shared.components.pickTime.pickType')}</span>
         ) : pending.length === 0 ? (
-          <span className={cx('inline-flex h-9.5 items-center rounded-full px-4 text-sm', TONES.success.fill, TONES.success.text)}>{t('shared.pickTime.allIn')}</span>
+          <span className={cx('inline-flex h-9.5 items-center rounded-full px-4 text-sm', TONES.success.fill, TONES.success.text)}>{t('shared.components.pickTime.allIn')}</span>
         ) : !set ? (
           <span className={cx('inline-flex h-9.5 items-center rounded-full px-4 text-sm', TONES.warn.fill, TONES.warn.text)}>
-            {latest != null ? dueOn(latest) : t('shared.pickTime.noDate')}
+            {latest != null ? dueOn(latest) : t('shared.components.pickTime.noDate')}
           </span>
         ) : (
           <div className="scrollbar-slim flex max-w-full gap-0.5 overflow-x-auto rounded-full bg-field p-1">
             {pills.map((d) => {
               const on = d === latest
               return (
-                <Button
+                <Button id={`pick-time-section-pick-${d}`}
                   key={d}
                   variant="bare"
                   aria-pressed={on}
@@ -107,7 +108,7 @@ function Picker({ draft, set, value, onChange, memberId }) {
           flow={flow}
         />
       ) : (
-        <p className="py-6 text-sm text-muted">{t('shared.pickTime.loadingDays')}</p>
+        <p className="py-6 text-sm text-muted">{t('shared.components.pickTime.loadingDays')}</p>
       )}
     </>
   )

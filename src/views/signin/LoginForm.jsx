@@ -1,9 +1,7 @@
 import { useState } from 'react'
-import { signInWithGoogle, takeGoogleError } from '../../models/data/auth.js'
+import { signInWithGoogle, takeGoogleError } from '../../controllers/signin.js'
 import { Link } from 'react-router-dom'
-import { SplashCard } from '../../components/layout/SplashCard.jsx'
-import Icon from '../../components/Icon.jsx'
-import { Button, Field, FormError, Input } from '../../components/ui/index.js'
+import { Button, Field, Icon, Input, Notice, SplashCard } from '@/components'
 import { useLang } from '../../controllers/shared/LangContext.jsx'
 import { PUBLIC } from '../../routes/paths.js'
 import { PasswordInput } from './PasswordInput.jsx'
@@ -53,7 +51,7 @@ export function LoginForm({ onSignIn, notice }) {
 
   if (done) {
     return (
-      <SplashCard title={t('auth.signedIn')} sub={t('auth.opening')}>
+      <SplashCard title={t('signin.signedIn')} sub={t('signin.opening')}>
         <div className="mt-6 flex justify-center">
           <span className="flex size-14 items-center justify-center rounded-full bg-success text-white ring-8 ring-success/10">
             <Icon name="check" className="size-8" strokeWidth={3} />
@@ -64,20 +62,20 @@ export function LoginForm({ onSignIn, notice }) {
   }
 
   return (
-    <SplashCard title={t('auth.welcomeBack')} sub={t('auth.welcomeSub')}>
-      <form onSubmit={submit} className="mt-7 flex flex-col gap-4">
-        <FormError tone="warn">{notice}</FormError>
-        <FormError>{error}</FormError>
-        <Button type="button" variant="outline" size="lg" fullWidth onClick={google} disabled={busy} className="gap-2.5">
+    <SplashCard title={t('signin.welcomeBack')} sub={t('signin.welcomeSub')}>
+      <form id="login-form-google" onSubmit={submit} className="v-login-form__google mt-7 flex flex-col gap-4">
+        <Notice tone="warn" role="alert">{notice && errorText(notice)}</Notice>
+        <Notice role="alert">{error}</Notice>
+        <Button id="login-form-google-2" type="button" variant="outline" size="lg" fullWidth onClick={google} disabled={busy} className="gap-2.5">
           <img src="/google.svg" alt="" className="size-4.5" />
-          {t('auth.google')}
+          {t('signin.google')}
         </Button>
         <span className="flex items-center gap-3 text-xs text-muted">
           <span className="h-px flex-1 bg-edge" />
-          {t('auth.orEmail')}
+          {t('signin.orEmail')}
           <span className="h-px flex-1 bg-edge" />
         </span>
-        <Field label={t('auth.email')}>
+        <Field id="login-form-email" label={t('signin.email')}>
           {(props) => (
             <Input
               {...props}
@@ -88,15 +86,15 @@ export function LoginForm({ onSignIn, notice }) {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               dir="ltr"
-              placeholder="you@codeit.sa"
+              placeholder={t('signin.emailHint')}
             />
           )}
         </Field>
-        <Field
-          label={t('auth.password')}
+        <Field id="login-form-password"
+          label={t('signin.password')}
           action={
-            <Link to={PUBLIC.forgot} className="text-xs font-medium text-brand-700 transition hover:text-brand-800">
-              {t('auth.forgotLink')}
+            <Link id="login-form-forgot-link" to={PUBLIC.forgot} className="v-login-form__forgot-link text-xs font-medium text-brand-700 transition hover:text-brand-800">
+              {t('signin.forgotLink')}
             </Link>
           }
         >
@@ -106,12 +104,12 @@ export function LoginForm({ onSignIn, notice }) {
               autoComplete="current-password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••"
+              placeholder={t('signin.passwordHint')}
             />
           )}
         </Field>
-        <Button type="submit" size="lg" fullWidth className="mt-2" disabled={busy}>
-          {busy ? t('auth.signingIn') : t('auth.signIn')}
+        <Button id="login-form-signing-in" type="submit" size="lg" fullWidth className="mt-2" disabled={busy}>
+          {busy ? t('signin.signingIn') : t('signin.signIn')}
         </Button>
       </form>
     </SplashCard>

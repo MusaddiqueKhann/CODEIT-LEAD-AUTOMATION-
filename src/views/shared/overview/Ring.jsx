@@ -11,7 +11,7 @@ export function Ring({ size, stroke, parts, total, track, round = false, childre
   return (
     <div className="relative shrink-0" style={{ width: size, height: size }}>
       <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className="-rotate-90 rtl:-scale-y-100" aria-hidden="true">
-        <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke={track} strokeWidth={stroke} />
+        <circle cx={size / 2} cy={size / 2} r={r} fill="none" style={{ stroke: track }} strokeWidth={stroke} />
         {parts.map((p, i) => {
           const arc = total ? (Math.min(p.value, total) / total) * length : 0
           const from = at
@@ -23,7 +23,7 @@ export function Ring({ size, stroke, parts, total, track, round = false, childre
               cy={size / 2}
               r={r}
               fill="none"
-              stroke={p.color}
+              style={{ stroke: p.color }}
               strokeWidth={stroke}
               strokeLinecap={round ? 'round' : 'butt'}
               strokeDasharray={`${Math.max(0, arc - gap)} ${length}`}

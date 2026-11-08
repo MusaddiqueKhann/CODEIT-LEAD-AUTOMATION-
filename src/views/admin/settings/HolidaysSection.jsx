@@ -1,10 +1,9 @@
 import { useState } from 'react'
-import Icon from '../../../components/Icon.jsx'
-import { Button, Field, Input, Modal } from '../../../components/ui/index.js'
+import { Button, Field, IconButton, Input, Modal } from '@/components'
 import { useConfig } from '../../../controllers/shared/ConfigContext.jsx'
 import { useLang } from '../../../controllers/shared/LangContext.jsx'
 import { useToast } from '../../../controllers/shared/ToastContext.jsx'
-import { removeHoliday, setHoliday } from '../../../models/data/settings.js'
+import { removeHoliday, setHoliday } from '../../../controllers/admin/settings.js'
 import { useAction } from '../../../controllers/shared/useAction.js'
 import { fromDay, monthShort, weekdayNames } from '../../../models/rules/format.js'
 import { Section } from './Section.jsx'
@@ -27,30 +26,22 @@ export function HolidaysSection({ after }) {
   }
   const addHoliday = async () => {
     let sessions = 0
-    const done = await run(async () => (sessions = await setHoliday(day, name.trim())), t('settings.week.saved'))
+    const done = await run(async () => (sessions = await setHoliday(day, name.trim())), t('admin.settings.week.saved'))
     if (done) {
       close()
-      if (sessions) toast(t('settings.week.clash', { n: sessions }), 'warn')
+      if (sessions) toast(t('admin.settings.week.clash', { n: sessions }), 'warn')
     }
   }
 
   return (
-    <Section id="holidays" icon="star" action={{ label: t('settings.week.add'), onClick: () => setAdding(true) }}>
+    <Section id="holidays" icon="star" action={{ label: t('admin.settings.week.add'), onClick: () => setAdding(true) }}>
       {holidays.length > 0 ? (
         <div className="grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-3">
           {holidays.map((h) => {
             const d = fromDay(h.day)
             return (
               <div key={h.day} className="relative flex animate-rise flex-col gap-3 rounded-[22px] bg-surface p-4.5">
-                <Button
-                  variant="bare"
-                  aria-label={t('settings.week.remove', { name: h.name })}
-                  title={t('common.remove')}
-                  onClick={() => run(() => removeHoliday(h.day), t('settings.week.removed'))}
-                  className="absolute end-3 top-3 grid size-7.5 place-items-center rounded-full bg-panel text-danger-ink transition hover:bg-danger-bg"
-                >
-                  <Icon name="close" className="size-3.5" strokeWidth={2} />
-                </Button>
+                <IconButton id={`holidays-section-remove-${h.day}`} icon="close" label={t('admin.settings.week.remove', { name: h.name })} title={t('shared.common.remove')} size={7.5} look="panelDanger" iconClassName="size-3.5" strokeWidth={2} onClick={() => run(() => removeHoliday(h.day), t('admin.settings.week.removed'))} className="absolute end-3 top-3" />
                 <span className="flex items-baseline gap-2">
                   <span className="text-stat text-ink">{d.getDate()}</span>
                   <span className="text-[13px] tracking-[0.1em] text-muted uppercase">{monthShort(d)}</span>
@@ -64,35 +55,35 @@ export function HolidaysSection({ after }) {
           })}
         </div>
       ) : (
-        <p className="rounded-[20px] bg-surface p-6 text-center text-sm text-muted">{t('settings.week.none')}</p>
+        <p className="rounded-[20px] bg-surface p-6 text-center text-sm text-muted">{t('admin.settings.week.none')}</p>
       )}
 
-      <Modal
+      <Modal id="holidays-section-add"
         open={adding}
         onClose={close}
-        title={t('settings.week.add')}
-        description={t('settings.sections.holidays.sub')}
+        title={t('admin.settings.week.add')}
+        description={t('admin.settings.sections.holidays.sub')}
         footer={
           <>
-            <Button variant="outline" onClick={close}>
-              {t('common.cancel')}
+            <Button id="holidays-section-cancel" variant="outline" onClick={close}>
+              {t('shared.common.cancel')}
             </Button>
-            <Button onClick={addHoliday} disabled={!day || !name.trim() || busy}>
-              {t('common.add')}
+            <Button id="holidays-section-add-2" onClick={addHoliday} disabled={!day || !name.trim() || busy}>
+              {t('shared.common.add')}
             </Button>
           </>
         }
       >
-        <form
+        <form id="holidays-section-day"
           onSubmit={(e) => {
             e.preventDefault()
             if (day && name.trim()) addHoliday()
           }}
-          className="flex flex-col gap-3"
+          className="v-holidays-section__day flex flex-col gap-3"
         >
-          <Field label={t('settings.week.day')}>{(props) => <Input {...props} type="date" autoFocus value={day} onChange={(e) => setDay(e.target.value)} />}</Field>
-          <Field label={t('settings.week.name')}>
-            {(props) => <Input {...props} placeholder={t('settings.week.namePlaceholder')} value={name} onChange={(e) => setName(e.target.value)} />}
+          <Field id="holidays-section-day-2" label={t('admin.settings.week.day')}>{(props) => <Input {...props} type="date" autoFocus value={day} onChange={(e) => setDay(e.target.value)} />}</Field>
+          <Field id="holidays-section-name" label={t('admin.settings.week.name')}>
+            {(props) => <Input {...props} placeholder={t('admin.settings.week.namePlaceholder')} value={name} onChange={(e) => setName(e.target.value)} />}
           </Field>
         </form>
       </Modal>

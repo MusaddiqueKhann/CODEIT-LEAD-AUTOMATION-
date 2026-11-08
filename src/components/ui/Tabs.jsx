@@ -16,7 +16,7 @@ const SIZES = {
   sm: 'h-8.5 text-[13px]',
 }
 
-export function Tabs({ items, value, onChange, size = 'md', className }) {
+export function Tabs({ id, items, value, onChange, size = 'md', className }) {
   const onKeyDown = (e) => {
     const i = items.findIndex((t) => t.key === value)
     if (i < 0) return
@@ -38,10 +38,11 @@ export function Tabs({ items, value, onChange, size = 'md', className }) {
 
   return (
     <div
+      id={id}
       role="tablist"
       onKeyDown={onKeyDown}
       className={cx(
-        'inline-flex gap-1 rounded-[22px] bg-track p-1',
+        'ui-tabs inline-flex gap-1 rounded-[22px] bg-track p-1',
         className,
       )}
     >
@@ -49,6 +50,7 @@ export function Tabs({ items, value, onChange, size = 'md', className }) {
         const active = tab.key === value
         return (
           <button
+            id={id && `${id}-${tab.key}`}
             key={tab.key}
             type="button"
             role="tab"
@@ -58,7 +60,7 @@ export function Tabs({ items, value, onChange, size = 'md', className }) {
             tabIndex={active ? 0 : -1}
             onClick={() => onChange(tab.key)}
             className={cx(
-              'inline-flex items-center justify-center gap-2.5 rounded-full whitespace-nowrap transition',
+              'ui-tabs__tab inline-flex items-center justify-center gap-2.5 rounded-full whitespace-nowrap transition',
               SIZES[size],
               tab.count != null ? 'ps-4 pe-1.5' : 'px-4',
               active ? 'bg-panel text-ink shadow-tab' : 'text-soft hover:text-ink',

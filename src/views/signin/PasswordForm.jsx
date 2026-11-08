@@ -1,10 +1,6 @@
 import { useState } from 'react'
-import { SplashCard } from '../../components/layout/SplashCard.jsx'
-import Icon from '../../components/Icon.jsx'
-import { Button, Field, FormError } from '../../components/ui/index.js'
+import { Button, cx, Field, Icon, Notice, SplashCard, TONES } from '@/components'
 import { useLang } from '../../controllers/shared/LangContext.jsx'
-import { cx } from '../../components/cx.js'
-import { TONES } from '../../components/tones.js'
 import { PasswordInput } from './PasswordInput.jsx'
 
 /**
@@ -33,28 +29,28 @@ export function PasswordForm({ title, sub, onSave, onCancel }) {
 
   return (
     <SplashCard title={title} sub={sub}>
-      <form onSubmit={submit} className="mt-7 flex flex-col gap-4">
-        <FormError>{error}</FormError>
-        <Field label={t('auth.newPassword.label')}>
+      <form id="password-form-label" onSubmit={submit} className="v-password-form__label mt-7 flex flex-col gap-4">
+        <Notice role="alert">{error}</Notice>
+        <Field id="password-form-label-2" label={t('signin.newPassword.label')}>
           {(props) => (
             <PasswordInput props={props} autoComplete="new-password" value={password} onChange={(e) => setPassword(e.target.value)} />
           )}
         </Field>
-        <Field label={t('auth.newPassword.again')}>
+        <Field id="password-form-again" label={t('signin.newPassword.again')}>
           {(props) => (
             <PasswordInput props={props} autoComplete="new-password" value={again} onChange={(e) => setAgain(e.target.value)} />
           )}
         </Field>
         <p className={cx('flex items-center gap-2 text-sm', match ? TONES.success.text : 'text-muted')}>
           <Icon name={match ? 'checkCircle' : 'info'} className="size-4" strokeWidth={1.9} />
-          {match ? t('auth.newPassword.match') : t('auth.newPassword.typeTwice')}
+          {match ? t('signin.newPassword.match') : t('signin.newPassword.typeTwice')}
         </p>
-        <Button type="submit" size="lg" fullWidth disabled={!match || busy}>
-          {busy ? t('common.saving') : t('auth.newPassword.saveContinue')}
+        <Button id="password-form-saving" type="submit" size="lg" fullWidth disabled={!match || busy}>
+          {busy ? t('shared.common.saving') : t('signin.newPassword.saveContinue')}
         </Button>
         {onCancel && (
-          <Button variant="bare" onClick={onCancel} className="text-sm text-muted hover:text-ink">
-            {t('layout.signOut')}
+          <Button id="password-form-sign-out" variant="bare" onClick={onCancel} className="text-sm text-muted hover:text-ink">
+            {t('shared.layout.signOut')}
           </Button>
         )}
       </form>

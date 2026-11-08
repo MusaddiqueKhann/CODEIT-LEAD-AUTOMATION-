@@ -36,3 +36,14 @@ export const bind = (draft, set, key, clean = (v) => v) => ({
 
 /** Tapping the picked chip again clears it. */
 export const toggle = (current, key) => (current === key ? null : key)
+
+/* The fields the member form edits, as the app names them; the server takes them snake_cased. */
+export const FORM_FIELDS = ['firstName', 'lastName', 'email', 'phone', 'language', 'company', 'cr', 'vat', 'city', 'website',
+  'industry', 'size', 'plan', 'branches', 'users', 'features', 'integrations', 'hardware']
+
+/** A member as the form's draft (the same keys Add a member uses). */
+export const toDraft = (m) => ({
+  ...Object.fromEntries(FORM_FIELDS.map((k) => [k, m[k] ?? ''])),
+  files: m.files,
+  due: m.due,
+})

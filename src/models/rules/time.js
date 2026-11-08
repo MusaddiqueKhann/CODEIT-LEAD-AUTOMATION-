@@ -19,6 +19,9 @@ export const toTime = (minutes) =>
 
 export const byDateTime = (a, b) => a.date - b.date || a.time.localeCompare(b.time)
 
+/** The Sunday that starts `date`'s week (the office week starts on Sunday). */
+export const startOfWeek = (date) => addDays(date, -date.getDay())
+
 export const addDays = (date, n) => {
   const d = startOfDay(date)
   d.setDate(d.getDate() + n)

@@ -22,12 +22,13 @@ function when(iso: string, lang: string) {
 
 async function context() {
   const [{ data: settings }, { data: texts }] = await Promise.all([
-    db.from('settings').select('company, emails_off').single(),
+    db.from('settings').select('company, emails_off, reminder_hours').single(),
     db.from('texts').select('key, en, ar'),
   ])
   return {
     company: settings?.company ?? {},
     emailsOff: (settings?.emails_off ?? []) as string[],
+    reminderHours: (settings?.reminder_hours ?? [24]) as number[],
     texts: Object.fromEntries((texts ?? []).map((t: any) => [t.key, t])),
   }
 }
@@ -118,8 +119,9 @@ async function testEmail(ctx: any, p: any) {
     meet_link: 'https://meet.google.com/abc-defg-hij',
     after_link: `${app}/after/example`,
     expires: `${when(new Date(+soon + 2 * 864e5).toISOString(), lang).date} ${when(soon.toISOString(), lang).time}`,
-    hours: '24',
-    customer: 'Example Co',
+    // The same sample member as the preview on the Texts page (admin.settings.texts.sample in src/content).
+    hours: String(ctx.reminderHours[0] ?? 24),
+    customer: lang === 'ar' ? 'عطور نجم' : 'Najm Perfumes',
     ...when(soon.toISOString(), lang),
   }
   await sendEmail(p.to, ctx.company.sender_email ?? '', `[Test] ${fill(t.subject, values)}`, fill(t.body, values))

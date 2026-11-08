@@ -1,6 +1,5 @@
 import { useState } from 'react'
-import { Option } from '../../../components/shared/index.js'
-import { Button, Field, Modal, Select } from '../../../components/ui/index.js'
+import { Button, Field, Modal, Option, Select } from '@/components'
 import { useConfig } from '../../../controllers/shared/ConfigContext.jsx'
 import { useLang } from '../../../controllers/shared/LangContext.jsx'
 
@@ -28,18 +27,18 @@ export function MoveMembersDialog({ person, onClose, onMove }) {
   }
 
   return (
-    <Modal
+    <Modal id="move-members-dialog-title"
       open={!!person}
       onClose={onClose}
-      title={t('person.move.title')}
-      description={person && t('person.move.description', { n: person.openCount, name: person.name })}
+      title={t('admin.person.move.title')}
+      description={person && t('admin.person.move.description', { n: person.openCount, name: person.name })}
       footer={
         <>
-          <Button variant="outline" onClick={onClose}>
-            {t('common.neverMind')}
+          <Button id="move-members-dialog-never-mind" variant="outline" onClick={onClose}>
+            {t('shared.common.neverMind')}
           </Button>
-          <Button onClick={move} disabled={!ready || busy}>
-            {busy ? t('person.move.moving') : t('person.move.submit')}
+          <Button id="move-members-dialog-moving" onClick={move} disabled={!ready || busy}>
+            {busy ? t('admin.person.move.moving') : t('admin.person.move.submit')}
           </Button>
         </>
       }
@@ -48,19 +47,19 @@ export function MoveMembersDialog({ person, onClose, onMove }) {
         <div className="flex flex-col gap-4">
           {!sales && (
             <div className="flex flex-wrap gap-2">
-              <Option on={mode === 'auto'} onClick={() => setMode('auto')} className="h-10 rounded-full px-4 text-sm">
-                {t('person.move.auto')}
+              <Option id="move-members-dialog-auto" on={mode === 'auto'} onClick={() => setMode('auto')} className="h-10 rounded-full px-4 text-sm">
+                {t('admin.person.move.auto')}
               </Option>
-              <Option on={mode === 'one'} onClick={() => setMode('one')} className="h-10 rounded-full px-4 text-sm">
-                {t('person.move.one')}
+              <Option id="move-members-dialog-one" on={mode === 'one'} onClick={() => setMode('one')} className="h-10 rounded-full px-4 text-sm">
+                {t('admin.person.move.one')}
               </Option>
             </div>
           )}
           {how === 'one' ? (
-            <Field label={t('person.move.toWhich', { role: label('role', person.role) })}>
+            <Field id="move-members-dialog-to-which" label={t('admin.person.move.toWhich', { role: label('role', person.role) })}>
               {(props) => (
                 <Select {...props} value={to} onChange={(e) => setTo(e.target.value)}>
-                  <option value="">{t('common.pickOne')}</option>
+                  <option value="">{t('shared.common.pickOne')}</option>
                   {others.map((p) => (
                     <option key={p.id} value={p.id}>
                       {p.name}
@@ -71,7 +70,7 @@ export function MoveMembersDialog({ person, onClose, onMove }) {
             </Field>
           ) : (
             <p className="text-sm text-muted">
-              {t('person.move.autoNote', { name: person.name })}
+              {t('admin.person.move.autoNote', { name: person.name })}
             </p>
           )}
         </div>

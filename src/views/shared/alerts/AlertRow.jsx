@@ -1,12 +1,10 @@
-import Icon from '../../../components/Icon.jsx'
-import { Button, cx } from '../../../components/ui/index.js'
+import { Button, cx, Icon, TONES } from '@/components'
 import { formatShort } from '../../../models/rules/format.js'
 import { toTime } from '../../../models/rules/time.js'
-import { TONES } from '../../../components/tones.js'
 import { useLang } from '../../../controllers/shared/LangContext.jsx'
 import { pick } from '../../../content/index.js'
 
-/* The icon, tone and button (alerts.cta.<key>) for each kind of alert; anything else is a plain bell. */
+/* The icon, tone and button (shared.alerts.cta.<key>) for each kind of alert; anything else is a plain bell. */
 const LOOK = {
   late: ['clock', 'danger', 'open'],
   missed: ['calendar', 'danger', 'open'],
@@ -42,7 +40,7 @@ export function AlertRow({ alert: a, index, onRead, onOpen }) {
     <div
       onClick={() => unread && onRead(a)}
       style={{ animationDelay: `${0.12 + index * 0.05}s` }}
-      className={cx(COLUMNS, 'mt-1 animate-rise cursor-pointer rounded-[18px] py-3 transition-colors hover:bg-[#f3f8f8]', unread && 'bg-[#f6fafa]')}
+      className={cx('v-alerts__row', COLUMNS, 'mt-1 animate-rise cursor-pointer rounded-[18px] py-3 transition-colors hover:bg-brand-mist', unread && 'bg-brand-wash')}
     >
       <span className="flex min-w-0 items-center gap-4">
         <span className={cx('grid size-10 shrink-0 place-items-center rounded-[13px]', TONES[tone].fill, TONES[tone].text)}>
@@ -55,7 +53,7 @@ export function AlertRow({ alert: a, index, onRead, onOpen }) {
         {formatShort(a.at)} · {toTime(a.at.getHours() * 60 + a.at.getMinutes())}
       </span>
       <span>
-        <Button
+        <Button id={`alert-row-${a.id}-cta`}
           variant="bare"
           onClick={(e) => {
             e.stopPropagation()
@@ -63,11 +61,11 @@ export function AlertRow({ alert: a, index, onRead, onOpen }) {
           }}
           className="inline-flex h-9 items-center gap-1.5 rounded-full bg-panel px-3.5 text-[13px] whitespace-nowrap text-ink ring-1 ring-edge transition hover:bg-surface"
         >
-          {t(`alerts.cta.${cta}`)}
+          {t(`shared.alerts.cta.${cta}`)}
           <Icon name="chevronRight" className="size-3.5" strokeWidth={2} />
         </Button>
       </span>
-      <span className={cx('size-2.5 rounded-full transition-colors', unread && 'bg-brand-700')} aria-label={unread ? t('alerts.unread') : undefined} />
+      <span className={cx('size-2.5 rounded-full transition-colors', unread && 'bg-brand-700')} aria-label={unread ? t('shared.alerts.unread') : undefined} />
     </div>
   )
 }

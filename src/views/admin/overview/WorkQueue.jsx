@@ -1,6 +1,5 @@
 import { Link } from 'react-router-dom'
-import Icon from '../../../components/Icon.jsx'
-import { Card, cx } from '../../../components/ui/index.js'
+import { Card, cx, Icon } from '@/components'
 import { useLang } from '../../../controllers/shared/LangContext.jsx'
 import { initials } from '../../../models/rules/time.js'
 
@@ -15,20 +14,20 @@ export function WorkQueue({ groups }) {
   const urgent = all.filter((p) => p.urgent).length
 
   return (
-    <Card as="section" radius="rounded-tile" padding="none" className="flex animate-rise flex-col gap-4 px-6 py-5 [animation-delay:.28s]">
+    <Card id="work-queue-title" as="section" radius="rounded-tile" padding="none" className="flex animate-rise flex-col gap-4 px-6 py-5 [animation-delay:.28s]">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <span className="flex items-baseline gap-2.5">
-          <h2 className="text-h2 text-ink">{t('overview.queue.title')}</h2>
-          <span className="text-[13px] text-muted">{t('overview.queue.count', { all: all.length, urgent })}</span>
+          <h2 className="text-h2 text-ink">{t('admin.overview.workQueue.title')}</h2>
+          <span className="text-[13px] text-muted">{t('admin.overview.workQueue.count', { all: all.length, urgent })}</span>
         </span>
         <span className="flex gap-3.5 text-xs text-soft">
           <span className="flex items-center gap-1.5">
             <span className="size-3 rounded bg-warn" />
-            {t('overview.queue.urgent')}
+            {t('admin.overview.workQueue.urgent')}
           </span>
           <span className="flex items-center gap-1.5">
             <span className="size-3 rounded bg-brand-700" />
-            {t('overview.queue.onTrack')}
+            {t('admin.overview.workQueue.onTrack')}
           </span>
         </span>
       </div>
@@ -45,11 +44,11 @@ export function WorkQueue({ groups }) {
                 const hot = item.people.some((p) => p.urgent)
                 const shown = [...item.people].sort((a, b) => b.urgent - a.urgent).slice(0, 3)
                 return (
-                  <Link
+                  <Link id={`work-queue-list-join-${item.key}`}
                     key={item.key}
                     to={item.to}
-                    title={`${item.label} · ${item.people.map((p) => p.name).join(t('overview.sep')) || t('overview.queue.none')}`}
-                    className="flex h-full flex-col items-center justify-end gap-2 text-ink transition hover:-translate-y-0.75"
+                    title={`${item.label} · ${item.people.map((p) => p.name).join(t('shared.common.listJoin')) || t('admin.overview.workQueue.none')}`}
+                    className="v-work-queue__list-join flex h-full flex-col items-center justify-end gap-2 text-ink transition hover:-translate-y-0.75"
                   >
                     <span className="text-[15px]">{item.people.length}</span>
                     <span

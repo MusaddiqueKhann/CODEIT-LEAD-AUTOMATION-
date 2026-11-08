@@ -1,7 +1,8 @@
 // node src/lib/history.check.js
 import assert from 'node:assert/strict'
 import { describeChange as describe } from './history.js'
-import { translate } from '../../content/index.js'
+import { readFileSync } from 'node:fs'
+import { CONTENT, translate } from '../../content/index.js'
 
 const describeChange = (row) => describe(row, (k, v) => translate('en', k, v))
 
@@ -19,4 +20,10 @@ assert.equal(describeChange({ area: 'holiday', item: '2030-02-22', before: 'Foun
 const ar = (row) => describe(row, (k, v) => translate('ar', k, v), 'ar')
 assert.deepEqual(ar({ area: 'settings', item: 'buffer_days', before: 3, after: 5 }), { what: 'المهلة قبل الجلسة', change: '3 → 5 أيام عمل' })
 assert.equal(ar({ area: 'option', item: 'lost_reason/price', before: null, after: { label: 'Price', label_ar: 'السعر' } }).what, 'سبب الخسارة: السعر')
+// Every setting the log can name has words: a Timing tile's name, or one under history.names.
+const schema = readFileSync(new URL('../../../supabase/migrations/0001_schema.sql', import.meta.url), 'utf8')
+const columns = [...schema.match(/create table public\.settings \(([\s\S]*?)\n\);/)[1].matchAll(/^\s+([a-z_]+)\s+[a-z]/gm)].map((m) => m[1])
+const { history, timing } = CONTENT.en.admin.settings
+for (const c of columns.filter((c) => !['id', 'updated_at', 'updated_by'].includes(c))) assert.ok(timing.fields[c] || history.names[c], `the setting ${c} has a name for History`)
+for (const list of Object.keys(CONTENT.en.admin.settings.lists.names)) assert.ok(history.lists[list], `the list ${list} has a name for History`)
 console.log('history.js ok')

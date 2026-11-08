@@ -1,14 +1,13 @@
 import { useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { PageHeader } from '../../../components/layout/PageHeader.jsx'
-import { Card, Select, Tabs } from '../../../components/ui/index.js'
+import { Card, PageHeader, Select, Tabs } from '@/components'
 import { useAuth } from '../../../controllers/shared/AuthContext.jsx'
 import { useConfig } from '../../../controllers/shared/ConfigContext.jsx'
 import { useLang } from '../../../controllers/shared/LangContext.jsx'
 import { useCalendar } from '../../../controllers/shared/useCalendar.js'
 import { weekdayNames, dayKey, isSameDay, monthShort, monthYear, riyadhNow, startOfDay } from '../../../models/rules/format.js'
 import { stepOfStage } from '../../../models/rules/stages.js'
-import { addDays, byDateTime, hourSpan, toMinutes } from '../../../models/rules/time.js'
+import { addDays, byDateTime, hourSpan, startOfWeek, toMinutes } from '../../../models/rules/time.js'
 import { range, timeSpan } from './grid.js'
 import { MonthGrid } from './MonthGrid.jsx'
 import { SessionsDialog } from './SessionsDialog.jsx'
@@ -17,7 +16,7 @@ import { TimeGrid } from './TimeGrid.jsx'
 
 const VIEWS = ['day', 'week', 'month']
 const MODES = ['sessions', 'other']
-/** Each due date the server sends, as the step it belongs to and its words (calendar.due.*; files name themselves). */
+/** Each due date the server sends, as the step it belongs to and its words (shared.calendar.due.*; files name themselves). */
 const TASKS = {
   transfer_due: ['sales', 'transfer'],
   files_due: ['sales', null],
@@ -48,7 +47,7 @@ export function CalendarPage() {
   const [pop, setPop] = useState(null) // { day, time? }
 
   // The days on screen, and so the range to load. Weeks show the working days only.
-  const weekStart = addDays(anchor, -anchor.getDay())
+  const weekStart = startOfWeek(anchor)
   const workDays = settings.officeHours.flatMap((h, i) => (h.on ? [i] : []))
   const week = range(0, 7).map((i) => addDays(weekStart, i)).filter((d) => workDays.includes(d.getDay()))
   const firstOfMonth = new Date(anchor.getFullYear(), anchor.getMonth(), 1)
@@ -69,9 +68,9 @@ export function CalendarPage() {
   for (const task of tasks) {
     task.what = task.kind === 'files_due'
       ? task.files.length === 1
-        ? t('calendar.due.file', { file: label('document', task.files[0]) })
-        : t('calendar.due.files', { n: task.files.length, list: task.files.map((k) => meta('document', k, 'short') || label('document', k)).join(t('calendar.listJoin')) })
-      : t(`calendar.due.${TASKS[task.kind][1]}`, { product: brand.product })
+        ? t('shared.calendar.due.file', { file: label('document', task.files[0]) })
+        : t('shared.calendar.due.files', { n: task.files.length, list: task.files.map((k) => meta('document', k, 'short') || label('document', k)).join(t('shared.common.listJoin')) })
+      : t(`shared.calendar.due.${TASKS[task.kind][1]}`, { product: brand.product })
     task.right = task.what
   }
   const shownTasks = tasks.filter((t) => !step || t.step === step)
@@ -81,7 +80,7 @@ export function CalendarPage() {
   const leaveOn = (d) => items.filter((i) => i.kind === 'leave' && i.date <= d && d <= i.endsDate)
   const itemsOn = mode === 'sessions' ? sessionsOn : tasksOn
   /** "3 sessions" / "3 tasks", whichever this mode shows. */
-  const count = (n) => t(mode === 'sessions' ? 'calendar.sessions' : 'calendar.tasks', { n })
+  const count = (n) => t(mode === 'sessions' ? 'shared.calendar.sessions' : 'shared.calendar.tasks', { n })
 
   const days = view === 'day' ? [anchor] : week
   // Office hours set the grid, widened to the hour of any session outside them.
@@ -95,12 +94,12 @@ export function CalendarPage() {
   const move = (dir) =>
     setAnchor((d) => (view === 'month' ? new Date(d.getFullYear(), d.getMonth() + dir, 1) : addDays(d, dir * (view === 'week' ? 7 : 1))))
 
-  const riyadh = mode === 'sessions' ? t('calendar.riyadh') : ''
+  const riyadh = mode === 'sessions' ? t('shared.calendar.riyadh') : ''
   const inMonth = (mode === 'sessions' ? sessions : shownTasks).filter((i) => i.date.getMonth() === anchor.getMonth()).length
-  const dayMonth = (d) => t('calendar.dayMonth', { month: monthShort(d), day: d.getDate() })
+  const dayMonth = (d) => t('shared.calendar.dayMonth', { month: monthShort(d), day: d.getDate() })
   const sub =
     view === 'month'
-      ? `${t('calendar.thisMonth', { count: count(inMonth) })}${riyadh}`
+      ? `${t('shared.calendar.thisMonth', { count: count(inMonth) })}${riyadh}`
       : `${view === 'day' ? dayMonth(anchor) : week.length ? `${dayMonth(week[0])} – ${dayMonth(week.at(-1))}` : ''} · ${count(days.flatMap(itemsOn).length)}${riyadh}`
 
   const popItems = pop ? itemsOn(pop.day).filter((i) => !pop.time || i.time === pop.time) : []
@@ -114,9 +113,9 @@ export function CalendarPage() {
         nav={{ onPrev: () => move(-1), onNext: () => move(1) }}
         actions={
           <>
-            <Tabs
+            <Tabs id="calendar-page-modes"
               size="sm"
-              items={MODES.map((key) => ({ key, label: t(`calendar.modes.${key}`) }))}
+              items={MODES.map((key) => ({ key, label: t(`shared.calendar.modes.${key}`) }))}
               value={mode}
               onChange={(m) => {
                 setAddress({ mode: m, step: '' })
@@ -124,8 +123,8 @@ export function CalendarPage() {
               }}
             />
             {mode === 'other' && (
-              <Select pill aria-label={t('calendar.step')} value={step} onChange={(e) => setAddress({ step: e.target.value })} className="ps-4 pe-10">
-                <option value="">{t('calendar.everyStep')}</option>
+              <Select id="calendar-page-step" pill aria-label={t('shared.calendar.step')} value={step} onChange={(e) => setAddress({ step: e.target.value })} className="ps-4 pe-10">
+                <option value="">{t('shared.calendar.everyStep')}</option>
                 {OTHER_STEPS.map((s) => (
                   <option key={s} value={s}>
                     {label('step', s)}
@@ -133,7 +132,7 @@ export function CalendarPage() {
                 ))}
               </Select>
             )}
-            <Tabs size="sm" items={VIEWS.map((key) => ({ key, label: t(`calendar.views.${key}`) }))} value={view} onChange={setView} />
+            <Tabs id="calendar-page-set-view" size="sm" items={VIEWS.map((key) => ({ key, label: t(`shared.calendar.views.${key}`) }))} value={view} onChange={setView} />
           </>
         }
       />
@@ -141,7 +140,7 @@ export function CalendarPage() {
       <Card padding="none" clip className="flex min-h-120 animate-rise flex-col [animation-delay:.08s] lg:min-h-0 lg:flex-1">
         <div className="scrollbar-slim min-h-0 flex-1 overflow-auto">
           {!data ? (
-            <p className="px-6 py-12 text-center text-sm text-muted">{t('calendar.loading')}</p>
+            <p className="px-6 py-12 text-center text-sm text-muted">{t('shared.calendar.loading')}</p>
           ) : view === 'month' ? (
             <MonthGrid
               anchor={anchor}
@@ -163,7 +162,7 @@ export function CalendarPage() {
       <SessionsDialog
         open={popItems.length > 0}
         onClose={() => setPop(null)}
-        title={pop?.time ? t('calendar.at', { count: count(popItems.length), time: pop.time }) : popDay}
+        title={pop?.time ? t('shared.calendar.at', { count: count(popItems.length), time: pop.time }) : popDay}
         sub={pop?.time ? `${popDay}${riyadh}` : `${count(popItems.length)}${riyadh}`}
         items={popItems}
         onDayView={

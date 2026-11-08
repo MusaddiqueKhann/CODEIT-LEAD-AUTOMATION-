@@ -32,7 +32,7 @@ export const featuresFor = (features, plan) => (plan ? features.filter((f) => fo
  */
 export function inDaysLabel(choices, days, t = english, nameOf = (c) => c.label) {
   const choice = choices.find((c) => c.meta.days === days)
-  return choice ? nameOf(choice) : t('shared.documents.inDays', { n: days })
+  return choice ? nameOf(choice) : t('shared.components.documents.inDays', { n: days })
 }
 
 /** "Thu 05 Nov": the date `days` from today. */
@@ -62,7 +62,6 @@ export const acceptFor = (type) => FILE_TYPES[type] ?? '.pdf,.jpg,.jpeg,.png'
 /** "PDF" from "cr_certificate.pdf". */
 export const extOf = (name) => (name?.split('.').pop() ?? '').toUpperCase().slice(0, 4)
 
-export const fileSize = (bytes) => (bytes < 1048576 ? `${Math.max(1, Math.round(bytes / 1024))} KB` : `${(bytes / 1048576).toFixed(1)} MB`)
 
 /** A member's documents and their tally, from the full documents list. */
 export function documentsOf(documents, m) {
@@ -79,7 +78,7 @@ export function readyOf(m) {
 
 /** Who has a member when nobody on the team does: the customer (recording), or nobody yet. */
 export const nobodyLabel = (m, t = english) =>
-  m.outcome || m.stage === 'closed' ? '—' : m.stage === 'recording' ? t('shared.nobody.customer') : t('shared.nobody.picked')
+  m.outcome || m.stage === 'closed' ? '—' : m.stage === 'recording' ? t('shared.components.nobody.customer') : t('shared.components.nobody.picked')
 
 /**
  * What counts against someone's places, the server's rule (private.open_count): Account until the

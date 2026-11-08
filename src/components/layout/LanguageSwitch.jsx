@@ -16,24 +16,24 @@ export function LanguageSwitch({ lang, onPick, short, className }) {
   const [next, name, mark] = OTHER[lang ?? app.lang]
   if (short) {
     return (
-      <button
+      <button id="language-switch-button"
         type="button"
         lang={next}
         onClick={() => (onPick ?? app.setLang)(next)}
         aria-label={name}
         title={name}
-        className={cx('grid size-9 shrink-0 place-items-center rounded-[11px] bg-white/14 text-[13px] transition hover:bg-white/24 focus-visible:outline-white', className)}
+        className={cx('ui-language-switch__button', 'grid size-9 shrink-0 place-items-center rounded-[11px] bg-white/14 text-[13px] transition hover:bg-white/24 focus-visible:outline-white', className)}
       >
         {mark}
       </button>
     )
   }
   return (
-    <button
+    <button id="language-switch-button-2"
       type="button"
       lang={next}
       onClick={() => (onPick ?? app.setLang)(next)}
-      className={cx(
+      className={cx('ui-language-switch__button-2', 
         'inline-flex h-8 items-center gap-1.5 rounded-full bg-white/14 px-3 text-xs text-white transition hover:bg-white/24 focus-visible:outline-white',
         className,
       )}

@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { SplashCard } from '../../components/layout/SplashCard.jsx'
-import { Button, Field, FormError, Input } from '../../components/ui/index.js'
+import { Button, Field, Input, Notice, SplashCard } from '@/components'
 import { useLang } from '../../controllers/shared/LangContext.jsx'
 import { PUBLIC } from '../../routes/paths.js'
 
@@ -28,25 +27,25 @@ export function ForgotForm({ onSend }) {
   }
 
   const back = (
-    <Link to={PUBLIC.login} className="text-sm font-medium text-brand-700 hover:text-brand-800">
-      {t('auth.backToSignIn')}
+    <Link id="forgot-form-back-to-sign-in" to={PUBLIC.login} className="v-forgot-form__back-to-sign-in text-sm font-medium text-brand-700 hover:text-brand-800">
+      {t('signin.backToSignIn')}
     </Link>
   )
 
   if (sent) {
     return (
       // The email is one left-to-right piece, so it doesn't scramble inside Arabic.
-      <SplashCard title={t('auth.forgot.checkTitle')} sub={t('auth.forgot.checkSub', { email: `\u2066${email.trim()}\u2069` })}>
+      <SplashCard title={t('signin.forgot.checkTitle')} sub={t('signin.forgot.checkSub', { email: `\u2066${email.trim()}\u2069` })}>
         <div className="mt-6">{back}</div>
       </SplashCard>
     )
   }
 
   return (
-    <SplashCard title={t('auth.forgot.title')} sub={t('auth.forgot.sub')}>
-      <form onSubmit={submit} className="mt-7 flex flex-col gap-4">
-        <FormError>{error}</FormError>
-        <Field label={t('auth.email')}>
+    <SplashCard title={t('signin.forgot.title')} sub={t('signin.forgot.sub')}>
+      <form id="forgot-form-email" onSubmit={submit} className="v-forgot-form__email mt-7 flex flex-col gap-4">
+        <Notice role="alert">{error}</Notice>
+        <Field id="forgot-form-email-2" label={t('signin.email')}>
           {(props) => (
             <Input
               {...props}
@@ -57,12 +56,12 @@ export function ForgotForm({ onSend }) {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               dir="ltr"
-              placeholder="you@codeit.sa"
+              placeholder={t('signin.emailHint')}
             />
           )}
         </Field>
-        <Button type="submit" size="lg" fullWidth disabled={busy}>
-          {busy ? t('auth.forgot.sending') : t('auth.forgot.send')}
+        <Button id="forgot-form-sending" type="submit" size="lg" fullWidth disabled={busy}>
+          {busy ? t('signin.forgot.sending') : t('signin.forgot.send')}
         </Button>
         <div className="text-center">{back}</div>
       </form>

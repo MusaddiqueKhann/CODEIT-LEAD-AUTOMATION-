@@ -1,13 +1,17 @@
-import { useEffect } from 'react'
+import { createContext, useContext, useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 import { myCounts, onAlertsChange } from '../../models/data/alerts.js'
 import { useRows } from './useRows.js'
 
+/** The sidebar's numbers, as the shell loaded them (one load, one live channel, one timer). */
+export const CountsContext = createContext({})
+export const useCounts = () => useContext(CountsContext)
+
 /**
- * The sidebar's numbers. They refresh when you move between pages, when one of your alerts
- * arrives or is read (live), and once a minute.
+ * Loads the numbers, for the shell only. They refresh when you move between pages, when one of
+ * your alerts arrives or is read (live), and once a minute.
  */
-export function useCounts(personId) {
+export function useLoadCounts(personId) {
   const { pathname } = useLocation()
   const { data, reload } = useRows(myCounts, 'counts')
 

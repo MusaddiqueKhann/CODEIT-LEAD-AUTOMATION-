@@ -25,19 +25,21 @@ const BAD = 'ring-[1.5px] ring-danger ring-inset'
  * `action` sits at the far end of the label row — the login form's "Forgot
  * password?" — without becoming part of the label's accessible name.
  */
-export function Field({ label, hint, error, required, action, children, className }) {
-  const id = useId()
+export function Field({ id: given, label, hint, error, required, action, children, className }) {
+  const auto = useId()
+  // The control's id: the one the page gives (its name in the page), else a generated one.
+  const id = given ?? auto
   const describedBy = error || hint ? `${id}-desc` : undefined
 
   const heading = (
-    <label htmlFor={id} className="text-[13px] text-soft">
+    <label htmlFor={id} className="ui-field__label text-[13px] text-soft">
       {label}
       {required && <span className="ms-0.5 text-danger">*</span>}
     </label>
   )
 
   return (
-    <div className={cx('flex flex-col gap-1.5', className)}>
+    <div className={cx('ui-field flex flex-col gap-1.5', className)}>
       {action ? (
         <div className="flex items-center justify-between">
           {heading}
@@ -50,7 +52,7 @@ export function Field({ label, hint, error, required, action, children, classNam
       {children({ id, 'aria-describedby': describedBy, 'aria-invalid': error ? true : undefined })}
 
       {(error || hint) && (
-        <p id={describedBy} className={cx('text-xs', error ? 'text-danger-ink' : 'text-muted')}>
+        <p id={describedBy} className={cx('ui-field__hint text-xs', error ? 'text-danger-ink' : 'text-muted')}>
           {error || hint}
         </p>
       )}
@@ -64,9 +66,11 @@ export function Field({ label, hint, error, required, action, children, classNam
  * is a node laid over the right edge — the show/hide toggle. Either one wraps
  * the input in a positioning div; with neither, the input renders bare.
  */
-export function Input({ icon, trailing, error, className, ...rest }) {
+export function Input({ bare = false, icon, trailing, error, className, ...rest }) {
+  // bare: the element alone, for a control whose look the page owns (like Button's bare).
+  if (bare) return <input className={cx('ui-input', className)} {...rest} />
   const control = (
-    <input className={cx(CONTROL, 'h-11', error ? BAD : OK, icon && 'ps-10', className)} {...rest} />
+    <input className={cx('ui-input', CONTROL, 'h-11', error ? BAD : OK, icon && 'ps-10', className)} {...rest} />
   )
 
   if (!icon && !trailing) return control
@@ -86,8 +90,9 @@ export function Input({ icon, trailing, error, className, ...rest }) {
 }
 
 /** The multi-line control. `rows` sets the resting height; the user can drag it taller. */
-export function Textarea({ error, rows = 4, className, ...rest }) {
-  return <textarea rows={rows} className={cx(CONTROL, 'py-3 leading-normal', error ? BAD : OK, 'resize-y', className)} {...rest} />
+export function Textarea({ bare = false, error, rows, className, ...rest }) {
+  if (bare) return <textarea rows={rows} className={cx('ui-textarea', className)} {...rest} />
+  return <textarea rows={rows ?? 4} className={cx('ui-textarea', CONTROL, 'py-3 leading-normal', error ? BAD : OK, 'resize-y', className)} {...rest} />
 }
 
 /**
@@ -95,11 +100,18 @@ export function Textarea({ error, rows = 4, className, ...rest }) {
  * `pill` is the design's filter look (a soft grey pill, 14px) for selects that sit in a header
  * or toolbar rather than in a form.
  */
-export function Select({ error, pill = false, className, children, ...rest }) {
+export function Select({ bare = false, error, pill = false, className, children, ...rest }) {
+  if (bare)
+    return (
+      <select className={cx('ui-select', className)} {...rest}>
+        {children}
+      </select>
+    )
   return (
     <div className="relative">
       <select
         className={cx(
+          'ui-select',
           pill ? 'h-10 w-full rounded-full bg-surface ps-4 text-[13px] text-ink outline-none transition hover:bg-surface-hover' : cx(CONTROL, 'h-11'),
           error ? BAD : OK,
           'cursor-pointer appearance-none pe-10',

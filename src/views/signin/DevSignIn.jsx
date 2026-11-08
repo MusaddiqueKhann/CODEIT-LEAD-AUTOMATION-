@@ -1,12 +1,11 @@
 import { useState } from 'react'
-import { Button } from '../../components/ui/index.js'
+import { Button, TONES } from '@/components'
 import { useLang } from '../../controllers/shared/LangContext.jsx'
-import { TONES } from '../../components/tones.js'
 
 /*
  * Sample data only: one click signs in as each seed login, so every panel can be checked.
  * Shown only in development, and the list comes from .env.local, never from the code:
- *   VITE_DEV_LOGINS="Admin=admin@codeit.test,New hire=tariq@codeit.test:Welcome-123"
+ *   VITE_DEV_LOGINS="Admin=admin@codeit.test,New hire=tariq@codeit.test:<temporary password>"
  *   VITE_DEV_PASSWORD=…   (used when a login has no ":password" of its own)
  * Read only under `import.meta.env.DEV`, so a production build never contains them.
  */
@@ -37,10 +36,10 @@ export function DevSignIn({ onSignIn }) {
 
   return (
     <div className="w-full max-w-md rounded-[22px] bg-panel/85 p-4 shadow-xl ring-1 ring-white/40 backdrop-blur-xl">
-      <p className="eyebrow px-1 text-muted">{t('auth.devSignIn')}</p>
+      <p className="eyebrow px-1 text-muted">{t('signin.devSignIn')}</p>
       <div className="mt-2.5 flex flex-wrap gap-1.5">
         {LOGINS.map((login) => (
-          <Button
+          <Button id={`dev-sign-in-pick-${login.email}`}
             key={login.email}
             variant="bare"
             onClick={() => pick(login)}

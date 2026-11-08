@@ -97,7 +97,7 @@ async function changeEmail(b: Record<string, any>, link: string) {
   const email = String(b.email ?? '').trim().toLowerCase()
   if (!EMAIL.test(email)) throw refuse('email_invalid', 'Type a full email, like name@company.com.')
   const { data: p } = await db.from('profiles').select('name, email, language').eq('id', b.id).single()
-  if (!p) throw refuse('person_fields', 'This person isn’t on the team.')
+  if (!p) throw refuse('person_missing', 'This person isn’t on the team.')
   if (email === p.email) return { email, emailed: false }
   // Supabase answers a taken email here with only "Error updating user", so ask first.
   const { count } = await db.from('profiles').select('id', { count: 'exact', head: true }).eq('email', email)

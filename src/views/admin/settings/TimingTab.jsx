@@ -1,9 +1,8 @@
 import { useState } from 'react'
-import Icon from '../../../components/Icon.jsx'
-import { Button, cx } from '../../../components/ui/index.js'
+import { cx, Icon, IconButton, Input } from '@/components'
 import { useConfig } from '../../../controllers/shared/ConfigContext.jsx'
 import { useLang } from '../../../controllers/shared/LangContext.jsx'
-import { updateSettings } from '../../../models/data/settings.js'
+import { updateSettings } from '../../../controllers/admin/settings.js'
 import { useAction } from '../../../controllers/shared/useAction.js'
 import { riyadhNow, startOfDay } from '../../../models/rules/format.js'
 import { exampleFor } from '../../../models/rules/settingsExamples.js'
@@ -28,6 +27,9 @@ const GROUPS = [
   ]],
   ['picked', 'userPlus', [
     ['max_open_members', 1, 100],
+  ]],
+  ['files', 'upload', [
+    ['max_upload_mb', 1, 50],
   ]],
   ['after', 'video', [
     ['no_show_limit', 1, 10],
@@ -72,8 +74,6 @@ const toValues = (form) =>
     ]),
   )
 
-const ARROW = 'grid h-7.5 w-8.5 place-items-center rounded-[10px] transition'
-
 /** Admin: every number the rules use, in groups of tiles; a tile being changed says what it means today. */
 export function TimingTab({ after }) {
   const { settings, holidays } = useConfig()
@@ -86,7 +86,7 @@ export function TimingTab({ after }) {
 
   useUnsaved('timing', JSON.stringify(form) !== JSON.stringify(fromSettings(settings)), () =>
     run(async () => {
-      if (KEYS.some((k) => Number.isNaN(values[k]))) throw new Error(t('settings.timing.fillAll'))
+      if (KEYS.some((k) => Number.isNaN(values[k]))) throw new Error(t('admin.settings.timing.fillAll'))
       return updateSettings(values)
     }),
   )
@@ -99,11 +99,11 @@ export function TimingTab({ after }) {
             <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-brand-100 text-brand-700">
               <Icon name={icon} className="size-4.25" strokeWidth={1.8} />
             </span>
-            <h3 className="text-[15px] text-ink">{t(`settings.timing.groups.${group}`)}</h3>
+            <h3 className="text-[15px] text-ink">{t(`admin.settings.timing.groups.${group}`)}</h3>
           </div>
           <div className="grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-2.5">
             {fields.map(([k, min, max, step = 1]) => {
-              const label = t(`settings.timing.fields.${k}`)
+              const label = t(`admin.settings.timing.fields.${k}`)
               const numeric = min !== undefined
               const by = (dir) => set(k, String(Math.min(max, Math.max(min, (Number(form[k]) || 0) + dir * step))))
               const example = exampleFor(k, values, ctx)
@@ -116,23 +116,19 @@ export function TimingTab({ after }) {
                     <span title={label} className="truncate text-xs text-soft">
                       {label}
                     </span>
-                    <input
+                    <Input bare id={`timing-tab-set-${k}`}
                       value={form[k]}
                       inputMode={TEXT.includes(k) ? 'tel' : numeric ? 'numeric' : 'text'}
                       dir={TEXT.includes(k) ? 'ltr' : undefined}
                       onChange={(e) => set(k, numeric ? e.target.value.replace(/\D/g, '') : e.target.value)}
                       className={cx('w-full min-w-0 bg-transparent p-0 text-stat text-ink tabular-nums outline-none', TEXT.includes(k) && 'rtl:text-end')}
                     />
-                    <span className="min-h-3.75 text-xs text-muted">{t(`settings.timing.units.${k}`)}</span>
+                    <span className="min-h-3.75 text-xs text-muted">{t(`admin.settings.timing.units.${k}`)}</span>
                   </label>
                   {numeric && (
                     <span className="flex shrink-0 flex-col gap-1">
-                      <Button variant="bare" aria-label={t('settings.timing.more', { what: label })} onClick={() => by(1)} className={`${ARROW} bg-brand-700 text-white hover:bg-brand-800`}>
-                        <Icon name="chevronDown" className="size-3.5 rotate-180" strokeWidth={2.2} />
-                      </Button>
-                      <Button variant="bare" aria-label={t('settings.timing.less', { what: label })} onClick={() => by(-1)} className={`${ARROW} bg-panel text-soft hover:bg-surface-hover`}>
-                        <Icon name="chevronDown" className="size-3.5" strokeWidth={2.2} />
-                      </Button>
+                      <IconButton id={`timing-tab-more-${k}`} icon="chevronDown" label={t('admin.settings.timing.more', { what: label })} size="arrow" shape="key" look="brand" iconClassName="size-3.5 rotate-180" strokeWidth={2.2} onClick={() => by(1)} />
+                      <IconButton id={`timing-tab-less-${k}`} icon="chevronDown" label={t('admin.settings.timing.less', { what: label })} size="arrow" shape="key" look="panelQuiet" iconClassName="size-3.5" strokeWidth={2.2} onClick={() => by(-1)} />
                     </span>
                   )}
                   {example && (

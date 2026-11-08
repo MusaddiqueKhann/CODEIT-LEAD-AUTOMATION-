@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { Card } from '../../../components/ui/index.js'
+import { Card } from '@/components'
 import { useConfig } from '../../../controllers/shared/ConfigContext.jsx'
 import { useLang } from '../../../controllers/shared/LangContext.jsx'
 import { weekdayNames, monthShort } from '../../../models/rules/format.js'
@@ -19,8 +19,8 @@ export function FreeSlots({ days, world }) {
   const hours = Array.from({ length: last - first }, (_, i) => first + i)
 
   return (
-    <Card as="section" radius="rounded-tile" padding="none" className="flex animate-rise flex-col gap-4 px-6 py-5 [animation-delay:.38s]">
-      <CardHead title={t('overview.free.title')} sub={t('overview.free.sub')} to={ROUTES.calendar} label={t('overview.links.calendar')} />
+    <Card id="free-slots-title" as="section" radius="rounded-tile" padding="none" className="flex animate-rise flex-col gap-4 px-6 py-5 [animation-delay:.38s]">
+      <CardHead id="free-slots-calendar" title={t('admin.overview.free.title')} sub={t('admin.overview.free.sub')} to={ROUTES.calendar} label={t('shared.overview.links.calendar')} />
       <div className="scrollbar-slim overflow-x-auto">
         <div className="grid min-w-150 items-center gap-1.5" style={{ gridTemplateColumns: `92px repeat(${hours.length}, minmax(0, 1fr))` }}>
           <span />
@@ -36,11 +36,11 @@ export function FreeSlots({ days, world }) {
             ...hours.map((h) => {
               const free = freeAt(new Date(d.getFullYear(), d.getMonth(), d.getDate(), h), world)
               return (
-                <Link
+                <Link id={`free-slots-who-${`${+d}:${h}`}`}
                   key={`${+d}:${h}`}
                   to={ROUTES.calendar}
-                  title={`${weekdayNames()[d.getDay()]} ${d.getDate()} ${monthShort(d)} · ${pad(h)}:00 · ${free.length ? t('overview.free.who', { names: free.map((p) => p.name.split(' ')[0]).join(t('overview.sep')) }) : t('overview.free.nobody')}`}
-                  className="grid h-12 place-items-center rounded-xl text-[15px] tracking-[-0.02em] text-white transition hover:-translate-y-0.5"
+                  title={`${weekdayNames()[d.getDay()]} ${d.getDate()} ${monthShort(d)} · ${pad(h)}:00 · ${free.length ? t('admin.overview.free.who', { names: free.map((p) => p.name.split(' ')[0]).join(t('shared.common.listJoin')) }) : t('admin.overview.free.nobody')}`}
+                  className="v-free-slots__who grid h-12 place-items-center rounded-xl text-[15px] tracking-[-0.02em] text-white transition hover:-translate-y-0.5"
                   style={{ background: shade(free.length) }}
                 >
                   {free.length || ''}
@@ -51,11 +51,11 @@ export function FreeSlots({ days, world }) {
         </div>
       </div>
       <div className="flex flex-wrap items-center gap-4 text-xs text-soft">
-        <span>{t('overview.free.legend')}</span>
+        <span>{t('admin.overview.free.legend')}</span>
         {[1, 2, 3, 0].map((n) => (
           <span key={n} className="flex items-center gap-1.5">
             <span className="size-4 rounded-[5px]" style={{ background: shade(n) }} />
-            {n || t('overview.free.none')}
+            {n || t('admin.overview.free.none')}
           </span>
         ))}
       </div>

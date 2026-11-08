@@ -1,10 +1,16 @@
 import { Fragment, createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { useAuth } from './AuthContext.jsx'
 import { setMyLanguage } from '../../models/data/auth.js'
-import { fromDay, formatShort, setDateLanguage } from '../../models/rules/format.js'
+import { setDateLanguage } from '../../models/rules/format.js'
+import { refusalText } from '../../models/rules/refusal.js'
 import { translate } from '../../content/index.js'
 
 const LangContext = createContext(null)
+/* A key with no words shows itself, and says so in the console while developing. */
+const missing = (key) => {
+  if (import.meta.env.DEV) console.warn(`No words for "${key}"`)
+  return key
+}
 const KEY = 'lead-codeit:lang'
 const stored = () => {
   try {
@@ -26,19 +32,6 @@ export function useLang() {
   const ctx = useContext(LangContext)
   if (!ctx) throw new Error('useLang must be used inside <LangProvider>')
   return ctx
-}
-
-/** A refusal in `lang`: the server's sentence in English, its translation by code in Arabic. */
-function errorMessage(lang, err) {
-  if (lang === 'en' || !err?.code) return err?.message ?? String(err)
-  const show = (v) =>
-    Array.isArray(v)
-      ? v.map((x) => translate(lang, `errors.names.${x}`) ?? x).join('، ')
-      : typeof v === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(v)
-        ? formatShort(fromDay(v))
-        : String(v)
-  const values = Object.fromEntries(Object.entries(err.values ?? {}).map(([k, v]) => [k, show(v)]))
-  return translate(lang, `errors.${err.code}`, values) ?? err.message
 }
 
 /**
@@ -81,9 +74,9 @@ export function LangProvider({ children }) {
     () => ({
       lang,
       dir,
-      /** The words for a key ("area.name") with {values}; the key itself if it has none, so a gap shows. */
-      t: (key, values) => translate(lang, key, values) ?? key,
-      errorText: (err) => errorMessage(lang, err),
+      /** The words for a key ("admin.team.title") with {values}; the key itself if it has none, so a gap shows. */
+      t: (key, values) => translate(lang, key, values) ?? missing(key),
+      errorText: (err) => refusalText(lang, err),
       setLang,
       /** The customer page: the whole page reads in `l` while it is open (null gives it back). */
       setPageLang,

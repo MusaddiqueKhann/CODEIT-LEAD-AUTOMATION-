@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { LOGO } from '../logo.js'
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom'
 import Icon from '../Icon.jsx'
 import { cx } from '../cx.js'
@@ -6,13 +7,12 @@ import { useAuth } from '../../controllers/shared/AuthContext.jsx'
 import { useConfig } from '../../controllers/shared/ConfigContext.jsx'
 import { useLang } from '../../controllers/shared/LangContext.jsx'
 import { useToast } from '../../controllers/shared/ToastContext.jsx'
-import { listMembers } from '../../models/data/members.js'
-import { useRows } from '../../controllers/shared/useRows.js'
 import { dayKey, riyadhNow } from '../../models/rules/format.js'
 import { PUBLIC, ROUTES, SECTIONS, navFor } from '../../routes/paths.js'
 import { initials } from '../../models/rules/time.js'
 import { LanguageSwitch } from './LanguageSwitch.jsx'
 import { sidebarTree, trailTo } from '../../routes/sidebar.js'
+import { useMembers } from '../../controllers/shared/useMembers.js'
 
 /* The sidebar is a teal card, so every state is a white wash over it: hover white/12, the
    current page white/20. Rows sit on a black/8 box. The focus ring flips to white, or it would
@@ -48,7 +48,7 @@ function Node({ node, depth, open, toggle, here, counts, onSelect }) {
     const isOpen = open.has(node.key)
     return (
       <>
-        <button type="button" aria-expanded={isOpen} onClick={() => toggle(node.key)} className={cx(row, isOpen && top && 'bg-white/12')}>
+        <button id={`sidebar-${node.key.replaceAll(':', '-')}-group`} type="button" aria-expanded={isOpen} onClick={() => toggle(node.key)} className={cx('ui-sidebar__group', row, isOpen && top && 'bg-white/12')}>
           {top && <Icon name={node.icon} strokeWidth={1.7} className="size-4.5 shrink-0 opacity-95" />}
           <span className="min-w-0 flex-1 truncate">{node.label}</span>
           {badge > 0 && <span className={BADGE}>{badge}</span>}
@@ -64,7 +64,7 @@ function Node({ node, depth, open, toggle, here, counts, onSelect }) {
   const current = here === node.to || (top && path !== ROUTES.overview && here.split('?')[0].startsWith(`${path}/`))
   return (
     <>
-      <Link to={node.to} onClick={onSelect} aria-current={current ? 'page' : undefined} className={cx(row, current ? (top ? 'bg-white/20' : 'bg-white/16') : !top && 'opacity-88')}>
+      <Link id={`sidebar-${node.key.replaceAll(':', '-')}`} to={node.to} onClick={onSelect} aria-current={current ? 'page' : undefined} className={cx('ui-sidebar__item', row, current ? (top ? 'bg-white/20' : 'bg-white/16') : !top && 'opacity-88')}>
         {top && <Icon name={node.icon} strokeWidth={1.7} className="size-4.5 shrink-0 opacity-95" />}
         <span className="min-w-0 flex-1 truncate">{node.label}</span>
         {badge > 0 && <span className={BADGE}>{badge}</span>}
@@ -88,7 +88,7 @@ export function Sidebar({ onNavigate, counts = {} }) {
   const opening = /^\/members\/([^/]+)$/.exec(pathname)?.[1]
   const [codes, setCodes] = useState([])
   if (opening && codes[0] !== opening) setCodes([opening, ...codes.filter((c) => c !== opening)].slice(0, 5))
-  const { data: members, reload } = useRows(listMembers, 'sidebar')
+  const { data: members, reload } = useMembers()
   // A member added since the list loaded has no name yet: load the list again, once per code.
   const missing = members && codes.find((c) => !members.some((m) => m.code === c))
   const [asked, setAsked] = useState(null)
@@ -127,7 +127,7 @@ export function Sidebar({ onNavigate, counts = {} }) {
     onNavigate?.() // close the mobile drawer before we leave the shell
     await signOut()
     navigate(PUBLIC.login, { replace: true })
-    toast(t('layout.signedOut'), 'success')
+    toast(t('shared.layout.signedOut'), 'success')
   }
 
   /* Header and your card stay put; the groups between them scroll on a short window. */
@@ -136,7 +136,7 @@ export function Sidebar({ onNavigate, counts = {} }) {
       {/* Whose panel this is: the logo, then the role's portal name from Settings → Lists. The PNG
           is teal on transparent; brightness-0 + invert turns it white for the panel. */}
       <div className={cx('flex shrink-0 flex-col items-center gap-2.5 border-b pb-4', RULE)}>
-        <img src="/CompanyLogo/Codeit-flat.png" alt={brand.app} className="h-15 w-auto brightness-0 invert" />
+        <img src={LOGO} alt={brand.app} className="h-15 w-auto brightness-0 invert" />
         <span className="inline-flex h-7 items-center gap-1.5 rounded-full bg-white/14 px-3 text-[11px] tracking-[0.14em] whitespace-nowrap uppercase">
           <Icon name="shield" strokeWidth={2} className="size-3" />
           {meta('role', role, 'portal') || label('role', role)}
@@ -145,12 +145,13 @@ export function Sidebar({ onNavigate, counts = {} }) {
 
       {primary && (
         <NavLink
+          id="sidebar-primary"
           to={primary.path}
           onClick={onNavigate}
-          className="my-3.5 flex h-11 shrink-0 items-center justify-center gap-2 rounded-[14px] bg-white text-sm text-brand-700 shadow-[0_8px_18px_-12px_rgb(0_0_0/0.4)] transition hover:bg-brand-50 focus-visible:outline-white"
+          className="ui-sidebar__primary my-3.5 flex h-11 shrink-0 items-center justify-center gap-2 rounded-[14px] bg-white text-sm text-brand-700 shadow-[0_8px_18px_-12px_rgb(0_0_0/0.4)] transition hover:bg-brand-50 focus-visible:outline-white"
         >
           <Icon name={primary.icon} strokeWidth={1.8} className="size-4.5" />
-          {t(`layout.nav.${primary.key}`)}
+          {t(`shared.layout.nav.${primary.key}`)}
         </NavLink>
       )}
 
@@ -159,7 +160,7 @@ export function Sidebar({ onNavigate, counts = {} }) {
         {SECTIONS.map((section, i) => (
           <div key={section.key} className="flex flex-col gap-2.5">
             {/* The first group goes without a heading, as in the design. */}
-            {i > 0 && <p className="px-3 text-[11px] tracking-[0.16em] uppercase opacity-75">{t(`layout.sections.${section.key}`)}</p>}
+            {i > 0 && <p className="px-3 text-[11px] tracking-[0.16em] uppercase opacity-75">{t(`shared.layout.sections.${section.key}`)}</p>}
             <div className="flex flex-col gap-0.5 rounded-2xl bg-black/8 p-1.5">
               {tree
                 .filter((node) => node.section === section.key)
@@ -174,7 +175,7 @@ export function Sidebar({ onNavigate, counts = {} }) {
       {/* Who is signed in: opens their own settings. The language and Sign out sit beside it. */}
       <div className={cx('mt-3 flex shrink-0 flex-col gap-2.5 border-t pt-3', RULE)}>
         <div className="flex items-center gap-2 rounded-2xl bg-white/12 p-1.75">
-          <NavLink to={ROUTES.settings} onClick={onNavigate} className="flex min-w-0 flex-1 items-center gap-2.5 rounded-[14px] focus-visible:outline-white">
+          <NavLink id="sidebar-profile" to={ROUTES.settings} onClick={onNavigate} className="ui-sidebar__profile flex min-w-0 flex-1 items-center gap-2.5 rounded-[14px] focus-visible:outline-white">
             {profile.avatarUrl ? (
               <img src={profile.avatarUrl} alt="" className="size-10 shrink-0 rounded-xl object-cover" />
             ) : (
@@ -185,17 +186,17 @@ export function Sidebar({ onNavigate, counts = {} }) {
               <span dir="auto" className="truncate text-sm rtl:text-right">{profile.name}</span>
               <span className="flex items-center gap-1.5 text-xs">
                 <span className="truncate opacity-80">{label('role', profile.role)}</span>
-                {onLeave && <span className="rounded-full bg-warn px-1.5 py-px text-[11px] text-ink">{t('layout.onLeave')}</span>}
+                {onLeave && <span className="rounded-full bg-warn px-1.5 py-px text-[11px] text-ink">{t('shared.layout.onLeave')}</span>}
               </span>
             </span>
           </NavLink>
           <LanguageSwitch short />
-          <button
+          <button id="sidebar-sign-out"
             type="button"
             onClick={handleSignOut}
-            aria-label={t('layout.signOut')}
-            title={t('layout.signOut')}
-            className="grid size-9 shrink-0 place-items-center rounded-[11px] bg-white/14 transition hover:bg-white/24 focus-visible:outline-white"
+            aria-label={t('shared.layout.signOut')}
+            title={t('shared.layout.signOut')}
+            className="ui-sidebar__sign-out grid size-9 shrink-0 place-items-center rounded-[11px] bg-white/14 transition hover:bg-white/24 focus-visible:outline-white"
           >
             <Icon name="logout" strokeWidth={1.8} className="size-4.25" />
           </button>

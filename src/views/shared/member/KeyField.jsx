@@ -1,5 +1,4 @@
-import Icon from '../../../components/Icon.jsx'
-import { Button, cx } from '../../../components/ui/index.js'
+import { Badge, cx, Icon, IconButton } from '@/components'
 
 /** A value someone copies into CODEIT: an icon, the value, a small tag, then its little buttons. */
 export function KeyField({ icon, tag, children, actions, mono }) {
@@ -12,10 +11,10 @@ export function KeyField({ icon, tag, children, actions, mono }) {
       <span className={cx('min-w-0 flex-1 truncate text-sm font-medium text-ink', mono && 'font-mono tracking-[0.06em]')}>
         <bdi>{children}</bdi>
       </span>
-      {tag && <span className="inline-flex h-6 shrink-0 items-center rounded-full bg-[#e6f2f1] px-2.5 text-[11px] whitespace-nowrap text-brand-800">{tag}</span>}
+      {tag && <Badge size="xs" look="brandSoft">{tag}</Badge>}
       {actions && (
         <>
-          <span className="h-5.5 w-px shrink-0 bg-[#dfe5e5]" />
+          <span className="h-5.5 w-px shrink-0 bg-brand-line" />
           {actions}
         </>
       )}
@@ -24,17 +23,8 @@ export function KeyField({ icon, tag, children, actions, mono }) {
 }
 
 /** One of KeyField's small icon buttons. */
-export function KeyButton({ icon, label, onClick, disabled }) {
+export function KeyButton({ id, icon, label, onClick, disabled }) {
   return (
-    <Button
-      variant="bare"
-      aria-label={label}
-      title={label}
-      disabled={disabled}
-      onClick={onClick}
-      className="grid size-8 shrink-0 place-items-center rounded-[10px] text-soft transition hover:bg-panel hover:text-brand-700 disabled:text-[#b7bec7]"
-    >
-      <Icon name={icon} className="size-4" strokeWidth={1.8} />
-    </Button>
+    <IconButton id={id} icon={icon} label={label} title size={8} shape="key" look="key" disabled={disabled} onClick={onClick} />
   )
 }

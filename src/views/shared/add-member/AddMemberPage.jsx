@@ -1,13 +1,12 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { PageHeader } from '../../../components/layout/PageHeader.jsx'
-import { AccountForm, CompanyForm, PickTimeSection, RequirementsForm } from '../../../components/shared/index.js'
+import { AccountForm, CompanyForm, PageHeader, PickTimeSection, RequirementsForm } from '@/components'
 import { EMAIL, EMPTY } from '../../../models/rules/memberDraft.js'
 import { useAuth } from '../../../controllers/shared/AuthContext.jsx'
 import { useConfig } from '../../../controllers/shared/ConfigContext.jsx'
 import { useLang } from '../../../controllers/shared/LangContext.jsx'
 import { useToast } from '../../../controllers/shared/ToastContext.jsx'
-import { addMember } from '../../../models/data/members.js'
+import { addMember } from '../../../controllers/shared/useMembers.js'
 import { ROUTES, memberPath } from '../../../routes/paths.js'
 import { SalesOwnerPicker } from './SalesOwnerPicker.jsx'
 import { SaveBar } from './SaveBar.jsx'
@@ -33,7 +32,7 @@ export function AddMemberPage() {
     !draft.company.trim() && 'company',
   ]
     .filter(Boolean)
-    .map((k) => t(`members.add.missing.${k}`))
+    .map((k) => t(`shared.members.add.missing.${k}`))
 
   const save = async () => {
     setBusy(true)
@@ -41,10 +40,10 @@ export function AddMemberPage() {
       const r = await addMember(draft, admin ? salesId : null)
       toast(
         r.account === 'nobody'
-          ? t('members.add.savedNobody', { code: r.code, admin: label('role', 'admin'), account: label('role', 'account') })
-          : t('members.add.saved', { code: r.code, person: r.account, product: brand.product }),
+          ? t('shared.members.add.savedNobody', { code: r.code, admin: label('role', 'admin'), account: label('role', 'account') })
+          : t('shared.members.add.saved', { code: r.code, person: r.account, product: brand.product }),
       )
-      if (r.phoneMatch) toast(t('members.add.phoneMatch', { match: r.phoneMatch }), 'warn')
+      if (r.phoneMatch) toast(t('shared.members.add.phoneMatch', { match: r.phoneMatch }), 'warn')
       for (const e of r.uploadErrors) toast(e, 'danger')
       navigate(memberPath(r.code))
     } catch (err) {
@@ -57,8 +56,8 @@ export function AddMemberPage() {
     <div className="flex flex-col gap-4">
       <PageHeader
         back={ROUTES.members}
-        title={t('layout.nav.addMember')}
-        sub={t(admin ? 'members.add.subAdmin' : 'members.add.subSales', { account: label('role', 'account'), product: brand.product })}
+        title={t('shared.layout.nav.addMember')}
+        sub={t(admin ? 'shared.members.add.subAdmin' : 'shared.members.add.subSales', { account: label('role', 'account'), product: brand.product })}
       />
       {admin && <SalesOwnerPicker value={salesId} onChange={setSalesId} />}
       <AccountForm draft={draft} set={set} />

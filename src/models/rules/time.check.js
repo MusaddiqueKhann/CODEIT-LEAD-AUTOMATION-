@@ -1,8 +1,8 @@
 // Self-check for the time and slot maths: `node src/lib/time.check.js`
 // Run it again as `TZ=America/New_York node src/lib/time.check.js`: Riyadh time must not follow the machine.
 import assert from 'node:assert/strict'
-import { ago, dayKey, fill, formatFor, fromDay, fromServer, riyadhNow, toServer } from './format.js'
-import { addDays, addWorkingDays, daySlots, hourSpan, initials, openDays, workdayHours, workingDaysUntil } from './time.js'
+import { ago, dayKey, fileSize, fill, formatFor, fromDay, fromServer, riyadhNow, setDateLanguage, toServer } from './format.js'
+import { addDays, addWorkingDays, daySlots, hourSpan, initials, openDays, startOfWeek, workdayHours, workingDaysUntil } from './time.js'
 
 const now = new Date()
 assert.equal(riyadhNow().getHours(), (now.getUTCHours() + 3) % 24)
@@ -62,4 +62,11 @@ assert.equal(ago(new Date(2029, 11, 30, 9, 0), noon), 'Sun 30 Dec')
   assert.equal(dayKey(addWorkingDays(fromDay('2026-11-08'), -1, week)), '2026-11-05') // 1 working day before Sun is Thu
   addWorkingDays(fromDay('2026-11-05'), 3, allOff) // a week with no working day still returns
 }
+assert.equal(startOfWeek(new Date(2030, 0, 9)).getDate(), 6, 'Wed 9 Jan 2030 → its week starts Sun 6 Jan')
+assert.equal(startOfWeek(new Date(2030, 0, 6)).getDate(), 6, 'a Sunday starts its own week')
+assert.equal(fileSize(245760), '240 KB')
+assert.equal(fileSize(3 * 1048576), '3.0 MB')
+setDateLanguage('ar')
+assert.equal(fileSize(245760), '240 كيلوبايت')
+setDateLanguage('en')
 console.log('time.js ok')

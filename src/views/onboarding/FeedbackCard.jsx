@@ -1,13 +1,10 @@
 import { useState } from 'react'
-import Icon from '../../components/Icon.jsx'
-import { MemberAvatar } from '../../components/shared/index.js'
-import { Badge, Button, cx } from '../../components/ui/index.js'
+import { Badge, Button, cx, Icon, MemberAvatar, Panel, Textarea } from '@/components'
 import { useAuth } from '../../controllers/shared/AuthContext.jsx'
 import { useConfig } from '../../controllers/shared/ConfigContext.jsx'
 import { useLang } from '../../controllers/shared/LangContext.jsx'
 import { formatStamp, fromServer } from '../../models/rules/format.js'
 import { initials } from '../../models/rules/time.js'
-import { Panel } from '../shared/member/Panel.jsx'
 
 const BOX = 'flex min-w-0 flex-[1_1_320px] flex-col gap-3 rounded-[20px] bg-surface-2 p-4.5'
 
@@ -26,7 +23,7 @@ export function FeedbackCard({ member: m, act }) {
   const low = m.rating && m.rating <= settings.lowRatingMax
 
   return (
-    <Panel title={t('member.feedback.title')} sub={t('member.feedback.sub', { role: label('role', 'onboarding') })}>
+    <Panel id="feedback-card-title" title={t('onboarding.member.feedback.title')} sub={t('onboarding.member.feedback.sub', { role: label('role', 'onboarding') })}>
       <div className="flex flex-wrap gap-3">
         <div className={BOX}>
           <div className="flex items-center gap-3">
@@ -35,30 +32,30 @@ export function FeedbackCard({ member: m, act }) {
             </span>
             <span className="flex min-w-0 flex-1 flex-col">
               <span className="text-[11px] text-faint">{label('role', 'onboarding')}</span>
-              <span className="truncate text-sm font-medium text-ink">{runner?.name ?? t('member.feedback.pickedAtHandover')}</span>
+              <span className="truncate text-sm font-medium text-ink">{runner?.name ?? t('onboarding.member.feedback.pickedAtHandover')}</span>
             </span>
             <Badge size="sm" tone={m.onboardingFeedback ? 'success' : 'warn'}>
-              {t(m.onboardingFeedback ? 'member.feedback.saved' : 'member.feedback.waiting')}
+              {t(m.onboardingFeedback ? 'onboarding.member.feedback.saved' : 'onboarding.member.feedback.waiting')}
             </Badge>
           </div>
           {mayWrite ? (
-            <textarea
+            <Textarea bare id="feedback-card-prompt"
               rows={4}
               value={text}
               onChange={(e) => setText(e.target.value)}
-              placeholder={t('member.feedback.prompt')}
+              placeholder={t('onboarding.member.feedback.prompt')}
               className="min-h-24 w-full resize-y rounded-[14px] bg-panel px-3.5 py-3 text-sm leading-normal text-ink outline-none placeholder:text-ghost focus:ring-[1.5px] focus:ring-brand-700 focus:ring-inset"
             />
           ) : (
             <p className={cx('min-h-24 rounded-[14px] bg-panel px-3.5 py-3 text-sm leading-normal whitespace-pre-wrap', m.onboardingFeedback ? 'text-ink' : 'text-ghost')}>
-              {m.onboardingFeedback ?? t('member.feedback.prompt')}
+              {m.onboardingFeedback ?? t('onboarding.member.feedback.prompt')}
             </p>
           )}
           <div className="flex items-center justify-between gap-2.5">
-            <span className="text-[11px] text-faint">{t('member.feedback.writtenAfter')}</span>
+            <span className="text-[11px] text-faint">{t('onboarding.member.feedback.writtenAfter')}</span>
             {mayWrite && (
-              <Button size="sm" onClick={() => act.feedback(text)} disabled={!changed || act.busy}>
-                {t('member.feedback.save')}
+              <Button id="feedback-card-save" size="sm" onClick={() => act.feedback(text)} disabled={!changed || act.busy}>
+                {t('onboarding.member.feedback.save')}
               </Button>
             )}
           </div>
@@ -68,25 +65,25 @@ export function FeedbackCard({ member: m, act }) {
           <div className="flex items-center gap-3">
             <MemberAvatar name={m.name} size="size-9 rounded-full text-xs" />
             <span className="flex min-w-0 flex-1 flex-col">
-              <span className="text-[11px] text-faint">{t('member.feedback.client')}</span>
+              <span className="text-[11px] text-faint">{t('onboarding.member.feedback.client')}</span>
               <span className="truncate text-sm font-medium text-ink">{m.name}</span>
             </span>
             <Badge size="sm" tone={m.rating ? (low ? 'warn' : 'success') : 'warn'}>
-              {m.rating ? t('member.feedback.ofFive', { n: m.rating }) : t(m.recordingSentAt ? 'member.feedback.waiting' : 'member.feedback.notSent')}
+              {m.rating ? t('onboarding.member.feedback.ofFive', { n: m.rating }) : t(m.recordingSentAt ? 'onboarding.member.feedback.waiting' : 'onboarding.member.feedback.notSent')}
             </Badge>
           </div>
-          <div className="flex items-center gap-1.5" aria-label={m.rating ? t('member.feedback.stars', { n: m.rating }) : t('member.feedback.noRating')}>
+          <div className="flex items-center gap-1.5" aria-label={m.rating ? t('onboarding.member.feedback.stars', { n: m.rating }) : t('onboarding.member.feedback.noRating')}>
             {[1, 2, 3, 4, 5].map((n) => (
-              <Icon key={n} name="star" className={cx('size-4.5', n <= (m.rating ?? 0) ? 'fill-warn text-warn' : 'text-[#d5dae2]')} strokeWidth={1.8} />
+              <Icon key={n} name="star" className={cx('size-4.5', n <= (m.rating ?? 0) ? 'fill-warn text-warn' : 'text-off')} strokeWidth={1.8} />
             ))}
-            <span className="ms-2 text-xs text-faint">{m.ratedAt ? t('member.feedback.rated', { at: formatStamp(fromServer(m.ratedAt)) }) : t('member.feedback.noRating')}</span>
+            <span className="ms-2 text-xs text-faint">{m.ratedAt ? t('onboarding.member.feedback.rated', { at: formatStamp(fromServer(m.ratedAt)) }) : t('onboarding.member.feedback.noRating')}</span>
           </div>
           <p className={cx('min-h-16 rounded-[14px] bg-panel px-3.5 py-3 text-[13px] leading-normal', m.ratingComment ? 'text-ink' : 'text-ghost')}>
-            {m.ratingComment ? `“${m.ratingComment}”` : t('member.feedback.commentHere')}
+            {m.ratingComment ? `“${m.ratingComment}”` : t('onboarding.member.feedback.commentHere')}
           </p>
           <span className="flex items-center gap-2 text-[11px] text-faint">
             <Icon name="mail" className="size-3.5" strokeWidth={1.8} />
-            {t('member.feedback.linkGoes', { language: t(m.language === 'ar' ? 'common.arabic' : 'common.english') })}
+            {t('onboarding.member.feedback.linkGoes', { language: t(m.language === 'ar' ? 'shared.common.arabic' : 'shared.common.english') })}
           </span>
         </div>
       </div>

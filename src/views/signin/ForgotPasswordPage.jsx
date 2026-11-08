@@ -1,10 +1,10 @@
-import { SplashPanel } from '../../components/layout/SplashPanel.jsx'
-import { requestReset } from '../../models/data/auth.js'
+import { SplashPanel } from '@/components'
+import { requestReset } from '../../controllers/signin.js'
 import { ForgotForm } from './ForgotForm.jsx'
 
 export function ForgotPasswordPage() {
   return (
-    <SplashPanel>
+    <SplashPanel page="forgot">
       <ForgotForm onSend={requestReset} />
     </SplashPanel>
   )

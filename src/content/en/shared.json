@@ -1,0 +1,970 @@
+{
+  "common": {
+    "save": "Save",
+    "saving": "Saving…",
+    "cancel": "Cancel",
+    "neverMind": "Never mind",
+    "confirm": "Confirm",
+    "close": "Close",
+    "closeDialog": "Close dialog",
+    "back": "Back",
+    "previous": "Previous",
+    "next": "Next",
+    "dismiss": "Dismiss",
+    "undo": "Undo",
+    "loading": "Loading…",
+    "tryAgain": "Try again",
+    "open": "Open",
+    "edit": "Edit",
+    "done": "Done",
+    "remove": "Remove",
+    "add": "Add",
+    "search": "Search",
+    "yes": "Yes",
+    "no": "No",
+    "on": "On",
+    "off": "Off",
+    "reason": "Reason",
+    "optional": "{label} (optional)",
+    "noteOptional": "Note (optional)",
+    "pickOne": "Pick one…",
+    "english": "English",
+    "arabic": "Arabic",
+    "ago": {
+      "now": "just now",
+      "minutes": {
+        "one": "{n} min ago",
+        "other": "{n} min ago"
+      },
+      "hours": {
+        "one": "{n} h ago",
+        "other": "{n} h ago"
+      },
+      "yesterday": "Yesterday"
+    },
+    "config": {
+      "signingOut": "Signing you out…",
+      "couldntLoad": "Couldn’t load the app"
+    },
+    "notYourPage": "That page isn’t part of your panel.",
+    "listJoin": ", ",
+    "and": " and ",
+    "copyFailed": "Couldn’t copy automatically — the value is {value}",
+    "stars": {
+      "one": "{n} star",
+      "other": "{n} stars"
+    },
+    "kb": "{n} KB",
+    "mb": "{n} MB"
+  },
+  "layout": {
+    "nav": {
+      "overview": "Overview",
+      "tasks": "My tasks",
+      "calendar": "Calendar",
+      "members": "Members",
+      "addMember": "Add a member",
+      "team": "Team",
+      "alerts": "Alerts",
+      "settings": "Settings"
+    },
+    "sections": {
+      "menu": "Menu",
+      "personal": "Personal"
+    },
+    "tree": {
+      "overview": "Overview",
+      "allTasks": "All tasks",
+      "filter": "Filter",
+      "mySessions": "My sessions",
+      "myMembers": "My members",
+      "onboardingSessions": "Onboarding sessions",
+      "allSteps": "All steps",
+      "allMembers": "All members",
+      "byStep": "By step",
+      "byType": "By business type",
+      "allTypes": "All types",
+      "byTeam": "By team",
+      "allTeams": "All teams",
+      "personalSettings": "Personal settings",
+      "companySettings": "Company settings",
+      "companyGroups": {
+        "scheduling": "Scheduling",
+        "memberSetup": "Member setup",
+        "company": "Company"
+      },
+      "companyDetails": "Company details"
+    },
+    "onLeave": "On leave",
+    "signOut": "Sign out",
+    "signedOut": "You have been signed out.",
+    "openNav": "Open navigation",
+    "closeNav": "Close navigation",
+    "alertsLabel": {
+      "one": "Alerts, {n} unread",
+      "other": "Alerts, {n} unread"
+    },
+    "tagline": "Every member, every step.",
+    "intro": "From the first call to the training recording: who has each member, what is missing, and what comes next."
+  },
+  "actions": {
+    "saved": "Changes saved.",
+    "booked": "Session time saved. The customer gets an email with the new time.",
+    "accountCreated": "Account created. {sales} has been told.",
+    "accountUnticked": "Account created is unticked. Email and business type can change again.",
+    "signedIn": "Marked as signed in.",
+    "signedInOff": "Signed in is unticked.",
+    "fileRemoved": "File removed.",
+    "transferred": "Transferred.",
+    "lost": "Marked Lost.",
+    "reopened": "Reopened. It is back with {sales}.",
+    "handedOver": "Handed to {step}.",
+    "sentBack": "Sent back with your reason.",
+    "completed": "Session marked Completed. Send the recording next.",
+    "noShow": "Marked No-show. {sales} books a new time.",
+    "recordingSent": "Sent to the customer.",
+    "extended": {
+      "one": "Link extended by {n} hour.",
+      "other": "Link extended by {n} hours."
+    },
+    "cancelled": "Cancelled.",
+    "personChanged": "Person changed. They have been told.",
+    "noteAdded": "Note added.",
+    "newPassword": "New password made. Use it when you create the account.",
+    "feedbackSaved": "Feedback saved."
+  },
+  "alerts": {
+    "title": "Alerts",
+    "sub": {
+      "one": "{unread} unread · kept for {n} days",
+      "other": "{unread} unread · kept for {n} days"
+    },
+    "tabs": {
+      "all": "All",
+      "unread": "Unread"
+    },
+    "markAll": "Mark all read",
+    "allMarked": "All marked read.",
+    "columns": {
+      "alert": "Alert",
+      "member": "Member",
+      "when": "When",
+      "action": "Action"
+    },
+    "empty": {
+      "title": "You’re all caught up",
+      "sub": "New alerts will show here."
+    },
+    "unread": "Unread",
+    "cta": {
+      "open": "Open",
+      "viewFeedback": "View feedback",
+      "pickSomeone": "Pick someone",
+      "seeWhy": "See why",
+      "bookAgain": "Book again",
+      "openTeam": "Open team",
+      "readNote": "Read note"
+    }
+  },
+  "tasks": {
+    "title": "My tasks",
+    "sub": {
+      "one": "{date} · {n} waiting on you",
+      "other": "{date} · {n} waiting on you"
+    },
+    "searchPlaceholder": "Member, company or task",
+    "searchLabel": "Search my tasks",
+    "tabs": {
+      "todo": "To do",
+      "late": "Late",
+      "week": "Due this week"
+    },
+    "columns": {
+      "member": "Member",
+      "todo": "To do",
+      "due": "Due",
+      "step": "Step"
+    },
+    "couldntLoad": "Couldn’t load your tasks: {error}",
+    "loading": "Loading your tasks…",
+    "empty": {
+      "search": "No tasks match this search.",
+      "late": "Nothing is late.",
+      "week": "Nothing is due this week.",
+      "all": "Nothing is waiting on you."
+    },
+    "due": {
+      "none": "No date",
+      "late": "Late · {date}",
+      "today": "Today"
+    },
+    "todo": {
+      "createAccount": "Create the {product} account",
+      "sentBack": "Sent back: {reason}",
+      "missed": "Missed the session. Book a new time",
+      "stillNeeded": "Still needed: {list}",
+      "ready": "Ready to transfer",
+      "connect": "Connect and test {names}",
+      "handOver": "Hand to {step}",
+      "setup": "Setup checklist · {done} of {total} done",
+      "markSession": "Mark the session Completed or No-show",
+      "run": "Run the session",
+      "runAt": "Run the session at {time}",
+      "sendRecording": "Send the recording"
+    },
+    "needs": {
+      "details": "details",
+      "requirements": "requirements",
+      "documents": "documents",
+      "account": "the {product} account",
+      "hardware": "hardware",
+      "session": "a session"
+    }
+  },
+  "calendar": {
+    "views": {
+      "day": "Day",
+      "week": "Week",
+      "month": "Month"
+    },
+    "modes": {
+      "sessions": "Onboarding sessions",
+      "other": "Other steps"
+    },
+    "step": "Step",
+    "everyStep": "Every step",
+    "loading": "Loading the calendar…",
+    "riyadh": " · Riyadh time",
+    "thisMonth": "{count} this month",
+    "dayMonth": "{month} {day}",
+    "at": "{count} at {time}",
+    "sessions": {
+      "one": "{n} session",
+      "other": "{n} sessions"
+    },
+    "tasks": {
+      "one": "{n} task",
+      "other": "{n} tasks"
+    },
+    "more": "+{n} more",
+    "due": {
+      "transfer": "Transfer due",
+      "hardware": "Hardware arrives",
+      "integration": "Integration due",
+      "account": "Create the {product} account",
+      "file": "{file} due",
+      "files": {
+        "one": "{n} file due: {list}",
+        "other": "{n} files due: {list}"
+      }
+    },
+    "onLeave": "{name} · On leave",
+    "nothingDue": "Nothing due",
+    "withPerson": "with {name}",
+    "nobodyYet": "Nobody picked yet",
+    "dayView": "View in day calendar",
+    "weekView": "View in week calendar"
+  },
+  "members": {
+    "list": {
+      "title": "Members",
+      "subAll": "{date} · every member",
+      "subMine": "{date} · the members you are on",
+      "search": "Name, company, phone or ID",
+      "searchLabel": "Search members",
+      "member": "Member",
+      "step": "Step",
+      "withNow": "With now",
+      "loadError": "Couldn’t load members: {error}",
+      "loading": "Loading members…",
+      "noMatch": "No members match these filters.",
+      "none": "No members yet."
+    },
+    "add": {
+      "subAdmin": "You pick the Sales owner. The {account} is picked to create the {product} account.",
+      "subSales": "You become its Sales owner. The {account} is picked to create the {product} account.",
+      "savedNobody": "Saved as {code}. The {admin} picks the {account}.",
+      "saved": "Saved as {code}. {person} creates the {product} account.",
+      "phoneMatch": "Another member has the same phone: {match}. Check it isn’t the same customer.",
+      "missing": {
+        "salesOwner": "Sales owner",
+        "name": "name",
+        "email": "email",
+        "phone": "phone",
+        "company": "company"
+      }
+    },
+    "owner": {
+      "title": "Sales owner",
+      "sub": "You are adding this for a {role}. They own it and are told."
+    },
+    "saveBar": {
+      "noTime": "No time picked yet",
+      "stillNeeded": "Still needed to save: {list}",
+      "ready": "Ready to save. The rest can be added later.",
+      "save": "Save member"
+    }
+  },
+  "components": {
+    "account": {
+      "title": "Account details",
+      "sub": "Used to create their {product} login",
+      "fullName": "Full name",
+      "fullNameSub": "As it should appear on their account",
+      "firstName": "First name",
+      "lastName": "Last name",
+      "contact": "Contact",
+      "contactSub": "Email is their login ID",
+      "email": "Email",
+      "phone": "Phone number",
+      "password": "Password",
+      "passwordSub": "Auto-generated for their login",
+      "generated": "Generated when saved",
+      "language": "Language",
+      "languageSub": "For their emails and the feedback page",
+      "en": "English",
+      "ar": "Arabic",
+      "emailHint": "name@example.com"
+    },
+    "company": {
+      "title": "Company details",
+      "sub": "Who they are buying for",
+      "company": "Company",
+      "companySub": "Legal name, CR and VAT numbers",
+      "name": "Company name",
+      "cr": "Commercial registration (CR)",
+      "vat": "VAT number",
+      "location": "Location",
+      "locationSub": "Where they are based",
+      "city": "City",
+      "website": "Website",
+      "industry": "Industry",
+      "industrySub": "Pick the closest match",
+      "size": "Company size",
+      "sizeSub": "Number of employees",
+      "websiteHint": "company.sa"
+    },
+    "requirements": {
+      "title": "Requirements",
+      "sub": "What they need, then the files that go with it",
+      "type": "Business type",
+      "typeSub": "Decides the features and documents",
+      "counts": "Branches and users",
+      "countsSub": "How many locations and staff accounts",
+      "branches": "Number of branches",
+      "users": "Number of users",
+      "features": "Features",
+      "featuresSub": "Which ones they want switched on",
+      "integrations": "Integrations",
+      "integrationsSub": "Pick any they want connected. Some need documents of their own.",
+      "hardware": "Hardware",
+      "hardwareSub": "Devices they need from us",
+      "documents": "Documents",
+      "documentsSub": "Every file they need to send, from the answers above.",
+      "noDocs": "Pick a business type above and the files they need will appear here.",
+      "readyBy": "Ready by",
+      "readyBySub": "When every document will be in"
+    },
+    "integrations": {
+      "addsDocs": {
+        "one": "Adds {n} document",
+        "other": "Adds {n} documents"
+      },
+      "noFile": "No file needed",
+      "none": "None picked"
+    },
+    "documents": {
+      "optional": "Optional",
+      "toSend": "To send · {n}",
+      "uploaded": "Uploaded · {n}",
+      "view": "View",
+      "replace": "Replace",
+      "remove": "Remove",
+      "removeLabel": "Remove {name}",
+      "removeTitle": "Remove {name}?",
+      "removeStored": "The stored file is deleted and it goes back to To send.",
+      "removeDraft": "It goes back to To send.",
+      "upload": "Upload",
+      "due": "Due {date} · {when}",
+      "notAdded": "Not added yet",
+      "noDate": "No date yet · set when they’ll send it",
+      "sendIn": "They'll send it in",
+      "custom": "Custom",
+      "dueInDays": "Due in how many days",
+      "days": "days",
+      "set": "Set",
+      "clear": "Clear the date",
+      "noFiles": "No files yet",
+      "inDays": {
+        "one": "{n} day",
+        "other": "{n} days"
+      }
+    },
+    "upload": {
+      "title": "Upload document",
+      "drop": "Drop to upload",
+      "drag": "Drag your file here",
+      "or": "or",
+      "choose": "Choose from computer",
+      "types": {
+        "default": "PDF, JPG or PNG · up to {mb} MB",
+        "pdf": "PDF · up to {mb} MB",
+        "image": "JPG or PNG · up to {mb} MB",
+        "excel": "Excel or CSV · up to {mb} MB",
+        "any": "Any file · up to {mb} MB"
+      },
+      "uploaded": "{size} · Uploaded"
+    },
+    "viewer": {
+      "download": "Download",
+      "replace": "Replace",
+      "previous": "Previous file",
+      "next": "Next file",
+      "opening": "Opening…",
+      "missing": "File not found"
+    },
+    "ready": {
+      "title": "Ready by",
+      "allIn": "All in",
+      "noDate": "No date yet",
+      "today": "Today",
+      "allUploaded": "Every file is uploaded",
+      "unmarked": {
+        "one": "{n} file with no date",
+        "other": "{n} files with no date"
+      },
+      "filesLeft": {
+        "one": "{n} file left",
+        "other": "{n} files left"
+      },
+      "line": "{when} · {left}",
+      "uploadedOf": "{done} of {total} uploaded",
+      "nothingToGo": "Nothing to go",
+      "toGo": "{n} to go",
+      "tileUploaded": "Uploaded",
+      "tileNoDate": "No date"
+    },
+    "hardware": {
+      "none": "No hardware",
+      "needs": "Needs hardware",
+      "notAnswered": "Not answered yet",
+      "noArrival": "{step} · no arrival date yet",
+      "arriving": "{step} · arriving {date}",
+      "stepOn": "{step} {date}",
+      "withCustomer": "With the customer",
+      "setDay": "Set the day it reaches the customer",
+      "inDays": {
+        "one": "In {n} day",
+        "other": "In {n} days"
+      },
+      "today": "Today",
+      "late": {
+        "one": "{n} day late",
+        "other": "{n} days late"
+      },
+      "beforeSession": "{when} · before the session",
+      "changeDate": "Change date",
+      "setDate": "Set date",
+      "notYet": "Not yet",
+      "noDate": "No date",
+      "arrival": "Arrival date",
+      "arrivalSub": "When the hardware reaches the customer",
+      "previousMonth": "Previous month",
+      "nextMonth": "Next month"
+    },
+    "slots": {
+      "earliest": "Earliest",
+      "next": "Next",
+      "later": "Later",
+      "date": "Date",
+      "time": "Time",
+      "morning": "Morning",
+      "afternoon": "Afternoon",
+      "noDays": "No days can be booked yet.",
+      "loadingTimes": "Loading the times…",
+      "nobody": {
+        "morning": "Nobody is free this morning.",
+        "afternoon": "Nobody is free this afternoon.",
+        "day": "Nobody is free this day."
+      },
+      "tryOther": {
+        "morning": "Try the morning.",
+        "afternoon": "Try the afternoon."
+      },
+      "free": {
+        "one": "{n} free",
+        "other": "{n} free"
+      },
+      "minutes": "{n} min"
+    },
+    "pickTime": {
+      "title": "Pick a time",
+      "sub": "The training session, on Google Meet",
+      "filesReady": "Files ready by",
+      "firstSession": {
+        "one": "The first session is {n} working day after the files are in",
+        "other": "The first session is {n} working days after the files are in"
+      },
+      "pickType": "Pick a business type first",
+      "allIn": "All files in",
+      "noDate": "No date yet",
+      "filesIn": "Files in",
+      "ready": "Ready",
+      "today": "Today",
+      "buffer": "Buffer",
+      "bufferDays": {
+        "one": "{n} working day",
+        "other": "{n} working days"
+      },
+      "loadingDays": "Loading the days…"
+    },
+    "nobody": {
+      "customer": "Customer",
+      "picked": "Nobody picked"
+    },
+    "hours": {
+      "office": "Office hours",
+      "own": "Own hours",
+      "to": "to",
+      "dayOff": "Day off",
+      "dayFrom": "{day} from",
+      "dayTo": "{day} to"
+    },
+    "leave": {
+      "title": "Add leave",
+      "save": "Add leave",
+      "from": "From",
+      "to": "To (the last day off)",
+      "note": "Whoever is on leave isn’t picked for anything on those days. Members they already have stay with them until the Admin moves them."
+    },
+    "picker": {
+      "hasIt": "Has it now",
+      "busy": "{name} is busy ({reason}). Click their name again to give it to them anyway.",
+      "reasons": {
+        "free": "Free · {n} open",
+        "full": "Full · {n} open",
+        "leave": "On leave until {date}",
+        "session": "Session at {time}",
+        "inactive": "Inactive",
+        "not_signed_in": "Not signed in yet",
+        "not_working_day": "Not a working day",
+        "outside_hours": "Outside working hours"
+      }
+    },
+    "password": {
+      "signsIn": "{name} signs in with {email} and this temporary password, then chooses their own.",
+      "copy": "Copy",
+      "copied": "Password copied to clipboard.",
+      "emailed": "It was also emailed to them.",
+      "notEmailed": "It wasn’t emailed: no email service is set up yet. Share it with them yourself. It is shown only now."
+    }
+  },
+  "overview": {
+    "greeting": {
+      "morning": "Good morning",
+      "afternoon": "Good afternoon",
+      "evening": "Good evening"
+    },
+    "hello": "{greeting}, {name}",
+    "riyadhTime": "Riyadh time (GMT+3)",
+    "couldntLoad": "Couldn’t load your members: {error}",
+    "counts": {
+      "session": {
+        "one": "{n} session",
+        "other": "{n} sessions"
+      },
+      "member": {
+        "one": "{n} member",
+        "other": "{n} members"
+      },
+      "item": {
+        "one": "{n} item",
+        "other": "{n} items"
+      },
+      "account": {
+        "one": "{n} account",
+        "other": "{n} accounts"
+      },
+      "customer": {
+        "one": "{n} customer",
+        "other": "{n} customers"
+      },
+      "integration": {
+        "one": "{n} integration",
+        "other": "{n} integrations"
+      },
+      "day": {
+        "one": "{n} day",
+        "other": "{n} days"
+      },
+      "workingDay": {
+        "one": "{n} working day",
+        "other": "{n} working days"
+      }
+    },
+    "lastDays": {
+      "one": "{n} days",
+      "other": "{n} days"
+    },
+    "links": {
+      "calendar": "Calendar",
+      "viewAll": "View all",
+      "team": "Team",
+      "alerts": "Alerts"
+    },
+    "hero": {
+      "alertsLabel": {
+        "one": "Alerts, {n} unread",
+        "other": "Alerts, {n} unread"
+      },
+      "unreadTitle": {
+        "one": "{n} unread alerts",
+        "other": "{n} unread alerts"
+      }
+    },
+    "with": "with {name}",
+    "from": "from {name}",
+    "someone": "Someone",
+    "aMember": "A member",
+    "nowAt": "now {time}",
+    "today": "Today",
+    "tomorrow": "Tomorrow",
+    "inDays": "In {days}",
+    "left": "{days} left",
+    "dayWords": {
+      "today": "today",
+      "tomorrow": "tomorrow",
+      "yesterday": "yesterday"
+    },
+    "missedBookNew": "Missed the session. Book a new time",
+    "units": {
+      "open": "open",
+      "myMembers": "my members",
+      "thisMonth": "this month",
+      "sessionsThisMonth": "sessions this month",
+      "rating": "rating",
+      "onTime": "on time",
+      "capacity": "capacity",
+      "transferred": "transferred",
+      "days": "days",
+      "sameDay": "same day",
+      "signedIn": "signed in",
+      "hours": "hours",
+      "firstTest": "first test",
+      "inHours": "in {hours} h"
+    },
+    "rings": {
+      "clientRating": "Client rating · {days}",
+      "readyOnTime": "Ready on time",
+      "teamCapacity": "Team capacity",
+      "upNext": "Up next",
+      "upNextSub": "{sessions} · next {days}",
+      "nothingNext": "Nothing booked in the next {days}."
+    },
+    "activity": {
+      "title": "Recent activity",
+      "happened": {
+        "one": "{n} thing happened with your members this week",
+        "other": "{n} things happened with your members this week"
+      },
+      "nothing": "Nothing happened with your members this week"
+    },
+    "week": {
+      "last6": "Last 6 weeks",
+      "thisWeek": "This week",
+      "weekNo": "W{week}"
+    }
+  },
+  "member": {
+    "page": {
+      "couldntLoad": "Couldn’t load this member: {error}",
+      "notFound": "No member {code} on your list.",
+      "backToMembers": "Back to members",
+      "cancelMember": "Cancel member",
+      "cancelTitle": "Cancel this member",
+      "cancelDescription": "It stops here. Sales and the Admin are told, and the calendar invite is cancelled."
+    },
+    "withNow": {
+      "label": "With now · {step}",
+      "customer": "Customer",
+      "nobody": "Nobody picked"
+    },
+    "tabs": {
+      "overview": "Overview",
+      "steps": "Steps",
+      "skipped": "Skipped",
+      "setupChecklist": "Setup checklist",
+      "session": "Session",
+      "recording": "Recording"
+    },
+    "stepNote": {
+      "skipped": "No integrations were picked, so this step is skipped.",
+      "startsAfterTransfer": "Starts after Transfer.",
+      "startsAtHandover": "Starts when the member is handed to {step}.",
+      "picked": "{name} is picked for it.",
+      "nothingYet": "Nothing can be changed here yet.",
+      "doneBy": "Done by {name}. View only.",
+      "done": "Done. View only.",
+      "viewOnlyBy": "View only. {name} ({role}) works on this step.",
+      "viewOnlyNobody": "View only. Nobody is picked for this step yet."
+    },
+    "outcome": {
+      "reopen": "Reopen"
+    },
+    "password": {
+      "fresh": "New · not sent",
+      "inUse": "In use",
+      "auto": "Auto-generated",
+      "hide": "Hide",
+      "show": "Show",
+      "copy": "Copy",
+      "copied": "Password copied to clipboard.",
+      "makeNew": "Make a new one"
+    },
+    "sessionWhen": {
+      "riyadh": "Riyadh time"
+    },
+    "sendBack": {
+      "to": "Send back to {step}",
+      "description": "It goes back with your reason. The booked time stays.",
+      "descriptionTo": "It goes back to {step} with your reason. The booked time stays.",
+      "missing": "What is missing",
+      "confirm": "Send back"
+    },
+    "people": {
+      "title": "People",
+      "sub": "Who works on this member",
+      "atTransfer": "Picked at Transfer",
+      "noIntegration": "No integration",
+      "atHandover": "Picked at handover",
+      "nobody": "Nobody yet",
+      "hasIt": "has it now",
+      "auto": "auto-picked",
+      "change": "Change",
+      "changeTitle": "Change the {role}"
+    },
+    "notes": {
+      "title": "Notes and activity",
+      "sub": "Who did what, and when",
+      "write": "Write a note…",
+      "writeLabel": "Write a note",
+      "add": "Add note"
+    },
+    "tiles": {
+      "bookFirst": "Book a session first",
+      "days": {
+        "one": "day",
+        "other": "days"
+      },
+      "daysLate": {
+        "one": "day late",
+        "other": "days late"
+      },
+      "daysLeft": {
+        "one": "day left",
+        "other": "days left"
+      },
+      "daysAgo": {
+        "one": "day ago",
+        "other": "days ago"
+      },
+      "hoursLeft": {
+        "one": "hour left",
+        "other": "hours left"
+      },
+      "due": "Due {date}",
+      "stopped": "Stopped here",
+      "transfer": "Transfer",
+      "setupChecklist": "Setup checklist",
+      "session": "Session",
+      "feedbackLink": "Feedback link",
+      "open": "Open",
+      "until": "Until {at}",
+      "done": "Done",
+      "rated": "Rated {n} of 5",
+      "noRating": "No rating",
+      "nextSession": "Next session",
+      "openSession": "Open the session",
+      "today": "Today",
+      "sessionLine": "{date} · {time} · {min} min",
+      "notBooked": "Not booked yet",
+      "readiness": "Readiness",
+      "ready": "Ready",
+      "by": "by {date}",
+      "filesMissing": "Files missing",
+      "uploaded": {
+        "one": "{done} of {n} document uploaded",
+        "other": "{done} of {n} documents uploaded"
+      },
+      "contact": "Contact"
+    },
+    "journey": {
+      "title": "Journey",
+      "sub": "Who had this member, and when it moved on",
+      "notPicked": "Not picked yet",
+      "due": "due",
+      "today": "Today · {at}"
+    },
+    "glance": {
+      "title": "Requirements and attachments",
+      "sub": "What they asked for in Sales, and the files they sent",
+      "openIn": "Open in {step}",
+      "requirements": "Requirements",
+      "attachments": "Attachments",
+      "uploaded": "{done} of {total} uploaded",
+      "noType": "No business type yet",
+      "branches": {
+        "one": "{n} branch",
+        "other": "{n} branches"
+      },
+      "users": {
+        "one": "{n} user",
+        "other": "{n} users"
+      },
+      "wants": "Wants",
+      "connectedTo": "Connected to",
+      "connectedToAfter": "connected to",
+      "no": "No {list}.",
+      "noHardware": "No hardware needed.",
+      "hardwareDelivered": "Hardware delivered.",
+      "hardwareArrives": "Hardware arrives {date}.",
+      "hardwareUnset": "Hardware not chosen yet.",
+      "toSend": "TO SEND",
+      "isUploaded": "✓ Uploaded",
+      "due": "Due {date}",
+      "notAdded": "Not added yet"
+    }
+  },
+  "settings": {
+    "page": {
+      "titlePersonal": "Personal settings",
+      "subPersonal": "Your profile and when you are available",
+      "saved": "Settings saved."
+    },
+    "parts": {
+      "profile": "My profile",
+      "availability": "My availability"
+    },
+    "bar": {
+      "unsaved": "You have unsaved changes",
+      "allSaved": "All changes saved",
+      "nothing": "Nothing changed yet",
+      "unsavedSub": "Save to apply them, or cancel to undo.",
+      "savedSub": "Saved just now",
+      "nothingSub": "Edit any setting above and save it here.",
+      "save": "Save settings"
+    },
+    "profile": {
+      "note": "The Admin can change your email.",
+      "changePhoto": "Change photo",
+      "addPhoto": "Add a photo",
+      "name": "Name",
+      "phone": "Phone",
+      "email": "Email · your username",
+      "emailAlerts": "Email me my alerts too",
+      "emailAlertsSub": "· they always show on the Alerts page",
+      "language": "Language",
+      "languageSub": "For this app, your alerts and your team emails. It changes at once.",
+      "password": "Password",
+      "passwordSub": "Type your current one first.",
+      "current": "Current password",
+      "next": "New password",
+      "nextHint": "At least 8 characters",
+      "again": "New password again",
+      "mismatch": "The two new passwords don’t match.",
+      "nameEmpty": "Your name can’t be empty.",
+      "needBoth": "Type your current password and a new one."
+    },
+    "availability": {
+      "noOffice": "No working days set",
+      "officeLine": "{from}–{to}, {hours}",
+      "hoursTitle": "Working hours",
+      "hoursSub": "Sessions are only given to you inside these hours.",
+      "officeNote": "Office hours: {hours}",
+      "leaveTitle": "Leave",
+      "leaveSub": "Nothing new is given to you on these days.",
+      "addLeave": "Add leave",
+      "noLeave": "No leave booked",
+      "leaveAdded": "Leave added.",
+      "leaveRemoved": "Leave removed.",
+      "leaveClash": {
+        "one": "You have {n} session in those days. The Admin has been told.",
+        "other": "You have {n} sessions in those days. The Admin has been told."
+      }
+    }
+  },
+  "errors": {
+    "not_allowed": "You can’t do that right now.",
+    "bad_login": "Email or password is wrong.",
+    "account_off": "Your account is turned off. Ask your Admin.",
+    "not_on_team": "This Google account isn’t on the team. Ask your Admin to add you with this email.",
+    "google_failed": "Google sign-in didn’t work. Try again.",
+    "same_password": "That is your current password. Choose a new one.",
+    "wrong_current_password": "Your current password is wrong.",
+    "link_expired": "This link has expired or was already used. Ask for a new one.",
+    "photo_upload": "Couldn’t upload the photo.",
+    "file_upload": "Couldn’t upload {file}.",
+    "sign_in_again": "Sign in again.",
+    "person_fields": "A name, an email and a role are needed.",
+    "email_taken": "Someone on the team already has this email.",
+    "self_off": "You can’t turn yourself off.",
+    "locked": "Too many wrong passwords. Try again at {time}.",
+    "password_short": "A password needs 8 or more characters.",
+    "person_off": "Turn this person back on first.",
+    "email_invalid": "Type a full email, like name@company.com.",
+    "link_invalid": "This link isn’t valid.",
+    "link_closed": "This link has closed.",
+    "already_rated": "Thank you, your rating is already in.",
+    "pick_stars": "Pick from 1 to 5 stars.",
+    "no_working_days": "No working days are set. Check Settings → Working week.",
+    "time_passed": "That time has already passed.",
+    "too_soon": "Too soon: sessions are booked at least {days} working days ahead.",
+    "too_soon_files": "Too soon: the files come in on {ready}, so the first session day is {first}.",
+    "too_far": "Too far ahead: sessions are booked up to {days} days ahead.",
+    "not_working_day": "That day isn’t a working day.",
+    "outside_hours": "That time is outside office hours.",
+    "no_room": "No Onboarding Member is free at that time. Pick another.",
+    "duplicate": "{code} already has these details (Sales: {sales}).",
+    "pick_sales_owner": "Pick an active Sales Member as the owner.",
+    "email_locked": "Email and business type are locked once the CODEIT account exists. The Admin can untick Account created first.",
+    "need_account_id": "Type the CODEIT account ID first.",
+    "file_missing": "That file isn’t in this member’s folder.",
+    "not_ready": "Not ready to transfer yet: {missing}.",
+    "pick_reason": "Pick a reason.",
+    "still_to_connect": "Connect and test every integration first.",
+    "need_send_back_reason": "Write what is missing.",
+    "need_recording": "Paste the recording link, or say why there is none.",
+    "pick_extend": "Pick one of the extend choices.",
+    "need_cancel_reason": "Write why it is cancelled.",
+    "pick_active_role": "Pick an active {role}.",
+    "account_person_locked": "The CODEIT account already exists, so the Account Member can’t change.",
+    "note_empty": "The note is empty.",
+    "last_admin": "There must be at least one active Admin.",
+    "seven_days": "Hours need all seven days.",
+    "leave_backwards": "The leave ends before it starts.",
+    "admin_no_members": "The Admin holds no members to move.",
+    "pick_sales_taker": "Pick the Sales Member who takes them.",
+    "name_empty": "Your name can’t be empty.",
+    "photo_not_yours": "That photo isn’t in your folder.",
+    "value_not_allowed": "That value isn’t allowed.",
+    "whole_numbers": "Use whole numbers.",
+    "name_holiday": "Name the holiday.",
+    "option_name": "The option needs a name.",
+    "option_key": "Keys use letters, numbers, - and _ only.",
+    "fixed_list": "Roles and steps are fixed; only their names can change.",
+    "password_locked": "The CODEIT account already exists, so its password can’t change here.",
+    "feedback_after_session": "Feedback is written after the session.",
+    "names": {
+      "details": "Details",
+      "requirements": "Requirements",
+      "documents": "Documents",
+      "account": "Account",
+      "hardware": "Hardware",
+      "session": "Session"
+    },
+    "session_ended": "Your sign-in has ended. Please sign in again.",
+    "reset_failed": "Couldn’t send the reset email. Try again in a few minutes.",
+    "person_missing": "This person isn’t on the team.",
+    "file_too_big": "That file is bigger than {mb} MB."
+  }
+}

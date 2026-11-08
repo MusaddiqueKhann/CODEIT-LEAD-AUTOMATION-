@@ -1,3 +1,5 @@
+import { cx } from '../cx.js'
+import { LOGO } from '../logo.js'
 import splashVideo from '../../assets/SplashVideo/Riyadh.mp4'
 import { useLang } from '../../controllers/shared/LangContext.jsx'
 import { useBrand } from '../../controllers/shared/useBrand.js'
@@ -7,8 +9,8 @@ function TeamIntro() {
   const { t } = useLang()
   return (
     <div>
-      <h1 className="font-display text-3xl leading-tight font-bold whitespace-nowrap text-white xl:text-stat">{t('auth.tagline')}</h1>
-      <p className="mt-4 max-w-md text-lg text-white/70">{t('auth.intro')}</p>
+      <h1 className="font-display text-3xl leading-tight font-bold whitespace-nowrap text-white xl:text-stat">{t('shared.layout.tagline')}</h1>
+      <p className="mt-4 max-w-md text-lg text-white/70">{t('shared.layout.intro')}</p>
     </div>
   )
 }
@@ -24,10 +26,10 @@ function TeamIntro() {
  * It owns the whole viewport layout so the login page is only "splash around a
  * form"; the video is decorative and hidden from assistive tech.
  */
-export function SplashPanel({ children, intro = <TeamIntro />, corner = <LanguageSwitch /> }) {
+export function SplashPanel({ page, children, intro = <TeamIntro />, corner = <LanguageSwitch /> }) {
   const brand = useBrand()
   return (
-    <div className="relative min-h-screen w-full overflow-hidden bg-brand-950">
+    <div className={cx(page && `v-${page}`, 'relative min-h-screen w-full overflow-hidden bg-brand-950')}>
       <video
         className="absolute inset-0 h-full w-full object-cover"
         src={splashVideo}
@@ -45,7 +47,7 @@ export function SplashPanel({ children, intro = <TeamIntro />, corner = <Languag
       <div className="relative z-10 flex min-h-screen flex-col lg:flex-row">
         <div className="hidden flex-1 flex-col justify-between p-14 lg:flex">
           <img
-            src="/CompanyLogo/Codeit-flat.png"
+            src={LOGO}
             alt={brand.app}
             className="h-24 w-auto self-start brightness-0 invert"
           />

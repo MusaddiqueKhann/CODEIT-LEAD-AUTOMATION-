@@ -8,12 +8,12 @@ import { Unsaved } from '../../../controllers/shared/unsaved.js'
 /**
  * A settings page: the header, then its parts ([key, Part]), then the Save bar. Every part reports
  * its changes to the bar, which saves them all at once or undoes them all (Cancel puts each part
- * back as it was). `labelled` puts each part's name (settings.parts.<key>) above it; `bar` names
- * the bar's words (settings.<bar>.*), or is false where every part saves as you go (no bar).
+ * back as it was). `labelled` puts each part's name (shared.settings.parts.<key>) above it; `bar` names
+ * the bar's words (<bar>.*, a key prefix), or is false where every part saves as you go (no bar).
  * `fill` makes the page exactly the screen's height (from laptop size up); its part fills the rest
  * and scrolls inside.
  */
-export function SettingsShell({ header, parts, labelled, bar = 'bar', fill = false }) {
+export function SettingsShell({ header, parts, labelled, bar = 'shared.settings.bar', fill = false }) {
   const config = useConfig()
   const { toast } = useToast()
   const { t, errorText } = useLang()
@@ -50,7 +50,7 @@ export function SettingsShell({ header, parts, labelled, bar = 'bar', fill = fal
     setBusy(false)
     if (ok) {
       setSaved(true)
-      toast(t('settings.page.saved'))
+      toast(t('shared.settings.page.saved'))
     }
   }
 
@@ -60,7 +60,7 @@ export function SettingsShell({ header, parts, labelled, bar = 'bar', fill = fal
       {parts.map(([key, Part]) =>
         labelled ? (
           <div key={key} id={key} className="flex scroll-mt-4 flex-col gap-3">
-            <span className="px-1.5 pt-2 text-xs tracking-[0.14em] text-muted uppercase">{t(`settings.parts.${key}`)}</span>
+            <span className="px-1.5 pt-2 text-xs tracking-[0.14em] text-muted uppercase">{t(`shared.settings.parts.${key}`)}</span>
             <Part key={round} after={config.reload} />
           </div>
         ) : (

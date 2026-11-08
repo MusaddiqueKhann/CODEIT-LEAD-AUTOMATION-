@@ -117,7 +117,7 @@ export async function requestReset(email) {
   const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), {
     redirectTo: `${window.location.origin}/set-password`,
   })
-  if (error) throw error
+  if (error) throw appError('reset_failed', 'Couldn’t send the reset email. Try again in a few minutes.')
 }
 
 /** Opens the session a reset link carries. Called on a click, so mail scanners can't use it up. */

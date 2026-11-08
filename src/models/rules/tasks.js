@@ -1,6 +1,6 @@
 import { dayKey, fromServer, riyadhNow } from './format.js'
 
-/* The ready checks a failing one asks Sales for, in order; their words are tasks.needs.<key>. */
+/* The ready checks a failing one asks Sales for, in order; their words are shared.tasks.needs.<key>. */
 const NEEDS = ['details', 'requirements', 'documents', 'account', 'hardware', 'session']
 
 /**
@@ -15,41 +15,41 @@ const NEEDS = ['details', 'requirements', 'documents', 'account', 'hardware', 's
 export function taskOf(m, me, { labelOf, setupKeys, product, t }) {
   if (m.outcome || m.stage === 'closed') return null
   if (m.stage === 'collecting' && m.accountPersonId === me && !m.accountCreatedAt) {
-    return { step: 'setup', tab: 'setup', todo: t('tasks.todo.createAccount', { product }), due: m.transferDeadline }
+    return { step: 'setup', tab: 'setup', todo: t('shared.tasks.todo.createAccount', { product }), due: m.transferDeadline }
   }
   if (m.holderId !== me) return null
-  const list = (words) => words.join(t('tasks.todo.listJoin'))
+  const list = (words) => words.join(t('shared.common.listJoin'))
   switch (m.stage) {
     case 'collecting': {
       const missing = NEEDS.filter((k) => !m.ready?.[k])
       const missed = !m.sentBackReason && m.noShows > 0 && !m.session
       const todo = m.sentBackReason
-        ? t('tasks.todo.sentBack', { reason: m.sentBackReason })
+        ? t('shared.tasks.todo.sentBack', { reason: m.sentBackReason })
         : missed
-          ? t('tasks.todo.missed')
+          ? t('shared.tasks.todo.missed')
           : missing.length
-            ? t('tasks.todo.stillNeeded', { list: list(missing.map((k) => t(`tasks.needs.${k}`, { product }))) })
-            : t('tasks.todo.ready')
+            ? t('shared.tasks.todo.stillNeeded', { list: list(missing.map((k) => t(`shared.tasks.needs.${k}`, { product }))) })
+            : t('shared.tasks.todo.ready')
       return { step: 'sales', tab: 'sales', at: missed ? 'pick-time' : 'ready', todo, due: m.transferDeadline }
     }
     case 'integration': {
       const left = m.integrations.filter((k) => !(m.integrationChecks?.[k]?.connected && m.integrationChecks?.[k]?.tested))
       const todo = left.length
-        ? t('tasks.todo.connect', { names: list(left.map((k) => labelOf('integration', k))) })
-        : t('tasks.todo.handOver', { step: labelOf('step', 'onboarding') })
+        ? t('shared.tasks.todo.connect', { names: list(left.map((k) => labelOf('integration', k))) })
+        : t('shared.tasks.todo.handOver', { step: labelOf('step', 'onboarding') })
       return { step: 'integration', tab: 'integration', todo, due: m.integrationDue }
     }
     case 'setup': {
       const done = setupKeys.filter((k) => m.setupChecks?.[k]).length
-      return { step: 'onboarding', tab: 'onboarding', todo: t('tasks.todo.setup', { done, total: setupKeys.length }), due: m.setupDue }
+      return { step: 'onboarding', tab: 'onboarding', todo: t('shared.tasks.todo.setup', { done, total: setupKeys.length }), due: m.setupDue }
     }
     case 'session': {
       const day = m.session && dayKey(m.session.date)
-      const todo = day && day < dayKey(riyadhNow()) ? t('tasks.todo.markSession') : m.session ? t('tasks.todo.runAt', { time: m.session.time }) : t('tasks.todo.run')
+      const todo = day && day < dayKey(riyadhNow()) ? t('shared.tasks.todo.markSession') : m.session ? t('shared.tasks.todo.runAt', { time: m.session.time }) : t('shared.tasks.todo.run')
       return { step: 'onboarding', tab: 'onboarding', todo, due: day }
     }
     case 'recording':
-      return { step: 'onboarding', tab: 'onboarding', todo: t('tasks.todo.sendRecording'), due: m.completedAt ? dayKey(fromServer(m.completedAt)) : null }
+      return { step: 'onboarding', tab: 'onboarding', todo: t('shared.tasks.todo.sendRecording'), due: m.completedAt ? dayKey(fromServer(m.completedAt)) : null }
     default:
       return null
   }

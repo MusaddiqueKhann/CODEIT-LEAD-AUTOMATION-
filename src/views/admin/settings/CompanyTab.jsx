@@ -1,11 +1,9 @@
 import { useState } from 'react'
-import Icon from '../../../components/Icon.jsx'
-import { Button, ConfirmDialog, Field, Input, Modal, cx } from '../../../components/ui/index.js'
+import { Button, ConfirmDialog, cx, Field, Icon, Input, Modal } from '@/components'
 import { useConfig } from '../../../controllers/shared/ConfigContext.jsx'
 import { useLang } from '../../../controllers/shared/LangContext.jsx'
-import { emailKeySet, setEmailKey, updateSettings } from '../../../models/data/settings.js'
+import { setEmailKey, updateSettings, useEmailKeySet } from '../../../controllers/admin/settings.js'
 import { useAction } from '../../../controllers/shared/useAction.js'
-import { useRows } from '../../../controllers/shared/useRows.js'
 import { Section } from './Section.jsx'
 import { useUnsaved } from '../../../controllers/shared/unsaved.js'
 
@@ -15,7 +13,7 @@ const EMPTY = {
 }
 /*
  * The design's three groups of tiles: [field, icon, input props, the field shown under it only
- * while editing]. Each tile's words are settings.company.fields.<field> and .notes.<field>.
+ * while editing]. Each tile's words are admin.settings.company.fields.<field> and .notes.<field>.
  */
 const GROUPS = [
   ['brand', [
@@ -55,7 +53,7 @@ export function CompanyTab({ after }) {
     <Section id="company" icon="building" className="gap-4.5">
       {GROUPS.map(([group, fields]) => (
         <div key={group} className="flex flex-col gap-2">
-          <span className="px-1 text-[11px] tracking-[0.14em] text-muted uppercase">{t(`settings.company.groups.${group}`)}</span>
+          <span className="px-1 text-[11px] tracking-[0.14em] text-muted uppercase">{t(`admin.settings.company.groups.${group}`)}</span>
           <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,240px),1fr))] gap-3">
             {fields.map(([k, icon, { small, ...props }, extra]) => (
               <label
@@ -63,12 +61,13 @@ export function CompanyTab({ after }) {
                 className="group flex min-h-25 min-w-0 cursor-text items-center gap-3 rounded-[22px] bg-surface py-4 ps-5 pe-4 transition focus-within:bg-panel focus-within:ring-[1.5px] focus-within:ring-brand-700 focus-within:ring-inset"
               >
                 <span className="flex min-w-0 flex-1 flex-col gap-1.25">
-                  <span className="text-xs text-soft">{t(`settings.company.fields.${k}`)}</span>
-                  <input
+                  <span className="text-xs text-soft">{t(`admin.settings.company.fields.${k}`)}</span>
+                  <Input bare
+                    id={`company-tab-${k}`}
                     value={c[k] ?? ''}
                     onChange={set(k)}
-                    aria-label={t(`settings.company.fields.${k}`)}
-                    placeholder={t('settings.company.empty')}
+                    aria-label={t(`admin.settings.company.fields.${k}`)}
+                    placeholder={t('admin.settings.company.empty')}
                     // English names read left to right even on an Arabic page, but sit on its reading side.
                     dir="auto"
                     className={cx(
@@ -80,19 +79,19 @@ export function CompanyTab({ after }) {
                   <span className="truncate text-xs text-muted group-focus-within:hidden">
                     {extra && RTL.includes(extra) && c[extra] ? (
                       <>
-                        <bdi dir="rtl">{c[extra]}</bdi> · {t(`settings.company.notes.${k}`)}
+                        <bdi dir="rtl">{c[extra]}</bdi> · {t(`admin.settings.company.notes.${k}`)}
                       </>
                     ) : (
-                      t(`settings.company.notes.${k}`)
+                      t(`admin.settings.company.notes.${k}`)
                     )}
                   </span>
                   {extra && (
                     // Kept from the old form, shown only while this tile is being edited.
-                    <input
+                    <Input bare id={`company-tab-fields-${k}`}
                       value={c[extra] ?? ''}
                       onChange={set(extra)}
-                      placeholder={t(`settings.company.fields.${extra}`)}
-                      aria-label={t(`settings.company.fields.${extra}`)}
+                      placeholder={t(`admin.settings.company.fields.${extra}`)}
+                      aria-label={t(`admin.settings.company.fields.${extra}`)}
                       dir={RTL.includes(extra) ? 'rtl' : 'ltr'}
                       className="hidden h-8 w-full min-w-0 rounded-lg bg-field px-2.5 text-[13px] text-ink outline-none placeholder:text-ghost group-focus-within:block"
                     />
@@ -115,11 +114,11 @@ export function CompanyTab({ after }) {
 function EmailSending({ sender, after }) {
   const { t } = useLang()
   const { run, busy } = useAction(after)
-  const { data: hasKey, reload } = useRows(emailKeySet, 'email-key')
+  const { data: hasKey, reload } = useEmailKeySet()
   const [typing, setTyping] = useState(null)
   const [removing, setRemoving] = useState(false)
   const save = async (key) => {
-    if (await run(() => setEmailKey(key), t(key ? 'settings.company.key.saved' : 'settings.company.key.removed'))) {
+    if (await run(() => setEmailKey(key), t(key ? 'admin.settings.company.key.saved' : 'admin.settings.company.key.removed'))) {
       setTyping(null)
       reload()
     }
@@ -133,56 +132,56 @@ function EmailSending({ sender, after }) {
         <Icon name="mail" className="size-5" strokeWidth={1.8} />
       </span>
       <span className="flex min-w-50 flex-1 flex-col gap-0.5">
-        <span className="text-[17px]">{t('settings.company.key.title')}</span>
-        <span className="text-[13px] text-brand-100">{t(`settings.company.key.${state}`, { sender })}</span>
+        <span className="text-[17px]">{t('admin.settings.company.key.title')}</span>
+        <span className="text-[13px] text-brand-100">{t(`admin.settings.company.key.${state}`, { sender })}</span>
       </span>
       <span className="flex items-center gap-2">
         {hasKey && (
-          <Button variant="bare" onClick={() => setRemoving(true)} className="h-10 rounded-full px-3.5 text-sm text-white/85 transition hover:bg-white/12">
-            {t('common.remove')}
+          <Button id="company-tab-remove" variant="bare" onClick={() => setRemoving(true)} className="h-10 rounded-full px-3.5 text-sm text-white/85 transition hover:bg-white/12">
+            {t('shared.common.remove')}
           </Button>
         )}
-        <Button variant="bare" onClick={() => setTyping('')} disabled={hasKey === undefined} className={cx(light, 'inline-flex items-center')}>
+        <Button id="company-tab-set-typing" variant="bare" onClick={() => setTyping('')} disabled={hasKey === undefined} className={cx(light, 'inline-flex items-center')}>
           <Icon name="key" className="size-3.5" strokeWidth={1.8} />
-          {t(hasKey ? 'settings.company.key.replace' : 'settings.company.key.add')}
+          {t(hasKey ? 'admin.settings.company.key.replace' : 'admin.settings.company.key.add')}
         </Button>
       </span>
-      <Modal
+      <Modal id="company-tab-label"
         open={typing !== null}
         onClose={() => setTyping(null)}
-        title={t(hasKey ? 'settings.company.key.replace' : 'settings.company.key.add')}
-        description={t('settings.company.key.hint')}
+        title={t(hasKey ? 'admin.settings.company.key.replace' : 'admin.settings.company.key.add')}
+        description={t('admin.settings.company.key.hint')}
         footer={
           <>
-            <Button variant="outline" onClick={() => setTyping(null)}>
-              {t('common.cancel')}
+            <Button id="company-tab-cancel" variant="outline" onClick={() => setTyping(null)}>
+              {t('shared.common.cancel')}
             </Button>
-            <Button onClick={() => save(typing)} disabled={!typing?.trim() || busy}>
-              {t('common.save')}
+            <Button id="company-tab-save" onClick={() => save(typing)} disabled={!typing?.trim() || busy}>
+              {t('shared.common.save')}
             </Button>
           </>
         }
       >
-        <form
+        <form className="v-company-tab__label-2" id="company-tab-label-2"
           onSubmit={(e) => {
             e.preventDefault()
             if (typing.trim()) save(typing)
           }}
         >
-          <Field label={t('settings.company.key.label')}>
+          <Field id="company-tab-label-3" label={t('admin.settings.company.key.label')}>
             {(props) => (
-              <Input {...props} autoFocus type="password" autoComplete="off" dir="ltr" placeholder="SG.…" value={typing ?? ''} onChange={(e) => setTyping(e.target.value)} />
+              <Input {...props} autoFocus type="password" autoComplete="off" dir="ltr" placeholder={t('admin.settings.company.key.placeholder')} value={typing ?? ''} onChange={(e) => setTyping(e.target.value)} />
             )}
           </Field>
         </form>
       </Modal>
-      <ConfirmDialog
+      <ConfirmDialog id="company-tab-remove-title"
         open={removing}
         onClose={() => setRemoving(false)}
         onConfirm={() => save('')}
-        title={t('settings.company.key.removeTitle')}
-        description={t('settings.company.key.removeText')}
-        confirmLabel={t('common.remove')}
+        title={t('admin.settings.company.key.removeTitle')}
+        description={t('admin.settings.company.key.removeText')}
+        confirmLabel={t('shared.common.remove')}
       />
     </div>
   )

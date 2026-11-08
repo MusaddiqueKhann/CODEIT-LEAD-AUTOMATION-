@@ -1,15 +1,15 @@
 import { useState } from 'react'
-import { Tabs, cx } from '../../../components/ui/index.js'
+import { cx, Tabs } from '@/components'
 import { useConfig } from '../../../controllers/shared/ConfigContext.jsx'
 import { useLang } from '../../../controllers/shared/LangContext.jsx'
-import { saveText, updateSettings } from '../../../models/data/settings.js'
+import { saveText, updateSettings } from '../../../controllers/admin/settings.js'
 import { useAction } from '../../../controllers/shared/useAction.js'
 import { MESSAGES, messageOf, unknownPlaceholders } from '../../../models/rules/placeholders.js'
 import { EmailMessage } from './EmailMessage.jsx'
 import { Section } from './Section.jsx'
 import { useUnsaved } from '../../../controllers/shared/unsaved.js'
 
-/* Who reads each group of messages, one tab each; their words are settings.texts.groups.<group> and <group>Sub. */
+/* Who reads each group of messages, one tab each; their words are admin.settings.texts.groups.<group> and <group>Sub. */
 const GROUPS = ['customer', 'team', 'page', 'calendar', 'activity']
 
 /**
@@ -32,7 +32,7 @@ export function TextsTab({ after }) {
 
   return (
     <Section id="texts" icon="mail">
-      <Tabs
+      <Tabs id="texts-tab-set-group"
         size="sm"
         className="flex-wrap self-start"
         value={group}
@@ -42,15 +42,15 @@ export function TextsTab({ after }) {
           // The count reads as part of the name, as in the design (the tab's own gap is pulled in).
           label: (
             <>
-              {t(`settings.texts.groups.${g}`)}
+              {t(`admin.settings.texts.groups.${g}`)}
               <span className="-ms-1.5 opacity-60">{inGroup(g).length}</span>
             </>
           ),
         }))}
       />
-      <p className="text-[13px] text-muted">{t(`settings.texts.groups.${group}Sub`)}</p>
+      <p className="text-[13px] text-muted">{t(`admin.settings.texts.groups.${group}Sub`)}</p>
       {GROUPS.map((g) => (
-        <div key={g} role="tabpanel" className={cx('relative flex flex-col', g !== group && 'hidden')}>
+        <div key={g} id={`texts-tab-${g}`} role="tabpanel" className={cx('v-texts-tab__div', 'relative flex flex-col', g !== group && 'hidden')}>
           <span aria-hidden="true" className="absolute inset-s-4.75 top-6 bottom-6 w-0.5 bg-edge" />
           {inGroup(g).map(([key, m]) => (
             <EmailMessage
@@ -64,7 +64,7 @@ export function TextsTab({ after }) {
                 run(async () => {
                   const bad = unknownPlaceholders(`${en} ${ar}`, m.placeholders)
                   if (bad.length) {
-                    throw new Error(t('settings.texts.refused', { title: m.group === 'activity' ? key : t(`settings.texts.messages.${key}`), words: bad.map((w) => `{${w}}`).join(', ') }))
+                    throw new Error(t('admin.settings.texts.refused', { title: m.group === 'activity' ? key : t(`admin.settings.texts.messages.${key}`), words: bad.map((w) => `{${w}}`).join(t('shared.common.listJoin')) }))
                   }
                   return saveText(k, en, ar)
                 })

@@ -17,8 +17,13 @@ const SUNDAY = new Date(2026, 0, 4) // any Sunday
 export const weekdayNames = (style = 'short') =>
   Array.from({ length: 7 }, (_, i) => format(new Date(2026, 0, SUNDAY.getDate() + i), { weekday: style }))
 
-/** "1 session", "3 sessions" (English only: screens in both languages use t() with a plural entry). */
-export const plural = (n, word) => `${n} ${word}${n === 1 ? '' : 's'}`
+/** A file's size in the reader's language: "240 KB", "3.0 MB". */
+export const fileSize = (bytes) =>
+  bytes < 1048576 ? translate(LANG, 'shared.common.kb', { n: Math.max(1, Math.round(bytes / 1024)) }) : translate(LANG, 'shared.common.mb', { n: (bytes / 1048576).toFixed(1) })
+
+/** A day as a customer reads it, in their language: "Thursday 5 November" (no time). */
+export const dayFor = (language, date) =>
+  new Intl.DateTimeFormat(language === 'ar' ? 'ar-SA-u-ca-gregory-nu-latn' : 'en-GB', { weekday: 'long', day: 'numeric', month: 'long' }).format(date)
 
 /** Fills {word} placeholders from `values`; an unknown one stays as it is. */
 export const fill = (text, values) => text.replace(/\{(\w+)\}/g, (m, k) => values[k] ?? m)
@@ -79,10 +84,10 @@ export const formatTime = (d) => `${pad(d.getHours())}:${pad(d.getMinutes())}`
 /** How long ago a Riyadh wall-clock Date was: "just now", "12 min ago", "3 h ago", "Yesterday", else "Mon 20 Jul". */
 export function ago(d, now = riyadhNow()) {
   const min = Math.floor((now - d) / 6e4)
-  if (min < 1) return translate(LANG, 'common.ago.now')
-  if (min < 60) return translate(LANG, 'common.ago.minutes', { n: min })
-  if (isSameDay(d, now)) return translate(LANG, 'common.ago.hours', { n: Math.floor(min / 60) })
-  if (isSameDay(d, new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1))) return translate(LANG, 'common.ago.yesterday')
+  if (min < 1) return translate(LANG, 'shared.common.ago.now')
+  if (min < 60) return translate(LANG, 'shared.common.ago.minutes', { n: min })
+  if (isSameDay(d, now)) return translate(LANG, 'shared.common.ago.hours', { n: Math.floor(min / 60) })
+  if (isSameDay(d, new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1))) return translate(LANG, 'shared.common.ago.yesterday')
   return formatShort(d)
 }
 

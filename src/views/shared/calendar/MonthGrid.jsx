@@ -1,4 +1,4 @@
-import { cx } from '../../../components/ui/index.js'
+import { cx } from '@/components'
 import { useLang } from '../../../controllers/shared/LangContext.jsx'
 import { weekdayNames } from '../../../models/rules/format.js'
 import { SessionAvatar } from './SessionAvatar.jsx'
@@ -30,8 +30,8 @@ export function MonthGrid({ anchor, cells, today, itemsOn, count, chip, onDay })
               style={{ animationDelay: `${0.05 + i * 0.012}s` }}
               className={cx(
                 'flex min-w-0 animate-rise flex-col gap-2 rounded-[18px] px-2.5 pt-2.5 pb-2 transition-colors',
-                !inMonth ? 'bg-[#fbfcfd] opacity-50' : isToday ? 'bg-brand-50' : 'bg-surface-2',
-                items.length > 0 && 'cursor-pointer hover:bg-[#eef5f5]',
+                !inMonth ? 'bg-brand-wash-2 opacity-50' : isToday ? 'bg-brand-50' : 'bg-surface-2',
+                items.length > 0 && 'cursor-pointer hover:bg-brand-bubble',
               )}
             >
               <div className="flex items-center justify-between">
@@ -49,7 +49,7 @@ export function MonthGrid({ anchor, cells, today, itemsOn, count, chip, onDay })
                 ))}
               </div>
               {items.length > 2 && (
-                <span className="mt-auto flex h-7 items-center justify-center rounded-full bg-tint px-2.5 text-xs text-brand-800">{t('calendar.more', { n: items.length - 2 })}</span>
+                <span className="mt-auto flex h-7 items-center justify-center rounded-full bg-tint px-2.5 text-xs text-brand-800">{t('shared.calendar.more', { n: items.length - 2 })}</span>
               )}
             </div>
           )

@@ -1,0 +1,124 @@
+{
+  "overview": {
+    "counters": {
+      "sessions": "Sessions",
+      "checklists": "Checklists",
+      "recordings": "Recordings",
+      "ratings": "Ratings"
+    },
+    "sessionNow": "Session now",
+    "next": "Next session · {when}",
+    "inHoursMinutes": "in {hours} h {minutes} min",
+    "inMinutes": "in {minutes} min",
+    "parts": {
+      "today": "Sessions today",
+      "later": "Later this week",
+      "checklists": "Checklists to finish",
+      "recordings": "Recordings to send",
+      "rest": "Rest of the month"
+    },
+    "todayTitle": "Today",
+    "todaySub": "Your session, with the Meet link",
+    "copyMeet": "Copy Meet link",
+    "meetCopied": "Meet link copied to clipboard.",
+    "joinMeet": "Join Meet",
+    "checklist": "Checklist {done} of {total}",
+    "left": "left: {list}",
+    "ready": "ready",
+    "noneComing": "No sessions coming up.",
+    "laterThisWeek": "Later this week",
+    "setupTitle": "Setup checklists to finish",
+    "setupSub": "Due {days} before the session",
+    "due": "Due {day}",
+    "noDueDate": "No due date",
+    "sessionAt": "session {when}",
+    "leftList": "Left: {list}",
+    "setupNone": "No checklists to finish.",
+    "recordingsTitle": "Recordings to send",
+    "recordingsSub": "Attach the link after each session",
+    "sessionOn": "Session {day} · {time}",
+    "sessionHeld": "Session held",
+    "addLink": "Add link",
+    "recordingsNone": "Every recording is sent.",
+    "startedOnTime": "Sessions started on time",
+    "sentIn": "Recordings sent in {hours} h",
+    "held": "Sessions held",
+    "work": "Onboarding work this week"
+  },
+  "member": {
+    "session": {
+      "title": "Session",
+      "with": "With {name}",
+      "pickedAtHandover": "The {role} is picked at handover",
+      "notBooked": "Not booked yet",
+      "join": "Join Meet",
+      "copyLink": "Copy link",
+      "linkCopied": "Meet link copied to clipboard.",
+      "missed": {
+        "one": "Missed once. Sales books a new time.",
+        "other": "Missed {n} times. Sales books a new time."
+      },
+      "completed": "Completed",
+      "noShow": "No-show",
+      "noShowTitle": "The customer didn’t come",
+      "noShowDescription": "It goes back to {step} to book a new time. The calendar invite is cancelled.",
+      "note": "Note",
+      "markNoShow": "Mark No-show"
+    },
+    "setup": {
+      "title": "Setup checklist",
+      "done": "The checklist is done",
+      "finishBy": {
+        "one": "Finish by {date}, {n} working day before the session",
+        "other": "Finish by {date}, {n} working days before the session"
+      },
+      "beforeSession": "Before the session",
+      "count": "{done} of {total} done"
+    },
+    "recording": {
+      "title": "Recording",
+      "completed": "Session completed {at}",
+      "after": "After the session",
+      "sent": "Sent",
+      "waiting": "Waiting",
+      "sessionRecording": "Session recording",
+      "withoutRecording": "Sent without a recording",
+      "formOnly": "The feedback form only",
+      "sentAt": "Sent {at}.",
+      "openFor": {
+        "one": "The customer’s link is open for {n} more hour, until {until}.",
+        "other": "The customer’s link is open for {n} more hours, until {until}."
+      },
+      "closed": "The customer’s link has closed.",
+      "paste": "Paste the recording link",
+      "link": "Recording link",
+      "send": "Send to customer",
+      "badLink": "Paste a full link, starting with https://",
+      "waitingFor": "Waiting for the {role} to send the recording.",
+      "sendWithout": "Send without recording",
+      "extend": "Extend +{h} h",
+      "withoutTitle": "Send the feedback form without a recording",
+      "withoutDescription": "The customer gets the feedback form only.",
+      "withoutWhy": "Why there is no recording",
+      "sendShort": "Send"
+    },
+    "feedback": {
+      "title": "Feedback",
+      "sub": "From the {role} and from the client, after the session",
+      "pickedAtHandover": "Picked at handover",
+      "saved": "Saved",
+      "waiting": "Waiting",
+      "prompt": "How did the session go? Anything the client still needs?",
+      "writtenAfter": "Written after the session",
+      "save": "Save feedback",
+      "client": "Client",
+      "ofFive": "{n} of 5",
+      "notSent": "Not sent yet",
+      "stars": "{n} of 5 stars",
+      "noRating": "No rating yet",
+      "rated": "Rated {at}",
+      "commentHere": "Their comment will appear here.",
+      "linkGoes": "The feedback page link goes to them by email in {language} after the session"
+    }
+  }
+}

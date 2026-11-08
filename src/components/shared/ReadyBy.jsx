@@ -3,7 +3,7 @@ import { useConfig } from '../../controllers/shared/ConfigContext.jsx'
 import { useLang } from '../../controllers/shared/LangContext.jsx'
 import { byReadiness, dueOn, inDaysLabel, readiness } from '../../models/rules/members.js'
 import { TONES } from '../tones.js'
-import { cx } from '../ui/index.js'
+import { cx } from '../cx.js'
 
 const MAX_DAYS = 14 // past two weeks the day marks squeeze into 15
 
@@ -23,9 +23,9 @@ export function ReadyBy({ keys, state }) {
   return (
     <div className="grid gap-x-7 gap-y-5 rounded-[24px] px-6 py-5.5 ring-1 ring-line ring-inset md:grid-cols-[auto_minmax(0,1fr)]">
       <div className="flex flex-col justify-between gap-3.5 border-line md:w-60 md:border-e md:pe-7">
-        <span className="eyebrow text-faint">{t('shared.ready.title')}</span>
+        <span className="eyebrow text-faint">{t('shared.components.ready.title')}</span>
         <span className={cx('text-stat', all ? TONES.success.text : tally.unmarked ? 'text-muted' : 'text-ink')}>
-          {all ? t('shared.ready.allIn') : tally.unmarked ? t('shared.ready.noDate') : dueOn(tally.latest)}
+          {all ? t('shared.components.ready.allIn') : tally.unmarked ? t('shared.components.ready.noDate') : dueOn(tally.latest)}
         </span>
         <div className="flex flex-col gap-2">
           <div className="grid gap-1" style={{ gridTemplateColumns: `repeat(${span + 1}, minmax(0, 1fr))` }}>
@@ -40,15 +40,15 @@ export function ReadyBy({ keys, state }) {
             ))}
           </div>
           <span className="flex justify-between gap-2 text-xs text-faint">
-            <span>{t('shared.ready.today')}</span>
+            <span>{t('shared.components.ready.today')}</span>
             <span className={all ? TONES.success.text : TONES.warn.text}>
               {all
-                ? t('shared.ready.allUploaded')
+                ? t('shared.components.ready.allUploaded')
                 : tally.unmarked
-                  ? t('shared.ready.unmarked', { n: tally.unmarked })
-                  : t('shared.ready.line', {
+                  ? t('shared.components.ready.unmarked', { n: tally.unmarked })
+                  : t('shared.components.ready.line', {
                       when: inDaysLabel(active('due_choice'), tally.latest, t, (c) => label('due_choice', c.key)),
-                      left: t('shared.ready.filesLeft', { n: left }),
+                      left: t('shared.components.ready.filesLeft', { n: left }),
                     })}
             </span>
           </span>
@@ -57,8 +57,8 @@ export function ReadyBy({ keys, state }) {
 
       <div className="flex min-w-0 flex-col gap-3.5">
         <span className="flex justify-between text-sm text-ink">
-          {t('shared.ready.uploadedOf', { done: tally.done, total: tally.total })}
-          <span className="text-faint">{all ? t('shared.ready.nothingToGo') : t('shared.ready.toGo', { n: left })}</span>
+          {t('shared.components.ready.uploadedOf', { done: tally.done, total: tally.total })}
+          <span className="text-faint">{all ? t('shared.components.ready.nothingToGo') : t('shared.components.ready.toGo', { n: left })}</span>
         </span>
         <div className="scrollbar-slim flex gap-2 overflow-x-auto pb-0.5">
           {[...keys].sort(byReadiness(state)).map((k) => {
@@ -88,7 +88,7 @@ export function ReadyBy({ keys, state }) {
                 </span>
                 <span className="mt-1 max-w-full truncate text-[13px] text-ink">{meta('document', k, 'short') || label('document', k)}</span>
                 <span className={cx('text-[11px] whitespace-nowrap', done ? TONES.success.text : due ? TONES.warn.text : 'text-muted')}>
-                  {done ? t('shared.ready.tileUploaded') : due ? dueOn(v) : t('shared.ready.tileNoDate')}
+                  {done ? t('shared.components.ready.tileUploaded') : due ? dueOn(v) : t('shared.components.ready.tileNoDate')}
                 </span>
               </div>
             )

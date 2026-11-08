@@ -9,3 +9,5 @@ export function useAlerts(personId) {
   useEffect(() => onAlertsChange(personId, reload), [personId, reload])
   return alerts
 }
+
+export { markRead } from '../../models/data/alerts.js'

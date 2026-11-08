@@ -1,5 +1,4 @@
-import Icon from '../../components/Icon.jsx'
-import { Button } from '../../components/ui/index.js'
+import { Button, Icon } from '@/components'
 
 /** The session recording: a button that opens it in a new tab, or a line saying there is none. */
 export function RecordingLink({ link, t }) {
@@ -13,7 +12,7 @@ export function RecordingLink({ link, t }) {
         {!link && <p className="mt-0.5 text-sm text-muted">{t.after_no_recording}</p>}
       </div>
       {link && (
-        <Button href={link} target="_blank" rel="noreferrer">
+        <Button id="recording-link-open" href={link} target="_blank" rel="noreferrer">
           {t.after_open_recording}
         </Button>
       )}

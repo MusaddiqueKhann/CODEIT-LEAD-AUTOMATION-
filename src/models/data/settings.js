@@ -2,8 +2,8 @@ import { camelKeys } from './case.js'
 import { fromServer } from '../rules/format.js'
 import { supabase } from './client.js'
 import { avatarUrl } from './auth.js'
-import { rows } from './rows.js'
-import { toError } from './errors.js'
+import { rows, rpc } from './rows.js'
+import { appError } from './errors.js'
 
 /**
  * Everything the app reads once after sign-in: the settings row, every options list, the texts,
@@ -25,7 +25,7 @@ export async function loadConfig() {
   // Every table comes back empty when the server no longer accepts this sign-in (it ended, or
   // passed the time-box in Settings). Say so, so the app can sign out instead of breaking.
   if (!settings) {
-    const ended = new Error('Your sign-in has ended. Please sign in again.')
+    const ended = appError('session_ended', 'Your sign-in has ended. Please sign in again.')
     ended.sessionEnded = true
     throw ended
   }
@@ -59,27 +59,22 @@ export const brandOf = (company = {}, lang = 'en') => ({
 
 let brand
 /** The brand words for pages before sign-in, asked once per visit; empty words if the server can't say. */
-export const loadBrand = () => (brand ??= call('brand').then((b) => b ?? {}, () => ({})))
+export const loadBrand = () => (brand ??= rpc('brand').then((b) => b ?? {}, () => ({})))
 
-async function call(fn, args) {
-  const { error, data } = await supabase.rpc(fn, args)
-  if (error) throw toError(error)
-  return data
-}
 
 /** Admin: change some settings (snake_case keys, as the settings table names them). */
-export const updateSettings = (patch) => call('update_settings', { p: patch })
+export const updateSettings = (patch) => rpc('update_settings', { p: patch })
 /** Admin: whether the email service key is set (the key itself never comes back). */
-export const emailKeySet = () => call('email_key_set')
+export const emailKeySet = () => rpc('email_key_set')
 /** Admin: save the email service key into Vault, or remove it with ''. */
-export const setEmailKey = (key) => call('set_email_key', { p_key: key })
+export const setEmailKey = (key) => rpc('set_email_key', { p_key: key })
 /** Admin: add or rename a public holiday; returns how many sessions already fall on it. */
-export const setHoliday = (day, name) => call('set_holiday', { p_day: day, p_name: name })
-export const removeHoliday = (day) => call('remove_holiday', { p_day: day })
+export const setHoliday = (day, name) => rpc('set_holiday', { p_day: day, p_name: name })
+export const removeHoliday = (day) => rpc('remove_holiday', { p_day: day })
 /** Admin: add or change one option of a list. */
 export const saveOption = (list, o) =>
-  call('save_option', { p_list: list, p_key: o.key, p_label: o.label, p_label_ar: o.labelAr ?? null, p_active: o.active, p_sort: o.sort, p_meta: o.meta })
+  rpc('save_option', { p_list: list, p_key: o.key, p_label: o.label, p_label_ar: o.labelAr ?? null, p_active: o.active, p_sort: o.sort, p_meta: o.meta })
 /** Admin: the English and Arabic wording of one text. */
-export const saveText = (key, en, ar) => call('save_text', { p_key: key, p_en: en, p_ar: ar })
+export const saveText = (key, en, ar) => rpc('save_text', { p_key: key, p_en: en, p_ar: ar })
 /** Admin: one email, as saved, filled with a made-up member, to your own address ("en" or "ar"). */
-export const sendTestEmail = (template, lang) => call('send_test_email', { p_template: template, p_lang: lang })
+export const sendTestEmail = (template, lang) => rpc('send_test_email', { p_template: template, p_lang: lang })

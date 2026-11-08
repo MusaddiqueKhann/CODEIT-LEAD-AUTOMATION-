@@ -1,6 +1,5 @@
 import { useState } from 'react'
-import { HoursEditor } from '../../../components/shared/index.js'
-import { Button, Field, Input, Modal, Select } from '../../../components/ui/index.js'
+import { Button, Field, HoursEditor, Input, Modal, Select } from '@/components'
 import { useConfig } from '../../../controllers/shared/ConfigContext.jsx'
 import { useLang } from '../../../controllers/shared/LangContext.jsx'
 
@@ -29,33 +28,33 @@ export function AddPersonDialog({ open, onClose, onSave }) {
   }
 
   return (
-    <Modal
+    <Modal id="add-person-dialog-title"
       open={open}
       onClose={onClose}
       size="lg"
-      title={t('team.add.title')}
-      description={t('team.add.description')}
+      title={t('admin.team.add.title')}
+      description={t('admin.team.add.description')}
       footer={
         <>
-          <Button variant="outline" onClick={onClose}>
-            {t('common.neverMind')}
+          <Button id="add-person-dialog-never-mind" variant="outline" onClick={onClose}>
+            {t('shared.common.neverMind')}
           </Button>
-          <Button onClick={save} disabled={!ready || busy}>
-            {busy ? t('team.add.adding') : t('team.add.submit')}
+          <Button id="add-person-dialog-adding" onClick={save} disabled={!ready || busy}>
+            {busy ? t('admin.team.add.adding') : t('admin.team.add.submit')}
           </Button>
         </>
       }
     >
       <div className="flex flex-col gap-4">
         <div className="grid gap-3 sm:grid-cols-2">
-          <Field label={t('team.add.name')}>{(props) => <Input {...props} value={form.name} onChange={(e) => set({ name: e.target.value })} />}</Field>
-          <Field label={t('team.add.email')}>
+          <Field id="add-person-dialog-name" label={t('admin.team.add.name')}>{(props) => <Input {...props} value={form.name} onChange={(e) => set({ name: e.target.value })} />}</Field>
+          <Field id="add-person-dialog-email" label={t('admin.team.add.email')}>
             {(props) => <Input {...props} type="email" dir="ltr" value={form.email} onChange={(e) => set({ email: e.target.value })} />}
           </Field>
-          <Field label={t('team.add.role')}>
+          <Field id="add-person-dialog-role" label={t('admin.team.add.role')}>
             {(props) => (
               <Select {...props} value={form.role} onChange={(e) => set({ role: e.target.value })}>
-                <option value="">{t('common.pickOne')}</option>
+                <option value="">{t('shared.common.pickOne')}</option>
                 {(lists.role ?? []).map((r) => (
                   <option key={r.key} value={r.key}>
                     {label('role', r.key)}
@@ -64,23 +63,23 @@ export function AddPersonDialog({ open, onClose, onSave }) {
               </Select>
             )}
           </Field>
-          <Field label={t('team.add.language')}>
+          <Field id="add-person-dialog-language" label={t('admin.team.add.language')}>
             {(props) => (
               <Select {...props} value={form.language} onChange={(e) => set({ language: e.target.value })}>
                 {['en', 'ar'].map((l) => (
                   <option key={l} value={l} lang={l}>
-                    {t(`team.add.languages.${l}`)}
+                    {t(`admin.team.add.languages.${l}`)}
                   </option>
                 ))}
               </Select>
             )}
           </Field>
-          <Field label={t('team.add.password')} hint={t('team.add.passwordHint')}>
+          <Field id="add-person-dialog-password" label={t('admin.team.add.password')} hint={t('admin.team.add.passwordHint')}>
             {(props) => <Input {...props} dir="ltr" value={form.password} onChange={(e) => set({ password: e.target.value })} />}
           </Field>
         </div>
         <div className="flex flex-col gap-2">
-          <span className="text-[13px] font-medium text-ink">{t('team.add.hours')}</span>
+          <span className="text-[13px] font-medium text-ink">{t('admin.team.add.hours')}</span>
           <HoursEditor value={form.hours} office={settings.officeHours} onChange={(hours) => set({ hours })} />
         </div>
       </div>

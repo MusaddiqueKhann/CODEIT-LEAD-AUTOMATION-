@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { IconButton } from '../ui/IconButton.jsx'
 import Icon from '../Icon.jsx'
 import { cx } from '../cx.js'
 import { useLang } from '../../controllers/shared/LangContext.jsx'
@@ -23,20 +23,14 @@ export function PageHeader({ title, sub, back, media, children, actions, nav }) 
   return (
     <header className="flex shrink-0 animate-rise flex-wrap items-center gap-3.5 rounded-card bg-panel px-6 py-5 shadow-card">
       {back && (
-        <Link
-          to={back}
-          aria-label={t('common.back')}
-          className="grid size-10 shrink-0 place-items-center rounded-full bg-surface text-ink transition hover:-translate-x-0.5 hover:bg-surface-hover rtl:hover:translate-x-0.5"
-        >
-          <Icon name="chevronLeft" className="size-4" strokeWidth={2} />
-        </Link>
+        <IconButton id="page-header-back" icon="chevronLeft" label={t('shared.common.back')} to={back} strokeWidth={2} className="hover:-translate-x-0.5 rtl:hover:translate-x-0.5" />
       )}
       {media}
       {nav ? (
         <div className="flex min-w-0 flex-[1_1_320px] items-center gap-3.5">
-          <Arrow label={t('common.previous')} icon="chevronLeft" onClick={nav.onPrev} />
+          <Arrow id="page-header-previous" label={t('shared.common.previous')} icon="chevronLeft" onClick={nav.onPrev} />
           {heading}
-          <Arrow label={t('common.next')} icon="chevronRight" onClick={nav.onNext} />
+          <Arrow id="page-header-next" label={t('shared.common.next')} icon="chevronRight" onClick={nav.onNext} />
         </div>
       ) : (
         heading
@@ -47,13 +41,13 @@ export function PageHeader({ title, sub, back, media, children, actions, nav }) 
   )
 }
 
-function Arrow({ label, icon, onClick }) {
+function Arrow({ id, label, icon, onClick }) {
   return (
-    <button
+    <button id={id}
       type="button"
       aria-label={label}
       onClick={onClick}
-      className="grid size-11 shrink-0 cursor-pointer place-items-center rounded-full bg-surface text-ink transition hover:bg-surface-hover"
+      className="ui-page-header__{id} grid size-11 shrink-0 cursor-pointer place-items-center rounded-full bg-surface text-ink transition hover:bg-surface-hover"
     >
       <Icon name={icon} className="size-4" strokeWidth={2.2} />
     </button>

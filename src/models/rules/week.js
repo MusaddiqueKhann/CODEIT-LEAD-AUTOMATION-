@@ -1,5 +1,5 @@
 import { dayKey, fromServer, riyadhNow, startOfDay } from './format.js'
-import { addDays, toMinutes } from './time.js'
+import { addDays, startOfWeek, toMinutes } from './time.js'
 
 /** The person's seven days of { on, from, to }, Sunday first: their own hours or the office's. */
 export const hoursOf = (person, officeHours) => person.hours ?? officeHours
@@ -10,7 +10,7 @@ export const hourOf = (time) => toMinutes(time) / 60
 /** The Sunday-to-Saturday week around today, as seven Dates. */
 export function thisWeek() {
   const today = startOfDay(riyadhNow())
-  const sunday = addDays(today, -today.getDay())
+  const sunday = startOfWeek(today)
   return Array.from({ length: 7 }, (_, i) => addDays(sunday, i))
 }
 

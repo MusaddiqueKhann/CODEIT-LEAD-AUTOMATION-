@@ -1,9 +1,12 @@
 import { useState } from 'react'
+import { IconButton } from '../ui/IconButton.jsx'
 import Icon from '../Icon.jsx'
 import { dayKey, formatShort, fromDay, monthYear, riyadhNow, startOfDay, weekdayNames } from '../../models/rules/format.js'
 import { useConfig } from '../../controllers/shared/ConfigContext.jsx'
 import { useLang } from '../../controllers/shared/LangContext.jsx'
-import { Button, Modal, cx } from '../ui/index.js'
+import { Button } from '../ui/Button.jsx'
+import { Modal } from '../ui/Modal.jsx'
+import { cx } from '../cx.js'
 import { Option } from './Option.jsx'
 import { ReadField } from './ReadField.jsx'
 
@@ -37,22 +40,22 @@ export function HardwareField({ value = {}, onChange, readOnly = false }) {
   const arrives = value.date && fromDay(value.date)
   const days = arrives && Math.round((arrives - today) / 864e5)
   const title = !arrives
-    ? t('shared.hardware.noArrival', { step: name(step) })
+    ? t('shared.components.hardware.noArrival', { step: name(step) })
     : step === 0
-      ? t('shared.hardware.arriving', { step: name(0), date: formatShort(arrives) })
-      : t('shared.hardware.stepOn', { step: name(step), date: formatShort(arrives) })
-  const when = days > 0 ? t('shared.hardware.inDays', { n: days }) : days === 0 ? t('shared.hardware.today') : t('shared.hardware.late', { n: -days })
-  const sub = step === last ? t('shared.hardware.withCustomer') : !arrives ? t('shared.hardware.setDay') : t('shared.hardware.beforeSession', { when })
+      ? t('shared.components.hardware.arriving', { step: name(0), date: formatShort(arrives) })
+      : t('shared.components.hardware.stepOn', { step: name(step), date: formatShort(arrives) })
+  const when = days > 0 ? t('shared.components.hardware.inDays', { n: days }) : days === 0 ? t('shared.components.hardware.today') : t('shared.components.hardware.late', { n: -days })
+  const sub = step === last ? t('shared.components.hardware.withCustomer') : !arrives ? t('shared.components.hardware.setDay') : t('shared.components.hardware.beforeSession', { when })
 
-  if (readOnly) return <ReadField>{value.none ? t('shared.hardware.none') : needs ? title : t('shared.hardware.notAnswered')}</ReadField>
+  if (readOnly) return <ReadField>{value.none ? t('shared.components.hardware.none') : needs ? title : t('shared.components.hardware.notAnswered')}</ReadField>
 
   const go = (n) => onChange({ ...value, needs: true, step: steps[n].key, delivered: n === last })
   const stepDate = (i) =>
     i === 0
       ? value.ordered ? formatShort(fromDay(value.ordered)) : '—'
       : i === last
-        ? step === last && arrives ? formatShort(arrives) : t('shared.hardware.notYet')
-        : arrives ? formatShort(arrives) : t('shared.hardware.noDate')
+        ? step === last && arrives ? formatShort(arrives) : t('shared.components.hardware.notYet')
+        : arrives ? formatShort(arrives) : t('shared.components.hardware.noDate')
   const icon = (i) => (i === 0 ? 'box' : i === last ? 'check' : 'truck')
   // Where a step's dot sits along the bar: the first at the start, the last at the end, the rest mid-column.
   const dotAt = (i) => (i === 0 ? '8px' : i === last ? 'calc(100% - 8px)' : `${((i + 0.5) / steps.length) * 100}%`)
@@ -60,15 +63,15 @@ export function HardwareField({ value = {}, onChange, readOnly = false }) {
   return (
     <div className="flex flex-col gap-3.5">
       <div className="flex flex-wrap gap-1.5">
-        <Option on={!!value.none} onClick={() => onChange({ none: true })} className="h-10 rounded-full px-4 text-sm whitespace-nowrap">
-          {t('shared.hardware.none')}
+        <Option id="hardware-field-none" on={!!value.none} onClick={() => onChange({ none: true })} className="h-10 rounded-full px-4 text-sm whitespace-nowrap">
+          {t('shared.components.hardware.none')}
         </Option>
-        <Option
+        <Option id="hardware-field-needs"
           on={needs}
           onClick={() => !needs && onChange({ needs: true, step: 0, ordered: dayKey(today) })}
           className="h-10 rounded-full px-4 text-sm whitespace-nowrap"
         >
-          {t('shared.hardware.needs')}
+          {t('shared.components.hardware.needs')}
         </Option>
       </div>
       {needs && (
@@ -81,9 +84,9 @@ export function HardwareField({ value = {}, onChange, readOnly = false }) {
               <span className="text-[15px] text-ink">{title}</span>
               <span className="text-[13px] text-muted">{sub}</span>
             </span>
-            <Button variant="bare" onClick={() => setPicking(true)} className="flex h-9.5 items-center gap-2 rounded-full bg-panel px-3.5 text-[13px] text-brand-700 transition hover:bg-brand-100">
+            <Button id="hardware-field-set-picking" variant="bare" onClick={() => setPicking(true)} className="flex h-9.5 items-center gap-2 rounded-full bg-panel px-3.5 text-[13px] text-brand-700 transition hover:bg-brand-100">
               <Icon name="calendar" className="size-3.75" strokeWidth={1.8} />
-              {t(arrives ? 'shared.hardware.changeDate' : 'shared.hardware.setDate')}
+              {t(arrives ? 'shared.components.hardware.changeDate' : 'shared.components.hardware.setDate')}
             </Button>
           </div>
           <div className="relative grid" style={{ gridTemplateColumns: `repeat(${steps.length}, minmax(0, 1fr))` }}>
@@ -91,11 +94,11 @@ export function HardwareField({ value = {}, onChange, readOnly = false }) {
               <span
                 key={s.key}
                 style={{ insetInlineStart: dotAt(i), insetInlineEnd: `calc(100% - ${dotAt(i + 1)})` }}
-                className={cx('absolute top-1.75 h-0.5 transition-colors', step > i ? 'bg-brand-700' : 'bg-[#dfe7e7]')}
+                className={cx('absolute top-1.75 h-0.5 transition-colors', step > i ? 'bg-brand-700' : 'bg-brand-line')}
               />
             ))}
             {steps.map((s, i) => (
-              <Button
+              <Button id={`hardware-field-go-${s.key}`}
                 key={s.key}
                 variant="bare"
                 aria-pressed={i === step}
@@ -105,7 +108,7 @@ export function HardwareField({ value = {}, onChange, readOnly = false }) {
                 <span
                   className={cx(
                     'size-4 rounded-full transition',
-                    i < step ? 'bg-brand-700' : i === step ? 'bg-panel shadow-[inset_0_0_0_4px_#367b7f]' : 'bg-panel shadow-[inset_0_0_0_2px_#dfe7e7]',
+                    i < step ? 'bg-brand-700' : i === step ? 'bg-panel shadow-[inset_0_0_0_4px_var(--color-brand-700)]' : 'bg-panel shadow-[inset_0_0_0_2px_var(--color-brand-line)]',
                   )}
                 />
                 <span className={cx('text-sm', i <= step ? 'text-ink' : 'text-muted')}>{name(i)}</span>
@@ -141,32 +144,28 @@ function ArrivalDialog({ value, today, onClose, onSet }) {
   const shift = (n) => setMonth(new Date(month.getFullYear(), month.getMonth() + n, 1))
 
   return (
-    <Modal
+    <Modal id="hardware-field-arrival"
       open
       onClose={onClose}
       size="sm"
-      title={t('shared.hardware.arrival')}
-      description={t('shared.hardware.arrivalSub')}
+      title={t('shared.components.hardware.arrival')}
+      description={t('shared.components.hardware.arrivalSub')}
       footer={
         <>
-          <Button variant="outline" className="flex-1" onClick={onClose}>
-            {t('common.cancel')}
+          <Button id="hardware-field-cancel" variant="outline" className="flex-1" onClick={onClose}>
+            {t('shared.common.cancel')}
           </Button>
-          <Button className="flex-1" onClick={() => onSet(pick)}>
-            {t('shared.hardware.setDate')}
+          <Button id="hardware-field-set-date" className="flex-1" onClick={() => onSet(pick)}>
+            {t('shared.components.hardware.setDate')}
           </Button>
         </>
       }
     >
       <div className="flex flex-col gap-4">
         <div className="flex items-center justify-between">
-          <Button variant="bare" aria-label={t('shared.hardware.previousMonth')} onClick={() => shift(-1)} className="grid size-9 place-items-center rounded-full bg-surface text-ink hover:bg-surface-hover">
-            <Icon name="chevronLeft" className="size-4" strokeWidth={2} />
-          </Button>
+          <IconButton id="hardware-field-previous-month" icon="chevronLeft" label={t('shared.components.hardware.previousMonth')} size={9} strokeWidth={2} onClick={() => shift(-1)} />
           <span className="text-sm text-ink">{monthYear(month)}</span>
-          <Button variant="bare" aria-label={t('shared.hardware.nextMonth')} onClick={() => shift(1)} className="grid size-9 place-items-center rounded-full bg-surface text-ink hover:bg-surface-hover">
-            <Icon name="chevronRight" className="size-4" strokeWidth={2} />
-          </Button>
+          <IconButton id="hardware-field-next-month" icon="chevronRight" label={t('shared.components.hardware.nextMonth')} size={9} strokeWidth={2} onClick={() => shift(1)} />
         </div>
         <div className="grid grid-cols-7 gap-1 text-center">
           {weekdayNames('narrow').map((w, i) => (
@@ -182,7 +181,7 @@ function ArrivalDialog({ value, today, onClose, onSet }) {
             const on = +d === +pick
             const past = d < today
             return (
-              <Button
+              <Button id={`hardware-field-set-pick-${i}`}
                 key={i}
                 variant="bare"
                 disabled={past}
@@ -202,7 +201,7 @@ function ArrivalDialog({ value, today, onClose, onSet }) {
         <div className="flex items-center gap-2.5 rounded-2xl bg-surface-2 px-3.5 py-3">
           <Icon name="calendar" className="size-4 text-brand-700" strokeWidth={1.8} />
           <span className="flex-1 text-sm text-ink">{formatShort(pick)} {pick.getFullYear()}</span>
-          <span className="text-xs text-muted">{days === 0 ? t('shared.hardware.today') : t('shared.hardware.inDays', { n: days })}</span>
+          <span className="text-xs text-muted">{days === 0 ? t('shared.components.hardware.today') : t('shared.components.hardware.inDays', { n: days })}</span>
         </div>
       </div>
     </Modal>

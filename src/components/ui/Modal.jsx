@@ -25,7 +25,7 @@ const WIDTHS = {
  * Focus moves to the panel on open and returns to the trigger on close, which
  * is what keyboard users need to not be dumped at the top of the document.
  */
-export function Modal({ open, onClose, title, description, media, footer, size = 'md', children }) {
+export function Modal({ id, open, onClose, title, description, media, footer, size = 'md', children }) {
   const { t } = useLang()
   const panelRef = useRef(null)
   const restoreRef = useRef(null)
@@ -65,18 +65,20 @@ export function Modal({ open, onClose, title, description, media, footer, size =
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <button
         type="button"
-        aria-label={t('common.closeDialog')}
+        aria-label={t('shared.common.closeDialog')}
         onClick={onClose}
         className="absolute inset-0 bg-[rgb(20_30_40/0.32)]"
       />
 
       <div
         ref={panelRef}
+        id={id}
         role="dialog"
         aria-modal="true"
         aria-label={title}
         tabIndex={-1}
         className={cx(
+          'ui-modal',
           // Scrolls inside rather than past the viewport on short screens.
           'relative max-h-[92vh] w-full overflow-auto rounded-tile bg-panel outline-none',
           // Popovers and dialogs keep a shadow where the cards no longer do —
@@ -89,14 +91,15 @@ export function Modal({ open, onClose, title, description, media, footer, size =
           {/* `media` is an optional leading tile — the lead's initials, say. */}
           {media}
           <div className="min-w-0 flex-1">
-            <h2 className="text-lg tracking-[-0.02em] text-ink">{title}</h2>
+            <h2 className="ui-modal__title text-lg tracking-[-0.02em] text-ink">{title}</h2>
             {description && <p className="truncate text-sm text-muted">{description}</p>}
           </div>
           <button
             type="button"
             onClick={onClose}
-            aria-label={t('common.close')}
-            className="flex size-10 shrink-0 items-center justify-center rounded-full bg-surface text-ink transition hover:bg-surface-hover"
+            id={id && `${id}-close`}
+            aria-label={t('shared.common.close')}
+            className="ui-modal__close flex size-10 shrink-0 items-center justify-center rounded-full bg-surface text-ink transition hover:bg-surface-hover"
           >
             <Icon name="close" className="size-3.5" strokeWidth={2.2} />
           </button>
@@ -104,7 +107,7 @@ export function Modal({ open, onClose, title, description, media, footer, size =
 
         {children && <div className="px-6.5 pt-4 pb-5">{children}</div>}
 
-        {footer && <div className="flex justify-end gap-2 px-6.5 pt-1 pb-6">{footer}</div>}
+        {footer && <div className="ui-modal__footer flex justify-end gap-2 px-6.5 pt-1 pb-6">{footer}</div>}
       </div>
     </div>,
     document.body,
@@ -117,6 +120,7 @@ export function Modal({ open, onClose, title, description, media, footer, size =
  * neutral one reads brand without the call site restating it.
  */
 export function ConfirmDialog({
+  id,
   open,
   onClose,
   onConfirm,
@@ -130,23 +134,24 @@ export function ConfirmDialog({
   return (
     // The message goes in the body: the header's description line truncates.
     <Modal
+      id={id}
       open={open}
       onClose={onClose}
       title={title}
       size="sm"
       footer={
         <>
-          <Button variant="soft" onClick={onClose}>
-            {cancelLabel ?? t('common.neverMind')}
+          <Button id={id && `${id}-cancel`} variant="soft" onClick={onClose}>
+            {cancelLabel ?? t('shared.common.neverMind')}
           </Button>
-          <Button
+          <Button id={id && `${id}-confirm`}
             variant={tone === 'danger' ? 'danger' : 'primary'}
             onClick={() => {
               onConfirm()
               onClose()
             }}
           >
-            {confirmLabel ?? t('common.confirm')}
+            {confirmLabel ?? t('shared.common.confirm')}
           </Button>
         </>
       }

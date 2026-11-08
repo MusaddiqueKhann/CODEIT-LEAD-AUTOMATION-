@@ -1,0 +1,174 @@
+{
+  "overview": {
+    "checks": {
+      "details": "Details",
+      "requirements": "Requirements",
+      "documents": "Documents",
+      "account": "Account",
+      "hardware": "Hardware",
+      "session": "Session"
+    },
+    "status": {
+      "done": "Done",
+      "today": "Today",
+      "missed": "Missed",
+      "upcoming": "Upcoming"
+    },
+    "collecting": {
+      "checksPass": "{done} of {total} checks pass",
+      "deadlinePassed": "Transfer deadline passed",
+      "readyBy": "ready by {date} · {left}",
+      "noSession": "No session booked yet",
+      "progress": "{done} of {total} · {due}",
+      "stillNeeded": "Still needed",
+      "allPass": "All {count} pass",
+      "ready": "Ready to transfer",
+      "more": "+{count} more"
+    },
+    "counters": {
+      "files": "Files",
+      "sessions": "Sessions",
+      "transfers": "Transfers",
+      "notes": "Notes",
+      "done": "Done"
+    },
+    "parts": {
+      "collecting": "Still collecting",
+      "ready": "Ready to transfer",
+      "back": "Came back to me",
+      "moved": "Transferred"
+    },
+    "today": "Today",
+    "noSessionsToday": "No sessions today",
+    "dueSoon": "Due soon",
+    "dueBy": "{name} by {day}",
+    "noTransferDue": "No Transfer due this week",
+    "waiting": "Waiting on customer",
+    "nothingOutstanding": "Nothing outstanding",
+    "collectingTitle": "My members collecting",
+    "collectingSub": "What each still needs before Transfer",
+    "nobodyCollecting": "Nobody is still collecting.",
+    "backTitle": "Came back to me",
+    "backSub": "Sent back, or missed their session",
+    "backNone": "Nothing sent back or missed",
+    "weekTitle": "Sessions this week",
+    "weekSub": "Onboarding for your members",
+    "nobodyPicked": "nobody picked yet",
+    "weekNone": "No sessions for your members this week.",
+    "transferRate": "Transfer rate · {days}",
+    "readyOnTime": "Ready on time",
+    "averageToTransfer": "Average to transfer",
+    "membersAdded": "Members I added"
+  },
+  "member": {
+    "editBar": {
+      "unsaved": "Unsaved changes. New files upload when you save.",
+      "discard": "Discard",
+      "save": "Save changes"
+    },
+    "editSection": "Edit this section",
+    "sentBack": "Sent back by {name} · {at}: {reason}",
+    "someone": "someone",
+    "account": {
+      "title": "Account details",
+      "sub": "Used to create their {product} login",
+      "fullName": "Full name",
+      "fullNameSub": "As it should appear on their account",
+      "firstName": "First name",
+      "lastName": "Last name",
+      "contact": "Contact",
+      "contactSub": "Email is their login ID",
+      "email": "Email",
+      "phone": "Phone number",
+      "language": "Language for emails",
+      "password": "Password",
+      "passwordSub": "Auto-generated for their login",
+      "memberId": "Member ID",
+      "memberIdSub": "Used for support and invoices",
+      "added": "Added {date} by {name}",
+      "formerMember": "someone no longer on the team",
+      "productAccount": "{product} account {id}"
+    },
+    "company": {
+      "title": "Company details",
+      "sub": "Who they are buying for",
+      "company": "Company",
+      "companySub": "Legal name, CR and VAT numbers",
+      "name": "Company name",
+      "cr": "Commercial registration (CR)",
+      "vat": "VAT number",
+      "location": "Location",
+      "locationSub": "Where they are based",
+      "city": "City",
+      "website": "Website",
+      "industry": "Industry",
+      "industrySub": "Type and size",
+      "size": "Company size"
+    },
+    "requirements": {
+      "title": "Requirements",
+      "sub": "What they need, then the files that go with it",
+      "businessType": "Business type",
+      "businessTypeSub": "Decides the features and documents",
+      "notPicked": "Not picked yet",
+      "branchesUsers": "Branches and users",
+      "branchesUsersSub": "How many locations and staff accounts",
+      "branches": "Number of branches",
+      "users": "Number of users",
+      "features": "Features",
+      "featuresSub": "Which ones they want switched on",
+      "integrations": "Integrations",
+      "integrationsSub": "What they asked to have connected",
+      "hardware": "Hardware",
+      "hardwareSub": "Devices they need from us",
+      "documents": "Documents",
+      "documentsSub": "Every file they need to send, from the answers above.",
+      "noFiles": "No business type is picked yet, so no files are needed.",
+      "readyBy": "Ready by",
+      "readyBySub": "When every document will be in"
+    },
+    "ready": {
+      "checks": {
+        "details": "Details",
+        "requirements": "Requirements",
+        "documents": "Documents",
+        "account": "Account",
+        "hardware": "Hardware",
+        "session": "Session"
+      },
+      "hints": {
+        "details": "Account and company sections filled in",
+        "requirements": "Business type, branches, users, every feature answered",
+        "documents": "Every required file uploaded",
+        "account": "The account is marked as created",
+        "hardware": "No hardware, delivered, or an arrival date",
+        "session": "Booked, someone can take it, and before the deadline"
+      },
+      "noDeadline": "Book a session to get a Transfer deadline",
+      "deadlinePassed": "The Transfer deadline ({date}) has passed. Move the session",
+      "transferBefore": "Transfer before {date}",
+      "ready": "Ready to transfer",
+      "notReady": "Not ready to transfer yet",
+      "summary": "{done} of {total} checks pass · {deadline}",
+      "markLost": "Mark Lost",
+      "transfer": "Transfer",
+      "transferOff": "Transfer turns on when every check passes",
+      "lostTitle": "Mark this member Lost",
+      "lostDescription": "It leaves the active lists and its session is cancelled. The Admin can reopen it.",
+      "why": "Why"
+    },
+    "sessionTime": {
+      "keep": "Keep this time",
+      "change": "Change time",
+      "missed": {
+        "one": "Missed the session.",
+        "other": "Missed the session {n} times."
+      },
+      "pickNew": "Pick a new time.",
+      "salesBooks": "Sales books a new time.",
+      "notBooked": "Not booked yet.",
+      "book": "Book {date} · {time}",
+      "pickDayTime": "Pick a day and time"
+    }
+  }
+}

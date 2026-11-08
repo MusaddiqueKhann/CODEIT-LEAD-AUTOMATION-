@@ -1,0 +1,178 @@
+{
+  "overview": {
+    "checks": {
+      "details": "البيانات",
+      "requirements": "المتطلبات",
+      "documents": "المستندات",
+      "account": "الحساب",
+      "hardware": "الأجهزة",
+      "session": "الجلسة"
+    },
+    "status": {
+      "done": "تمت",
+      "today": "اليوم",
+      "missed": "فائتة",
+      "upcoming": "قادمة"
+    },
+    "collecting": {
+      "checksPass": "اجتاز {done} من {total} فحوصات",
+      "deadlinePassed": "فات موعد التحويل",
+      "readyBy": "جاهز قبل {date} · {left}",
+      "noSession": "لم تُحجز جلسة بعد",
+      "progress": "{done} من {total} · {due}",
+      "stillNeeded": "ما زال مطلوباً",
+      "allPass": "اجتاز الكل ({count})",
+      "ready": "جاهز للتحويل",
+      "more": "+{count} أخرى"
+    },
+    "counters": {
+      "files": "الملفات",
+      "sessions": "الجلسات",
+      "transfers": "التحويلات",
+      "notes": "الملاحظات",
+      "done": "المنجز"
+    },
+    "parts": {
+      "collecting": "قيد الجمع",
+      "ready": "جاهز للتحويل",
+      "back": "عاد إليّ",
+      "moved": "تم تحويله"
+    },
+    "today": "اليوم",
+    "noSessionsToday": "لا جلسات اليوم",
+    "dueSoon": "قريب الاستحقاق",
+    "dueBy": "{name} قبل {day}",
+    "noTransferDue": "لا تحويل مستحق هذا الأسبوع",
+    "waiting": "بانتظار العميل",
+    "nothingOutstanding": "لا شيء معلّق",
+    "collectingTitle": "أعضائي قيد الجمع",
+    "collectingSub": "ما يحتاجه كل عضو قبل التحويل",
+    "nobodyCollecting": "لا أحد قيد الجمع حالياً.",
+    "backTitle": "عاد إليّ",
+    "backSub": "أُعيد إليك أو فاتته الجلسة",
+    "backNone": "لا شيء مُعاد أو فائت",
+    "weekTitle": "جلسات هذا الأسبوع",
+    "weekSub": "جلسات التهيئة لأعضائك",
+    "nobodyPicked": "لم يُحدَّد أحد بعد",
+    "weekNone": "لا جلسات لأعضائك هذا الأسبوع.",
+    "transferRate": "نسبة التحويل · {days}",
+    "readyOnTime": "جاهز في الموعد",
+    "averageToTransfer": "متوسط مدة التحويل",
+    "membersAdded": "الأعضاء الذين أضفتهم"
+  },
+  "member": {
+    "editBar": {
+      "unsaved": "تغييرات غير محفوظة. تُرفع الملفات الجديدة عند الحفظ.",
+      "discard": "تجاهل",
+      "save": "حفظ التغييرات"
+    },
+    "editSection": "تعديل هذا القسم",
+    "sentBack": "أعاده {name} · {at}: {reason}",
+    "someone": "شخص ما",
+    "account": {
+      "title": "بيانات الحساب",
+      "sub": "تُستخدم لإنشاء حساب الدخول إلى {product}",
+      "fullName": "الاسم الكامل",
+      "fullNameSub": "كما يجب أن يظهر في حسابهم",
+      "firstName": "الاسم الأول",
+      "lastName": "اسم العائلة",
+      "contact": "التواصل",
+      "contactSub": "البريد الإلكتروني هو معرّف الدخول",
+      "email": "البريد الإلكتروني",
+      "phone": "رقم الجوال",
+      "language": "لغة الرسائل",
+      "password": "كلمة المرور",
+      "passwordSub": "تُنشأ تلقائياً لحسابهم",
+      "memberId": "رقم العضو",
+      "memberIdSub": "يُستخدم للدعم والفواتير",
+      "added": "أُضيف في {date} بواسطة {name}",
+      "formerMember": "شخص لم يعد في الفريق",
+      "productAccount": "حساب {product} رقم {id}"
+    },
+    "company": {
+      "title": "بيانات الشركة",
+      "sub": "الجهة التي يشترون لها",
+      "company": "الشركة",
+      "companySub": "الاسم القانوني ورقم السجل التجاري والرقم الضريبي",
+      "name": "اسم الشركة",
+      "cr": "السجل التجاري",
+      "vat": "الرقم الضريبي",
+      "location": "الموقع",
+      "locationSub": "مقرّهم",
+      "city": "المدينة",
+      "website": "الموقع الإلكتروني",
+      "industry": "القطاع",
+      "industrySub": "النوع والحجم",
+      "size": "حجم الشركة"
+    },
+    "requirements": {
+      "title": "المتطلبات",
+      "sub": "ما يحتاجونه، ثم الملفات المرتبطة به",
+      "businessType": "نوع النشاط",
+      "businessTypeSub": "يحدد الخصائص والمستندات",
+      "notPicked": "لم يُختر بعد",
+      "branchesUsers": "الفروع والمستخدمون",
+      "branchesUsersSub": "عدد المواقع وحسابات الموظفين",
+      "branches": "عدد الفروع",
+      "users": "عدد المستخدمين",
+      "features": "الخصائص",
+      "featuresSub": "ما يريدون تفعيله",
+      "integrations": "الربطات",
+      "integrationsSub": "ما طلبوا ربطه",
+      "hardware": "الأجهزة",
+      "hardwareSub": "الأجهزة التي يحتاجونها منا",
+      "documents": "المستندات",
+      "documentsSub": "كل ملف يحتاجون إلى إرساله، حسب الإجابات أعلاه.",
+      "noFiles": "لم يُختر نوع النشاط بعد، لذا لا حاجة إلى ملفات.",
+      "readyBy": "جاهزة بحلول",
+      "readyBySub": "متى تصل كل المستندات"
+    },
+    "ready": {
+      "checks": {
+        "details": "البيانات",
+        "requirements": "المتطلبات",
+        "documents": "المستندات",
+        "account": "الحساب",
+        "hardware": "الأجهزة",
+        "session": "الجلسة"
+      },
+      "hints": {
+        "details": "قسما الحساب والشركة مكتملان",
+        "requirements": "نوع النشاط والفروع والمستخدمون، مع الإجابة عن كل خاصية",
+        "documents": "رُفع كل ملف مطلوب",
+        "account": "تم تأكيد إنشاء الحساب",
+        "hardware": "لا أجهزة، أو تم التسليم، أو حُدد موعد الوصول",
+        "session": "محجوزة، ويمكن لأحد تقديمها، وقبل الموعد النهائي"
+      },
+      "noDeadline": "احجز جلسة لتحديد موعد التحويل النهائي",
+      "deadlinePassed": "انقضى موعد التحويل النهائي ({date}). انقل الجلسة",
+      "transferBefore": "حوّل قبل {date}",
+      "ready": "جاهز للتحويل",
+      "notReady": "غير جاهز للتحويل بعد",
+      "summary": "اجتاز {done} من {total} فحوصات · {deadline}",
+      "markLost": "تسجيل كخسارة",
+      "transfer": "تحويل",
+      "transferOff": "يتفعّل التحويل عند اجتياز كل الفحوصات",
+      "lostTitle": "تسجيل هذا العضو كخسارة",
+      "lostDescription": "يخرج من القوائم النشطة وتُلغى جلسته. يمكن للمسؤول إعادة فتحه.",
+      "why": "السبب"
+    },
+    "sessionTime": {
+      "keep": "الإبقاء على هذا الموعد",
+      "change": "تغيير الموعد",
+      "missed": {
+        "zero": "فاتته الجلسة.",
+        "one": "فاتته الجلسة.",
+        "two": "فاتته الجلسة مرتين.",
+        "few": "فاتته الجلسة {n} مرات.",
+        "many": "فاتته الجلسة {n} مرة.",
+        "other": "فاتته الجلسة {n} مرة."
+      },
+      "pickNew": "اختر موعداً جديداً.",
+      "salesBooks": "يحجز فريق المبيعات موعداً جديداً.",
+      "notBooked": "لم تُحجز بعد.",
+      "book": "حجز {date} · {time}",
+      "pickDayTime": "اختر اليوم والوقت"
+    }
+  }
+}

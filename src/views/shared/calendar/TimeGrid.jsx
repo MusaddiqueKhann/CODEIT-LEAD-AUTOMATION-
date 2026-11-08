@@ -1,6 +1,5 @@
 import { Link } from 'react-router-dom'
-import { StepBadge } from '../../../components/shared/index.js'
-import { Button, cx } from '../../../components/ui/index.js'
+import { Button, cx, StepBadge } from '@/components'
 import { useLang } from '../../../controllers/shared/LangContext.jsx'
 import { weekdayNames, riyadhNow } from '../../../models/rules/format.js'
 import { memberPath } from '../../../routes/paths.js'
@@ -32,7 +31,7 @@ export function TimeGrid({ days, today, hours: [first, last], sessionsOn, onGrou
               </span>
               <span className="flex flex-col">
                 <span className={cx('text-[11px] tracking-[0.12em] uppercase', isToday ? 'text-brand-700' : 'text-faint')}>{weekdayNames()[d.getDay()]}</span>
-                <span className="text-xs text-muted">{t('calendar.sessions', { n: sessionsOn(d).length })}</span>
+                <span className="text-xs text-muted">{t('shared.calendar.sessions', { n: sessionsOn(d).length })}</span>
               </span>
             </div>
           )
@@ -45,7 +44,7 @@ export function TimeGrid({ days, today, hours: [first, last], sessionsOn, onGrou
             <span
               key={q}
               style={{ height: QUARTER }}
-              className={cx('-translate-y-1.75 px-2.5 text-end tabular-nums', q % 4 ? 'text-[10px] text-[#b5bac3]' : 'text-xs font-medium text-ink-2')}
+              className={cx('-translate-y-1.75 px-2.5 text-end tabular-nums', q % 4 ? 'text-[10px] text-off-text' : 'text-xs font-medium text-ink-2')}
             >
               {/* Left to right inside, or ":15" turns into "15:" in Arabic; the column itself mirrors. */}
               <span dir="ltr">{q % 4 ? `:${(q % 4) * 15}` : `${String(q / 4).padStart(2, '0')}:00`}</span>
@@ -55,12 +54,12 @@ export function TimeGrid({ days, today, hours: [first, last], sessionsOn, onGrou
         {days.map((d) => {
           const isToday = +d === +today
           return (
-            <div key={+d} className={cx('relative border-s border-line-soft', isToday && 'bg-[#fafcfc]')}>
+            <div key={+d} className={cx('relative border-s border-line-soft', isToday && 'bg-brand-wash-2')}>
               {quarters.map((q) => (
                 <span
                   key={q}
                   style={{ height: QUARTER }}
-                  className={cx('block border-t', q % 4 === 0 ? 'border-solid border-[#e9edf2]' : q % 2 === 0 ? 'border-dashed border-line' : 'border-dotted border-line-soft')}
+                  className={cx('block border-t', q % 4 === 0 ? 'border-solid border-surface-hover' : q % 2 === 0 ? 'border-dashed border-line' : 'border-dotted border-line-soft')}
                 />
               ))}
               {byStart(sessionsOn(d)).map((group, i) => {
@@ -72,7 +71,7 @@ export function TimeGrid({ days, today, hours: [first, last], sessionsOn, onGrou
                   animationDelay: `${0.2 + i * 0.05}s`,
                 }
                 return group.length === 1 ? (
-                  <Link key={one.id} to={one.code ? memberPath(one.code) : '#'} style={place} className={cx(CARD, 'animate-rise bg-panel text-ink')}>
+                  <Link id={`time-grid-member-${one.id}`} key={one.id} to={one.code ? memberPath(one.code) : '#'} style={place} className={cx('v-time-grid__member', CARD, 'animate-rise bg-panel text-ink')}>
                     <span className="truncate text-[11px] text-soft tabular-nums">{timeSpan(one)}</span>
                     <span className="truncate text-[13px] font-medium">{one.title}</span>
                     <span className="flex min-w-0 items-center gap-1.5">
@@ -81,15 +80,15 @@ export function TimeGrid({ days, today, hours: [first, last], sessionsOn, onGrou
                     </span>
                   </Link>
                 ) : (
-                  <Button key={one.id} variant="bare" style={place} onClick={() => onGroup(d, one.time)} className={cx(CARD, 'animate-rise bg-[#eef6f5] text-ink')}>
+                  <Button id={`time-grid-sessions-${one.id}`} key={one.id} variant="bare" style={place} onClick={() => onGroup(d, one.time)} className={cx(CARD, 'animate-rise bg-brand-bubble text-ink')}>
                     <span className="text-[11px] text-soft tabular-nums">{timeSpan(one)}</span>
-                    <span className="text-[13px] font-medium">{t('calendar.sessions', { n: group.length })}</span>
+                    <span className="text-[13px] font-medium">{t('shared.calendar.sessions', { n: group.length })}</span>
                     <span className="flex items-center">
                       {group.slice(0, 4).map((x, j) => (
-                        <SessionAvatar key={x.id} item={x} className={cx('size-6 text-[9px] ring-2 ring-[#f6faf9]', j > 0 && '-ms-1.5')} />
+                        <SessionAvatar key={x.id} item={x} className={cx('size-6 text-[9px] ring-2 ring-brand-wash', j > 0 && '-ms-1.5')} />
                       ))}
                       {group.length > 4 && (
-                        <span className="-ms-1.5 grid size-6 place-items-center rounded-full bg-panel text-[10px] text-soft ring-2 ring-[#f6faf9]">+{group.length - 4}</span>
+                        <span className="-ms-1.5 grid size-6 place-items-center rounded-full bg-panel text-[10px] text-soft ring-2 ring-brand-wash">+{group.length - 4}</span>
                       )}
                     </span>
                   </Button>

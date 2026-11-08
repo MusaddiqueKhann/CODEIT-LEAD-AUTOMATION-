@@ -1,14 +1,14 @@
 import { useRef, useState } from 'react'
-import Icon from '../../../components/Icon.jsx'
-import { Button, Modal, Switch, Textarea, cx } from '../../../components/ui/index.js'
+import { Badge, Button, cx, Icon, IconButton, Modal, Switch, Textarea } from '@/components'
 import { useConfig } from '../../../controllers/shared/ConfigContext.jsx'
 import { useLang } from '../../../controllers/shared/LangContext.jsx'
-import { sendTestEmail } from '../../../models/data/settings.js'
+import { sendTestEmail } from '../../../controllers/admin/settings.js'
 import { fill } from '../../../models/rules/format.js'
 import { sampleValues, unknownPlaceholders } from '../../../models/rules/placeholders.js'
 import { useUnsaved } from '../../../controllers/shared/unsaved.js'
+import { translate } from '../../../content/index.js'
 
-/* A text's part, as settings.texts.parts.<…>: an email's subject or body, or the page text's own key. */
+/* A text's part, as admin.settings.texts.parts.<…>: an email's subject or body, or the page text's own key. */
 const partOf = (key) => key.match(/_(subject|body)$/)?.[1] ?? key
 const ICON = { customer: 'mail', team: 'mail', page: 'globe', calendar: 'calendar', activity: 'info' }
 
@@ -44,12 +44,12 @@ export function EmailMessage({ id, message, keys, on, onToggle, onSave, run }) {
   // An alert or activity line: log_*, alert_* or field_* (who reads it), named by its own wording.
   const kind = activity ? id.split('_')[0] : message.group
   const icon = kind === 'alert' ? 'bell' : ICON[message.group]
-  const say = (k, lang) => fill(drafts[k]?.[lang] ?? '', sampleValues(lang, { brand, company: settings.company }))
+  const say = (k, lang) => fill(drafts[k]?.[lang] ?? '', sampleValues(lang, { brand, company: settings.company, reminderHours: settings.reminderHours }))
   // The stored wording in the reader's language, {words} and all.
   const raw = (k) => (drafts[k]?.[lang] || drafts[k]?.en || '').replace(/\s+/g, ' ')
-  const hours = new Intl.ListFormat(lang, { type: 'conjunction' }).format(settings.reminderHours.map((n) => t('settings.texts.hour', { n })))
-  const when = activity ? t(`settings.texts.toWhom.${kind}`) : t(`settings.texts.when.${id}`, { hours, n: settings.feedbackReminderHours })
-  const title = activity ? codes(raw(id)) : t(`settings.texts.messages.${id}`)
+  const hours = new Intl.ListFormat(lang, { type: 'conjunction' }).format(settings.reminderHours.map((n) => t('admin.settings.texts.hour', { n })))
+  const when = activity ? t(`admin.settings.texts.toWhom.${kind}`) : t(`admin.settings.texts.when.${id}`, { hours, n: settings.feedbackReminderHours })
+  const title = activity ? codes(raw(id)) : t(`admin.settings.texts.messages.${id}`)
   const preview = activity ? null : codes(raw(email ? `${id}_body` : keys.includes('after_intro') ? 'after_intro' : keys[0]))
 
   return (
@@ -71,33 +71,25 @@ export function EmailMessage({ id, message, keys, on, onToggle, onSave, run }) {
             {preview && <span className="truncate text-xs text-soft">{preview}</span>}
           </span>
           {onToggle ? (
-            <Switch on={on} label={title} onChange={onToggle} />
+            <Switch id={`email-message-${id}-on`} on={on} label={title} onChange={onToggle} />
           ) : (
-            !activity && <span className="inline-flex h-6.5 shrink-0 items-center rounded-full bg-panel px-2.5 text-xs whitespace-nowrap text-muted">{t('settings.texts.alwaysSent')}</span>
+            !activity && <Badge size="sm" look="panel">{t('admin.settings.texts.alwaysSent')}</Badge>
           )}
-          <Button
-            variant="bare"
-            aria-label={t('common.edit')}
-            title={t('common.edit')}
-            onClick={() => setOpen(drafts)}
-            className="grid size-8.5 shrink-0 place-items-center rounded-full bg-panel text-soft transition hover:bg-tint hover:text-brand-700"
-          >
-            <Icon name="pencil" className="size-3.75" strokeWidth={1.8} />
-          </Button>
+          <IconButton id={`email-message-${id}-edit`} icon="pencil" label={t('shared.common.edit')} title size={8.5} look="panel" iconClassName="size-3.75" onClick={() => setOpen(drafts)} />
         </div>
       </div>
-      <Modal
+      <Modal id="email-message-messages"
         open={!!open}
         onClose={cancel}
         size="wide"
-        title={activity ? raw(id) : t(`settings.texts.messages.${id}`)}
+        title={activity ? raw(id) : t(`admin.settings.texts.messages.${id}`)}
         description={when}
         footer={
           <>
-            <Button variant="outline" onClick={cancel}>
-              {t('common.cancel')}
+            <Button id="email-message-cancel" variant="outline" onClick={cancel}>
+              {t('shared.common.cancel')}
             </Button>
-            <Button onClick={() => setOpen(null)}>{t('common.done')}</Button>
+            <Button id="email-message-done" onClick={() => setOpen(null)}>{t('shared.common.done')}</Button>
           </>
         }
       >
@@ -105,7 +97,7 @@ export function EmailMessage({ id, message, keys, on, onToggle, onSave, run }) {
           {keys.map((k) => (
             <TextEditor
               key={k}
-              label={t(`settings.texts.parts.${activity ? 'line' : partOf(k)}`)}
+              label={t(`admin.settings.texts.parts.${activity ? 'line' : partOf(k)}`)}
               value={drafts[k]}
               allowed={message.placeholders}
               onChange={(v) => setDrafts((d) => ({ ...d, [k]: v }))}
@@ -115,7 +107,7 @@ export function EmailMessage({ id, message, keys, on, onToggle, onSave, run }) {
             <div className="grid gap-2.5 lg:grid-cols-2">
               {['en', 'ar'].map((lang) => (
                 <div key={lang} dir={lang === 'ar' ? 'rtl' : 'ltr'} lang={lang} className="flex min-w-0 flex-col gap-2 rounded-2xl bg-panel px-4 py-3.5 ring-1 ring-line ring-inset">
-                  <span className="text-[11px] tracking-[0.1em] text-muted uppercase">{lang === 'ar' ? 'معاينة' : 'Preview'}</span>
+                  <span className="text-[11px] tracking-[0.1em] text-muted uppercase">{translate(lang, 'admin.settings.texts.preview')}</span>
                   <span className="text-sm font-medium text-ink">{say(email ? `${id}_subject` : id, lang)}</span>
                   {email && <p className="text-[13px] leading-relaxed whitespace-pre-wrap text-soft [overflow-wrap:anywhere]">{say(`${id}_body`, lang)}</p>}
                 </div>
@@ -124,11 +116,11 @@ export function EmailMessage({ id, message, keys, on, onToggle, onSave, run }) {
           )}
           {email && (
             <div className="flex flex-wrap items-center gap-2">
-              <span className="flex-1 text-[13px] text-muted">{t(dirty ? 'settings.texts.saveFirst' : 'settings.texts.testHint')}</span>
+              <span className="flex-1 text-[13px] text-muted">{t(dirty ? 'admin.settings.texts.saveFirst' : 'admin.settings.texts.testHint')}</span>
               {['en', 'ar'].map((lang) => (
-                <Button key={lang} variant="soft" size="sm" disabled={dirty} onClick={() => run(() => sendTestEmail(id, lang), t('settings.texts.testSent'))}>
+                <Button id={`email-message-run-${lang}`} key={lang} variant="soft" size="sm" disabled={dirty} onClick={() => run(() => sendTestEmail(id, lang), t('admin.settings.texts.testSent'))}>
                   <Icon name="send" className="size-3.5" strokeWidth={1.8} />
-                  {t(lang === 'ar' ? 'settings.texts.testAr' : 'settings.texts.testEn')}
+                  {t(lang === 'ar' ? 'admin.settings.texts.testAr' : 'admin.settings.texts.testEn')}
                 </Button>
               ))}
             </div>
@@ -164,12 +156,12 @@ function TextEditor({ label, value, allowed, onChange }) {
       <span className="text-[13px] text-soft">{label}</span>
       <div className="grid gap-2.5 lg:grid-cols-2">
         {['en', 'ar'].map((lang) => (
-          <Textarea
+          <Textarea id={`email-message-on-change-${lang}`}
             key={lang}
             ref={boxes[lang]}
             rows={rows}
             dir={lang === 'ar' ? 'rtl' : 'ltr'}
-            aria-label={t(lang === 'ar' ? 'settings.texts.boxAr' : 'settings.texts.boxEn', { part: label })}
+            aria-label={t(lang === 'ar' ? 'admin.settings.texts.boxAr' : 'admin.settings.texts.boxEn', { part: label })}
             value={value[lang]}
             error={bad.length > 0}
             onFocus={() => setLast(lang)}
@@ -179,7 +171,7 @@ function TextEditor({ label, value, allowed, onChange }) {
       </div>
       <div className="flex flex-wrap items-center gap-1.5">
         {allowed.map((w) => (
-          <button
+          <Button variant="bare" id={`email-message-cant-fill-${w}`}
             key={w}
             type="button"
             onMouseDown={(e) => e.preventDefault()}
@@ -187,10 +179,10 @@ function TextEditor({ label, value, allowed, onChange }) {
             className="h-7 rounded-full bg-panel px-2.5 text-xs text-brand-800 ring-1 ring-line transition ring-inset hover:bg-brand-100"
           >
             {`{${w}}`}
-          </button>
+          </Button>
         ))}
       </div>
-      {bad.length > 0 && <p className="text-xs text-danger-ink">{t('settings.texts.cantFill', { words: bad.map((w) => `{${w}}`).join(', ') })}</p>}
+      {bad.length > 0 && <p className="text-xs text-danger-ink">{t('admin.settings.texts.cantFill', { words: bad.map((w) => `{${w}}`).join(t('shared.common.listJoin')) })}</p>}
     </div>
   )
 }

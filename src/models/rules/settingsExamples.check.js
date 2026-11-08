@@ -23,6 +23,8 @@ assert.equal(exampleFor('feedback_reminder_hours', { ...v, feedback_reminder_hou
 assert.equal(exampleFor('session_hours', { ...v, session_hours: 12 }, ctx), 'Signed in at 09:00 → asked again at 21:00')
 assert.equal(exampleFor('feedback_reminder_hours', { ...v, feedback_reminder_hours: 72 }, ctx), 'Sent at 10:00 → reminder at 10:00 3 days later')
 const ar = { ...ctx, t: (k, v) => translate('ar', k, v) }
-assert.equal(exampleFor('lock_tries', v, ar), '5 من كلمات المرور الخاطئة المتتالية تقفل الحساب')
+assert.equal(exampleFor('lock_tries', v, ar), '5 كلمات مرور خاطئة متتالية تقفل الحساب')
+assert.equal(exampleFor('lock_tries', { ...v, lock_tries: 2 }, ar), 'كلمتا مرور خاطئتان متتاليتان تقفلان الحساب')
+assert.equal(exampleFor('lock_tries', { ...v, lock_tries: 1 }, ctx), '1 wrong password in a row locks the account')
 assert.equal(exampleFor('reminder_hours', v, ar), 'رسائل قبل الجلسة بـ 24 ساعة و1 ساعة')
 console.log('settingsExamples.js ok')

@@ -1,8 +1,8 @@
 -- What a fresh project starts with (migration 0007), Settings → History, hardware after Transfer,
--- and removing a document. `supabase test db`.
+-- removing a document, and the upload limit. `supabase test db`.
 begin;
 create extension if not exists pgtap with schema extensions;
-select plan(24);
+select plan(26);
 
 set local app.now = '2030-01-06 10:00:00+03';
 create function pg_temp.as_user(id text) returns void language sql as $$
@@ -73,6 +73,12 @@ select throws_ok($$ select public.remove_document(961, 'logo') $$, '42501', null
 select pg_temp.as_user('00000000-0000-4000-8000-000000000011');
 select is(public.remove_document(961, 'logo'), '961/logo/f.pdf', 'Sales removes it and gets the path to delete');
 select is((select text from public.activity where member_id = 961 order by id desc limit 1), 'Company logo removed', 'and it is logged');
+
+-- ── The upload limit (Company settings → Timing, 10 MB to start) ───────────
+
+insert into storage.objects (bucket_id, name) values ('documents', '961/logo/big.pdf');
+select throws_ok($$ select public.attach_document(961, 'logo', '961/logo/big.pdf', 'big.pdf', 11 * 1048576) $$, 'P0001', 'That file is bigger than 10 MB.', 'a file over the limit is refused');
+select lives_ok($$ select public.attach_document(961, 'logo', '961/logo/big.pdf', 'big.pdf', 2 * 1048576) $$, 'one under it is kept');
 
 select * from finish();
 rollback;

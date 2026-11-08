@@ -1,16 +1,18 @@
 import { useLang } from '../../controllers/shared/LangContext.jsx'
 import { weekdayNames } from '../../models/rules/format.js'
-import { Button, Switch, cx } from '../ui/index.js'
+import { Button } from '../ui/Button.jsx'
+import { Switch } from '../ui/Switch.jsx'
+import { cx } from '../cx.js'
 
 const TIME = 'h-10 cursor-pointer rounded-xl bg-panel px-3 text-[13px] text-ink tabular-nums outline-none disabled:cursor-default disabled:bg-surface-2 disabled:text-ghost'
 /* Every quarter hour of the day, 24-hour: the same in English and Arabic (a browser's own time box follows its own language). */
 const QUARTERS = Array.from({ length: 96 }, (_, i) => `${String(Math.floor(i / 4)).padStart(2, '0')}:${String((i % 4) * 15).padStart(2, '0')}`)
 
 /** A time of day to pick; a saved time off the quarter hours stays in the list. A `className` replaces the box look. */
-export function TimeSelect({ value, ...rest }) {
+export function TimeSelect({ value, className = TIME, ...rest }) {
   const times = QUARTERS.includes(value) ? QUARTERS : [...QUARTERS, value].sort()
   return (
-    <select value={value} className={TIME} {...rest}>
+    <select value={value} className={cx('ui-time-select', className)} {...rest}>
       {times.map((x) => (
         <option key={x} value={x}>
           {x}
@@ -36,11 +38,11 @@ export function HoursEditor({ value, office, onChange, fixed = false }) {
     <div className="flex flex-col gap-3">
       {!fixed && (
         <div className="inline-flex gap-1 self-start rounded-full bg-track p-1">
-          <Button variant="bare" aria-pressed={!own} onClick={() => onChange(null)} className={pill(!own)}>
-            {t('team.hours.office')}
+          <Button id="hours-editor-office" variant="bare" aria-pressed={!own} onClick={() => onChange(null)} className={pill(!own)}>
+            {t('shared.components.hours.office')}
           </Button>
-          <Button variant="bare" aria-pressed={own} onClick={() => !own && onChange(office.map((d) => ({ ...d })))} className={pill(own)}>
-            {t('team.hours.own')}
+          <Button id="hours-editor-own" variant="bare" aria-pressed={own} onClick={() => !own && onChange(office.map((d) => ({ ...d })))} className={pill(own)}>
+            {t('shared.components.hours.own')}
           </Button>
         </div>
       )}
@@ -49,13 +51,13 @@ export function HoursEditor({ value, office, onChange, fixed = false }) {
           {value.map((d, i) => (
             <div key={days[i]} className="flex flex-wrap items-center gap-3.5 px-2.5 py-1.5">
               <span className="flex items-center gap-2.5">
-                <Switch on={d.on} label={days[i]} onChange={(on) => set(i, { on })} />
+                <Switch id={`hours-editor-${i}-on`} on={d.on} label={days[i]} onChange={(on) => set(i, { on })} />
                 <span className={cx('w-10 text-sm rtl:w-16', d.on ? 'text-ink' : 'text-ghost')}>{days[i]}</span>
               </span>
-              <TimeSelect aria-label={t('team.hours.dayFrom', { day: days[i] })} value={d.from} disabled={!d.on} onChange={(e) => set(i, { from: e.target.value })} />
-              <span className="text-[13px] text-muted">{t('team.hours.to')}</span>
-              <TimeSelect aria-label={t('team.hours.dayTo', { day: days[i] })} value={d.to} disabled={!d.on} onChange={(e) => set(i, { to: e.target.value })} />
-              {!d.on && <span className="text-[13px] text-ghost">{t('team.hours.dayOff')}</span>}
+              <TimeSelect id={`hours-editor-${i}-from`} aria-label={t('shared.components.hours.dayFrom', { day: days[i] })} value={d.from} disabled={!d.on} onChange={(e) => set(i, { from: e.target.value })} />
+              <span className="text-[13px] text-muted">{t('shared.components.hours.to')}</span>
+              <TimeSelect id={`hours-editor-${i}-to`} aria-label={t('shared.components.hours.dayTo', { day: days[i] })} value={d.to} disabled={!d.on} onChange={(e) => set(i, { to: e.target.value })} />
+              {!d.on && <span className="text-[13px] text-ghost">{t('shared.components.hours.dayOff')}</span>}
             </div>
           ))}
         </div>

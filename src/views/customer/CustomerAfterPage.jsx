@@ -1,16 +1,10 @@
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import Icon from '../../components/Icon.jsx'
-import { LanguageSwitch } from '../../components/layout/LanguageSwitch.jsx'
-import { SplashCard } from '../../components/layout/SplashCard.jsx'
-import { SplashPanel } from '../../components/layout/SplashPanel.jsx'
-import { FormError, cx } from '../../components/ui/index.js'
+import { Icon, LanguageSwitch, Notice, SplashCard, SplashPanel } from '@/components'
 import { useLang } from '../../controllers/shared/LangContext.jsx'
-import { getAfter, rateAfter } from '../../models/data/after.js'
-import { useRows } from '../../controllers/shared/useRows.js'
+import { rateAfter, useCustomerPage } from '../../controllers/customer.js'
 import { fill, formatFor } from '../../models/rules/format.js'
-import { translate } from '../../content/index.js'
-import { TONES } from '../../components/tones.js'
+import { refusalText } from '../../models/rules/refusal.js'
 import { FeedbackForm } from './FeedbackForm.jsx'
 import { RecordingLink } from './RecordingLink.jsx'
 
@@ -24,7 +18,7 @@ export function CustomerAfterPage() {
   const { token } = useParams()
   const { errorText, setPageLang } = useLang()
   const [picked, setPicked] = useState(null)
-  const { data: page, error, reload } = useRows(() => getAfter(token, picked), `${token}:${picked}`)
+  const { data: page, error, reload } = useCustomerPage(token, picked)
   const [sent, setSent] = useState(false)
   const lang = page?.language ?? picked ?? 'en'
   // The page's own language switch: it changes only this page.
@@ -41,16 +35,16 @@ export function CustomerAfterPage() {
       setSent(true)
     } catch (err) {
       reload() // closed or already rated meanwhile: the page then says so in the customer's language
-      // The refusal in the page's language: the server's sentence is the English.
-      throw new Error((lang === 'ar' && err.code && translate('ar', `errors.${err.code}`)) || err.message)
+      // The refusal in the page's language.
+      throw new Error(refusalText(lang, err))
     }
   }
 
   if (error)
     return (
-      <SplashPanel intro={null} corner={corner}>
+      <SplashPanel page="customer" intro={null} corner={corner}>
         <div className="w-full max-w-md">
-          <FormError>{errorText(error)}</FormError>
+          <Notice role="alert">{errorText(error)}</Notice>
         </div>
       </SplashPanel>
     )
@@ -80,12 +74,11 @@ export function CustomerAfterPage() {
             </p>
             <RecordingLink link={page.recordingLink} t={page.texts} />
             {sent || page.rated ? (
-              <p role="status" className={cx('mt-6 flex items-center gap-2 rounded-xl px-3.5 py-3 text-sm', TONES.success.fill, TONES.success.text)}>
-                <Icon name="checkCircle" className="size-4 shrink-0" />
+              <Notice tone="success" icon="checkCircle" align="center" strokeWidth={1.7} role="status" className="mt-6">
                 {say('after_thanks')}
-              </p>
+              </Notice>
             ) : (
-              <FeedbackForm t={page.texts} onSend={send} />
+              <FeedbackForm t={page.texts} lang={lang} onSend={send} />
             )}
           </SplashCard>
         )}

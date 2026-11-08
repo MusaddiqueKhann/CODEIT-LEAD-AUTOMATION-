@@ -1,10 +1,8 @@
 import { useSearchParams } from 'react-router-dom'
-import Icon from '../../../components/Icon.jsx'
-import { PageHeader } from '../../../components/layout/PageHeader.jsx'
+import { Icon, PageHeader } from '@/components'
 import { useConfig } from '../../../controllers/shared/ConfigContext.jsx'
 import { useLang } from '../../../controllers/shared/LangContext.jsx'
-import { listSettingsLog } from '../../../models/data/settings.js'
-import { useRows } from '../../../controllers/shared/useRows.js'
+import { useSettingsLog } from '../../../controllers/admin/settings.js'
 import { formatShort } from '../../../models/rules/format.js'
 import { COMPANY_PARTS } from '../../../routes/paths.js'
 import { CompanyTab } from './CompanyTab.jsx'
@@ -44,7 +42,7 @@ export function CompanySettingsPage() {
   return (
     <SettingsShell
       key={shown.join()}
-      bar={shown.every((p) => INSTANT.includes(p)) ? false : 'companyBar'}
+      bar={shown.every((p) => INSTANT.includes(p)) ? false : 'admin.settings.companyBar'}
       // Lists on its own fits the screen, and scrolls inside.
       fill={part === 'lists'}
       parts={shown.map((p) => [p, PART[p]])}
@@ -55,8 +53,8 @@ export function CompanySettingsPage() {
               <Icon name="building" className="size-6" strokeWidth={1.8} />
             </span>
           }
-          title={t('settings.page.titleCompany')}
-          sub={t('settings.page.subCompany', { app: brand.app })}
+          title={t('admin.settings.page.titleCompany')}
+          sub={t('admin.settings.page.subCompany', { app: brand.app })}
           actions={<LastSaved />}
         />
       }
@@ -66,15 +64,15 @@ export function CompanySettingsPage() {
 
 /** "Last saved Mon 02 Nov · Musaddique": the newest change in History. */
 function LastSaved() {
-  const { person, loadedAt } = useConfig()
+  const { person } = useConfig()
   const { t } = useLang()
-  const { data: log } = useRows(listSettingsLog, `history:${loadedAt}`)
+  const { data: log } = useSettingsLog()
   const last = log?.[0]
   if (!last) return null
-  const name = person(last.actorId)?.name.split(' ')[0] ?? t('settings.history.someone')
+  const name = person(last.actorId)?.name.split(' ')[0] ?? t('admin.settings.history.someone')
   return (
     <span className="inline-flex h-8.5 items-center rounded-full bg-surface px-3.5 text-[13px] whitespace-nowrap text-soft">
-      {t('settings.page.lastSaved', { date: formatShort(last.at), name })}
+      {t('admin.settings.page.lastSaved', { date: formatShort(last.at), name })}
     </span>
   )
 }

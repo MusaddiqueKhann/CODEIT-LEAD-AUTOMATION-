@@ -1,9 +1,7 @@
 import { useState } from 'react'
-import { PickTimeSection } from '../../components/shared/index.js'
-import { Button, cx } from '../../components/ui/index.js'
+import { Button, cx, Notice, PickTimeSection } from '@/components'
 import { useLang } from '../../controllers/shared/LangContext.jsx'
 import { formatShort, toServer } from '../../models/rules/format.js'
-import { Notice } from '../shared/member/Notice.jsx'
 import { SessionWhen } from '../shared/member/SessionWhen.jsx'
 
 /**
@@ -36,12 +34,12 @@ export function SessionTime({ member: m, draft, set, canBook, onBook, busy }) {
       open={open}
       aside={
         canBook && m.session && (changing ? (
-          <Button variant="soft" onClick={stop}>
-            {t('member.sessionTime.keep')}
+          <Button id="session-time-keep" variant="soft" onClick={stop}>
+            {t('sales.member.sessionTime.keep')}
           </Button>
         ) : (
-          <Button variant="soft" onClick={() => setChanging(true)}>
-            {t('member.sessionTime.change')}
+          <Button id="session-time-change" variant="soft" onClick={() => setChanging(true)}>
+            {t('sales.member.sessionTime.change')}
           </Button>
         ))
       }
@@ -52,18 +50,18 @@ export function SessionTime({ member: m, draft, set, canBook, onBook, busy }) {
           </div>
         ) : missed ? (
           <div className="pt-5">
-            <Notice tone="warn" icon="calendar">
-              {t('member.sessionTime.missed', { n: m.noShows })} {t(canBook ? 'member.sessionTime.pickNew' : 'member.sessionTime.salesBooks')}
+            <Notice size="md" tone="warn" icon="calendar">
+              {t('sales.member.sessionTime.missed', { n: m.noShows })} {t(canBook ? 'sales.member.sessionTime.pickNew' : 'sales.member.sessionTime.salesBooks')}
             </Notice>
           </div>
         ) : (
-          !canBook && <p className="py-5 text-sm text-muted">{t('member.sessionTime.notBooked')}</p>
+          !canBook && <p className="py-5 text-sm text-muted">{t('sales.member.sessionTime.notBooked')}</p>
         )
       }
       bottom={
         <div className="flex justify-end border-t border-line pt-4 pb-3">
-          <Button disabled={!slot || busy} onClick={book}>
-            {slot ? t('member.sessionTime.book', { date: formatShort(slot.date), time: slot.time }) : t('member.sessionTime.pickDayTime')}
+          <Button id="session-time-book" disabled={!slot || busy} onClick={book}>
+            {slot ? t('sales.member.sessionTime.book', { date: formatShort(slot.date), time: slot.time }) : t('sales.member.sessionTime.pickDayTime')}
           </Button>
         </div>
       }

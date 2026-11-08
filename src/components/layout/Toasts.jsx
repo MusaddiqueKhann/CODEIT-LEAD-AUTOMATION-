@@ -37,27 +37,27 @@ export function Toasts() {
             <Icon name={ICONS[t.tone] ?? 'checkCircle'} className="mt-0.5 size-4 shrink-0" />
             <span className="flex-1">{t.message}</span>
             {t.action?.to && (
-              <Link to={t.action.to} onClick={() => dismissToast(t.id)} className="shrink-0 underline underline-offset-2">
+              <Link id={`toasts-dismiss-toast-${t.id}`} to={t.action.to} onClick={() => dismissToast(t.id)} className="ui-toasts__dismiss-toast shrink-0 underline underline-offset-2">
                 {t.action.label}
               </Link>
             )}
             {t.action?.onClick && (
-              <button
+              <button id={`toasts-dismiss-${t.id}`}
                 type="button"
                 onClick={() => {
                   dismissToast(t.id)
                   t.action.onClick()
                 }}
-                className="shrink-0 font-medium underline underline-offset-2"
+                className="ui-toasts__dismiss shrink-0 font-medium underline underline-offset-2"
               >
                 {t.action.label}
               </button>
             )}
-            <button
+            <button id={`toasts-dismiss-2-${t.id}`}
               type="button"
               onClick={() => dismissToast(t.id)}
-              aria-label={say('common.dismiss')}
-              className="opacity-60 transition hover:opacity-100"
+              aria-label={say('shared.common.dismiss')}
+              className="ui-toasts__dismiss-2 opacity-60 transition hover:opacity-100"
             >
               <Icon name="close" className="size-4" />
             </button>

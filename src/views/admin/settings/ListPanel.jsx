@@ -1,10 +1,9 @@
 import { useState } from 'react'
-import Icon from '../../../components/Icon.jsx'
-import { Button, Field, Input, Modal, cx } from '../../../components/ui/index.js'
+import { Button, cx, Field, Icon, Input, Modal } from '@/components'
 import { useConfig } from '../../../controllers/shared/ConfigContext.jsx'
 import { useLang } from '../../../controllers/shared/LangContext.jsx'
 import { useToast } from '../../../controllers/shared/ToastContext.jsx'
-import { saveOption } from '../../../models/data/settings.js'
+import { saveOption } from '../../../controllers/admin/settings.js'
 import { useAction } from '../../../controllers/shared/useAction.js'
 import { useMembers } from '../../../controllers/shared/useMembers.js'
 import { atStep, statusOf } from '../../../models/rules/stages.js'
@@ -40,9 +39,9 @@ export function ListPanel({ list, after, fill }) {
   const [dragging, setDragging] = useState(null)
   const { shown: items, show, drop } = useShownNow(lists[list] ?? [])
   const fixed = FIXED.includes(list)
-  const one = t(`settings.lists.one.${list}`)
+  const one = t(`admin.settings.lists.one.${list}`)
   const used = (key) => (members && HAS[list] ? members.filter((m) => HAS[list](m, key)).length : null)
-  const undo = (restore) => ({ label: t('common.undo'), onClick: () => run(restore) })
+  const undo = (restore) => ({ label: t('shared.common.undo'), onClick: () => run(restore) })
 
   /** Saves one option; the toast says `message` and Undo puts back what it was. Resolves whether it saved. */
   const save = async (next, message) => {
@@ -51,8 +50,8 @@ export function ListPanel({ list, after, fill }) {
       toast(words, 'danger')
       return false
     }
-    if (!next.label.trim()) return refuse(t('settings.lists.needsName'))
-    if (before.active && !next.active && items.filter((o) => o.active).length === 1) return refuse(t('settings.lists.keepOne', { name: one }))
+    if (!next.label.trim()) return refuse(t('admin.settings.lists.needsName'))
+    if (before.active && !next.active && items.filter((o) => o.active).length === 1) return refuse(t('admin.settings.lists.keepOne', { name: one }))
     show(next)
     const done = await run(() => saveOption(list, next))
     if (done) toast(message, 'success', undo(() => saveOption(list, before)))
@@ -61,7 +60,7 @@ export function ListPanel({ list, after, fill }) {
   }
   const toggle = (o, active) => {
     const n = used(o.key)
-    const message = active ? t('settings.lists.shown', { name: o.label }) : n ? t('settings.lists.hidden', { name: o.label, n }) : t('settings.lists.hiddenUnused', { name: o.label })
+    const message = active ? t('admin.settings.lists.shown', { name: o.label }) : n ? t('admin.settings.lists.hidden', { name: o.label, n }) : t('admin.settings.lists.hiddenUnused', { name: o.label })
     return save({ ...o, active }, message)
   }
   /** Puts `key` where `target` is, and saves every option whose place changed. */
@@ -77,38 +76,38 @@ export function ListPanel({ list, after, fill }) {
       for (const o of rows) await saveOption(list, o)
     }
     moved.forEach(show)
-    if (await run(() => saveAll(moved))) toast(t('settings.lists.ordered'), 'success', undo(() => saveAll(before)))
+    if (await run(() => saveAll(moved))) toast(t('admin.settings.lists.ordered'), 'success', undo(() => saveAll(before)))
     else moved.forEach((o) => drop(o.key))
   }
   const add = async () => {
     const label = adding.label.trim()
     const key = slug(label) || `option_${items.length + 1}`
-    if (items.some((o) => o.key === key)) return toast(t('settings.lists.duplicate'), 'danger')
+    if (items.some((o) => o.key === key)) return toast(t('admin.settings.lists.duplicate'), 'danger')
     const option = { key, label, labelAr: adding.labelAr.trim(), active: true, sort: Math.max(0, ...items.map((o) => o.sort ?? 0)) + 1, meta: {} }
-    if (await run(() => saveOption(list, option), t('settings.lists.added', { name: label }))) setAdding(null)
+    if (await run(() => saveOption(list, option), t('admin.settings.lists.added', { name: label }))) setAdding(null)
   }
 
   return (
     <div className={cx('flex min-w-0 flex-col gap-4', fill && 'lg:min-h-0')}>
       <div className="flex flex-wrap items-start gap-3">
         <span className="flex min-w-0 flex-1 flex-col gap-1">
-          <h3 className="text-h2 text-ink">{t(`settings.lists.names.${list}`)}</h3>
-          <span className="text-sm text-muted">{t(`settings.lists.about.${list}`)}</span>
+          <h3 className="text-h2 text-ink">{t(`admin.settings.lists.names.${list}`)}</h3>
+          <span className="text-sm text-muted">{t(`admin.settings.lists.about.${list}`)}</span>
         </span>
         {!fixed && (
-          <Button
+          <Button id="list-panel-add"
             onClick={() => setAdding({ label: '', labelAr: '' })}
-            aria-label={t('settings.lists.add', { name: one })}
+            aria-label={t('admin.settings.lists.add', { name: one })}
             className="shrink-0 gap-2 shadow-[0_8px_18px_-10px_rgb(54_123_127/0.7)]"
           >
             <Icon name="plus" className="size-4" strokeWidth={2.2} />
-            {t('common.add')}
+            {t('shared.common.add')}
           </Button>
         )}
       </div>
 
       {items.length === 0 ? (
-        <p className="rounded-2xl bg-surface p-6 text-center text-sm text-muted">{t('settings.lists.empty', { name: one })}</p>
+        <p className="rounded-2xl bg-surface p-6 text-center text-sm text-muted">{t('admin.settings.lists.empty', { name: one })}</p>
       ) : (
         // The tiles scroll under the list's name and Add (on a fixed-height page); the padding keeps their shadows.
         <div className={cx('grid grid-cols-[repeat(auto-fill,minmax(min(100%,300px),1fr))] content-start gap-4', fill && 'scrollbar-slim lg:-m-1.5 lg:min-h-0 lg:flex-1 lg:overflow-y-auto lg:p-1.5')}>
@@ -127,41 +126,41 @@ export function ListPanel({ list, after, fill }) {
               onDropOn={() => dragging && reorder(dragging, o.key)}
               onMove={(dir) => items[i + dir] && reorder(o.key, items[i + dir].key)}
               onToggle={(active) => toggle(o, active)}
-              onSave={(next) => save(next, t('settings.lists.saved', { name: next.label }))}
+              onSave={(next) => save(next, t('admin.settings.lists.saved', { name: next.label }))}
             />
           ))}
         </div>
       )}
-      {fixed && <p className="text-xs text-muted">{t('settings.lists.rareNote')}</p>}
+      {fixed && <p className="text-xs text-muted">{t('admin.settings.lists.rareNote')}</p>}
 
-      <Modal
+      <Modal id="list-panel-add-2"
         open={!!adding}
         onClose={() => setAdding(null)}
-        title={t('settings.lists.add', { name: one })}
-        description={t(`settings.lists.names.${list}`)}
+        title={t('admin.settings.lists.add', { name: one })}
+        description={t(`admin.settings.lists.names.${list}`)}
         footer={
           <>
-            <Button variant="outline" onClick={() => setAdding(null)}>
-              {t('common.cancel')}
+            <Button id="list-panel-cancel" variant="outline" onClick={() => setAdding(null)}>
+              {t('shared.common.cancel')}
             </Button>
-            <Button onClick={add} disabled={!adding?.label.trim() || busy}>
-              {t('common.add')}
+            <Button id="list-panel-add-3" onClick={add} disabled={!adding?.label.trim() || busy}>
+              {t('shared.common.add')}
             </Button>
           </>
         }
       >
         {adding && (
-          <form
+          <form id="list-panel-name"
             onSubmit={(e) => {
               e.preventDefault()
               if (adding.label.trim()) add()
             }}
-            className="flex flex-col gap-3"
+            className="v-list-panel__name flex flex-col gap-3"
           >
-            <Field label={t('settings.lists.name')}>
+            <Field id="list-panel-name-2" label={t('admin.settings.lists.name')}>
               {(props) => <Input {...props} autoFocus value={adding.label} onChange={(e) => setAdding((a) => ({ ...a, label: e.target.value }))} />}
             </Field>
-            <Field label={t('settings.lists.nameAr')}>
+            <Field id="list-panel-name-ar" label={t('admin.settings.lists.nameAr')}>
               {(props) => <Input {...props} dir="rtl" value={adding.labelAr} onChange={(e) => setAdding((a) => ({ ...a, labelAr: e.target.value }))} />}
             </Field>
           </form>

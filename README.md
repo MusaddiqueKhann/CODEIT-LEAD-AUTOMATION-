@@ -60,7 +60,7 @@ On your computer, customer and team emails are **not sent**. The server function
 | `npm run create-admin` | Makes an Admin (see **Going live**, step 3) |
 | `supabase db reset` | Rebuilds the local database from the migrations and the sample data |
 | `supabase db reset --no-seed` | The same, but empty: exactly what a new live project starts with |
-| `supabase test db` | Runs the database tests (198) |
+| `supabase test db` | Runs the database tests (202) |
 | `npm run check` | Runs every small self-check (`src/**/*.check.js`: dates, documents, tasks, wording…) |
 
 After changing `supabase/config.toml`, run `supabase stop && supabase start`.
@@ -76,8 +76,8 @@ After changing `supabase/config.toml`, run `supabase stop && supabase start`.
 | `src/models/rules/` | **Model.** Business rules with no screen: steps, documents maths, dates and Riyadh time, tasks, history lines (each with a `*.check.js`) |
 | `src/controllers/` | **Controller.** Who is signed in, the settings, the language, toasts, loading hooks and the member actions |
 | `src/views/<portal>/` | **View.** The pages, by portal: `shared/` (every role), `admin/`, `sales/`, `account/`, `integration/`, `onboarding/`, `signin/`, `customer/` |
-| `src/components/` | Reusable UI: `ui/` (buttons, fields, dialogs), `layout/` (sidebar, header), `shared/` (member forms, documents) |
-| `src/content/` | Every screen word in English and Arabic |
+| `src/components/` | Reusable UI, one module: views import everything from `@/components` (`index.js`). Inside: `ui/` (buttons, fields, dialogs), `layout/` (sidebar, header), `shared/` (member forms, documents) |
+| `src/content/` | Every screen word: `en/` and `ar/`, one JSON file per portal (shared, signin, admin, sales, account, integration, onboarding) with the same keys in both |
 | `supabase/migrations/` | The whole database: tables (0001), rules (0002), actions (0003), who can do what (0004), timers and the email outbox (0005), the customer page (0006), and the default settings, lists and wording (0007) |
 | `supabase/functions/` | Two server functions: `admin-users` (add a person, reset a password, change an email, turn someone off) and `worker` (sends emails, syncs Google Calendar) |
 | `supabase/seed.sql` | **Sample data for your computer only.** Never push it to a live project |

@@ -1,0 +1,802 @@
+{
+  "overview": {
+    "todayLine": {
+      "title": "Today, {day}",
+      "none": "No sessions today"
+    },
+    "workQueue": {
+      "title": "Work queue",
+      "count": "{all} · {urgent} urgent",
+      "urgent": "Urgent",
+      "onTrack": "On track",
+      "none": "none"
+    },
+    "busy": {
+      "title": "Busy hours",
+      "peak": "Peak: {when} · {sessions}",
+      "none": "No sessions this week",
+      "total": "Total",
+      "thisWeek": "{sessions} this week"
+    },
+    "team": {
+      "title": "Team right now",
+      "sub": "{active} active · {away} away",
+      "away": "Away",
+      "new": "New",
+      "open": "{count} open",
+      "scroll": "Scroll for all {count}",
+      "full": "Full",
+      "size": "Size = members held",
+      "awayOrNew": "Away or new"
+    },
+    "free": {
+      "title": "Free slots this week",
+      "sub": "Where a new session can still fit · hover a box for who",
+      "who": "{names} free",
+      "nobody": "nobody free",
+      "legend": "People free",
+      "none": "None"
+    },
+    "late": {
+      "transfer": "too late to transfer",
+      "integration": "integration past due",
+      "setup": "setup checklist past due",
+      "recording": "recording not sent",
+      "nobody": "nobody picked to run it"
+    },
+    "queue": {
+      "accounts": "Accounts",
+      "stuck": "Stuck",
+      "integrations": "Integrations",
+      "due": "Due",
+      "feedback": "Feedback",
+      "recordings": "Recordings",
+      "team": "Team",
+      "unassigned": "Unassigned",
+      "leave": "Leave"
+    },
+    "today": "Today",
+    "nothingToday": "Nothing booked today",
+    "attention": "Needs attention",
+    "andMore": "and {count} more",
+    "nothingLate": "Nothing is late",
+    "capacity": "Team capacity",
+    "placesUsed": "{used} of {places} places used"
+  },
+  "settings": {
+    "page": {
+      "titleCompany": "Company settings",
+      "subCompany": "How {app} works for everyone",
+      "lastSaved": "Last saved {date} · {name}"
+    },
+    "sections": {
+      "timing": {
+        "title": "Timing",
+        "sub": "When things can be booked, and when they are due"
+      },
+      "week": {
+        "title": "Working week",
+        "sub": "Ticked days are working days. Everyone without their own hours works these."
+      },
+      "holidays": {
+        "title": "Public holidays",
+        "sub": "Not working days. Nothing is booked or due on them."
+      },
+      "lists": {
+        "title": "Lists",
+        "sub": "The choices your team picks from. Changes save as you go."
+      },
+      "docs": {
+        "title": "Required documents",
+        "sub": "What each customer must send. Optional ones are asked for but don’t stop the hand-over. Changes save as you go."
+      },
+      "texts": {
+        "title": "Emails & texts",
+        "sub": "What members and the team receive, and the customer’s page"
+      },
+      "company": {
+        "title": "Company",
+        "sub": "Names and contact details used in emails and on the customer page"
+      },
+      "history": {
+        "title": "History",
+        "sub": "Who changed what in Settings, newest first"
+      }
+    },
+    "companyBar": {
+      "unsaved": "You have unsaved changes",
+      "allSaved": "Settings saved",
+      "nothing": "Nothing changed yet",
+      "unsavedSub": "Save to apply them for everyone",
+      "savedSub": "New bookings use these from now",
+      "nothingSub": "Edit any setting above and save it here"
+    },
+    "week": {
+      "hours": "{n}h",
+      "day": "Day",
+      "name": "Name",
+      "namePlaceholder": "Name, e.g. Eid al-Fitr",
+      "add": "Add holiday",
+      "remove": "Remove {name}",
+      "none": "No holidays yet. Use Add holiday above.",
+      "saved": "Holiday saved.",
+      "removed": "Holiday removed.",
+      "clash": {
+        "one": "{n} session is already on that day. Move it.",
+        "other": "{n} sessions are already on that day. Move them."
+      }
+    },
+    "timing": {
+      "fillAll": "Fill in every timing setting with a number.",
+      "more": "Increase {what}",
+      "less": "Decrease {what}",
+      "groups": {
+        "booking": "Booking",
+        "deadlines": "Deadlines",
+        "picked": "Who gets picked",
+        "after": "After the session",
+        "dashboards": "Dashboards",
+        "signIn": "Sign-in",
+        "phones": "Phones",
+        "alerts": "Alerts",
+        "files": "Files"
+      },
+      "fields": {
+        "buffer_days": "Buffer before a session",
+        "files_ready_days": "Files ready before",
+        "session_minutes": "Session length",
+        "gap_minutes": "Gap between sessions",
+        "slot_step_minutes": "Start times every",
+        "book_ahead_days": "Book up to",
+        "integration_due_days": "Integration due",
+        "setup_due_days": "Setup checklist due",
+        "max_open_members": "Most open members",
+        "no_show_limit": "Tell the Admin after",
+        "link_hours": "Recording link works for",
+        "extend_hours": "Extend choices",
+        "reminder_hours": "Session reminders",
+        "recording_alert_hours": "Alert if recording not sent",
+        "feedback_reminder_hours": "Remind about feedback",
+        "low_rating_max": "Alert on ratings of",
+        "due_soon_days": "Due soon",
+        "ahead_days": "Coming up",
+        "recent_days": "Recent",
+        "session_hours": "Sign people out after",
+        "lock_tries": "Lock after",
+        "lock_window_minutes": "Count tries over",
+        "lock_minutes": "Lock for",
+        "phone_min_digits": "Phones need at least",
+        "phone_prefix": "Phones start with",
+        "alerts_keep_days": "Keep alerts for",
+        "max_upload_mb": "Biggest file to upload"
+      },
+      "units": {
+        "buffer_days": "working days",
+        "files_ready_days": "working days",
+        "session_minutes": "minutes",
+        "gap_minutes": "minutes",
+        "slot_step_minutes": "minutes",
+        "book_ahead_days": "days ahead",
+        "integration_due_days": "working days before",
+        "setup_due_days": "working days before",
+        "max_open_members": "per person",
+        "no_show_limit": "no-shows",
+        "link_hours": "hours",
+        "extend_hours": "hours",
+        "reminder_hours": "hours before",
+        "recording_alert_hours": "hours",
+        "feedback_reminder_hours": "hours",
+        "low_rating_max": "stars or less",
+        "due_soon_days": "days",
+        "ahead_days": "days ahead",
+        "recent_days": "days back",
+        "session_hours": "hours",
+        "lock_tries": "wrong passwords",
+        "lock_window_minutes": "minutes",
+        "lock_minutes": "minutes",
+        "phone_min_digits": "digits",
+        "phone_prefix": "",
+        "alerts_keep_days": "days",
+        "max_upload_mb": "MB"
+      }
+    },
+    "examples": {
+      "atNextDay": "{time} the next day",
+      "atDaysLater": "{time} {days} days later",
+      "hours": "{n} h",
+      "or": " or ",
+      "buffer_days": "Sales can book from {date}",
+      "files_ready_days": "Files in today → first session {date}",
+      "session_minutes": "A session at 10:00 ends at {time}",
+      "gap_minutes": "The same person’s next session starts from {time}",
+      "slot_step_minutes": "Start times {times}…",
+      "book_ahead_days": "Sales can book up to {date}",
+      "integration_due_days": "Session {session} → integrations done by {date}",
+      "setup_due_days": "Session {session} → setup checklist done by {date}",
+      "max_open_members": {
+        "one": "Someone with {n} open member isn’t given more",
+        "other": "Someone with {n} open members isn’t given more"
+      },
+      "no_show_limit": {
+        "one": "The Admin is told after {n} no-show",
+        "other": "The Admin is told after {n} no-shows"
+      },
+      "link_hours": "Sent now → open until {stamp}",
+      "feedback_reminder_hours": "Sent at 10:00 → reminder at {at}",
+      "reminder_hours": "Emails {list} before the session",
+      "noReminders": "No reminder emails",
+      "extend_hours": "The Admin can add {list}",
+      "noExtend": "No extend choices",
+      "recording_alert_hours": "Session ends 11:00 → alert at {at} if not sent",
+      "lowRatingOne": "1 star tell the Admin",
+      "low_rating_max": "1 to {max} stars tell the Admin",
+      "due_soon_days": "Due by {date} shows as soon",
+      "ahead_days": "Coming up: until {date}",
+      "recent_days": "Counts from {date}",
+      "session_hours": "Signed in at 09:00 → asked again at {at}",
+      "lock_tries": {
+        "one": "{n} wrong password in a row locks the account",
+        "other": "{n} wrong passwords in a row locks the account"
+      },
+      "lock_window_minutes": {
+        "one": "Counted over {n} minute",
+        "other": "Counted over {n} minutes"
+      },
+      "lock_minutes": {
+        "one": "Locked for {n} minute, then they can try again",
+        "other": "Locked for {n} minutes, then they can try again"
+      },
+      "phone_min_digits": "{phone} has {digits} digits",
+      "phone_prefix": "New members start with {prefix}",
+      "noPrefix": "New members start with an empty phone",
+      "alerts_keep_days": "Alerts from before {date} are cleared",
+      "max_upload_mb": "A file over {n} MB is turned away; anything smaller uploads"
+    },
+    "lists": {
+      "find": "Find a list",
+      "noMatch": "No list called “{q}”. Try “customer types” or “features”.",
+      "groups": {
+        "adding": "Adding a member",
+        "onboarding": "During onboarding",
+        "closing": "Closing",
+        "rare": "Rarely changed"
+      },
+      "rareNote": "Rarely needed. These names appear across the whole app.",
+      "names": {
+        "business_type": "Customer types",
+        "feature": "Features",
+        "integration": "Integrations",
+        "industry": "Industries",
+        "size": "Company sizes",
+        "due_choice": "File deadlines",
+        "account_part": "Account checklist",
+        "hardware_step": "Hardware delivery steps",
+        "setup_check": "Before-session checklist",
+        "lost_reason": "Reasons a customer was lost",
+        "role": "Team role names",
+        "step": "Step names"
+      },
+      "one": {
+        "business_type": "customer type",
+        "feature": "feature",
+        "integration": "integration",
+        "industry": "industry",
+        "size": "company size",
+        "due_choice": "file deadline",
+        "account_part": "checklist item",
+        "hardware_step": "delivery step",
+        "setup_check": "checklist item",
+        "lost_reason": "reason",
+        "role": "role name",
+        "step": "step name"
+      },
+      "about": {
+        "business_type": "Picked when adding a member. Decides which documents and features apply.",
+        "feature": "What a customer can ask to be trained on.",
+        "integration": "Other systems we connect for the customer.",
+        "industry": "Helps you sort and find members.",
+        "size": "Helps you sort and find members.",
+        "due_choice": "When a customer will send a file later, Sales picks one of these.",
+        "account_part": "What the Account Member ticks off when making the customer’s account.",
+        "hardware_step": "How hardware gets to the customer. Shown on the member’s page.",
+        "setup_check": "What Onboarding prepares before the training session.",
+        "lost_reason": "Picked when marking a member as Lost. Shown in reports.",
+        "role": "Only the wording can change; how roles work stays the same.",
+        "step": "Only the wording can change; how steps work stays the same."
+      },
+      "add": "Add {name}",
+      "edit": "Edit {name}",
+      "name": "Name",
+      "nameAr": "Name in Arabic",
+      "noArabic": "No Arabic name",
+      "hiddenTag": "Hidden",
+      "noArabicHint": "Arabic users will see the English one.",
+      "show": "Show to new members",
+      "hiddenNote": "Turned off = hidden from new members. Members who already have it keep it.",
+      "turnOff": "Turn off",
+      "turnOn": "Turn on",
+      "used": {
+        "one": "Used by {n} member",
+        "other": "Used by {n} members"
+      },
+      "usedShort": {
+        "one": "{n} member",
+        "other": "{n} members"
+      },
+      "notUsed": "Not used yet",
+      "inDays": {
+        "one": "In {n} day",
+        "other": "In {n} days"
+      },
+      "site": "{product} website",
+      "siteHint": "Where {name} customers’ accounts are made.",
+      "sitePlaceholder": "e.g. live.codeit.sa",
+      "openSite": "Open the site",
+      "days": "Days until it’s due",
+      "forTypes": "For these customer types (none ticked: all of them)",
+      "portalName": "Sidebar portal name",
+      "portalPlaceholder": "Sales portal",
+      "arabicPortal": "Sidebar portal name in Arabic",
+      "teamName": "Team name",
+      "teamPlaceholder": "Sales",
+      "arabicTeam": "Team name in Arabic",
+      "move": "Move {name}: drag, or use the arrow keys",
+      "saved": "{name} saved.",
+      "hidden": {
+        "one": "{name} is hidden from new members. The {n} member who has it keeps it.",
+        "other": "{name} is hidden from new members. The {n} members who have it keep it."
+      },
+      "hiddenUnused": "{name} is hidden from new members.",
+      "shown": "{name} is shown to new members again.",
+      "keepOne": "Keep at least one {name} on.",
+      "ordered": "New order saved.",
+      "added": "{name} added.",
+      "duplicate": "That one is already on the list.",
+      "needsName": "Give it a name.",
+      "empty": "Nothing here yet. Add the first {name} so your team can pick it."
+    },
+    "texts": {
+      "groups": {
+        "customer": "Customer",
+        "customerSub": "To the member, in their language. Turn one off and it isn’t sent; it is noted on the member.",
+        "team": "Team",
+        "teamSub": "To the team. These always go.",
+        "page": "Customer page",
+        "pageSub": "What the customer reads at their link.",
+        "calendar": "Calendar",
+        "calendarSub": "The session’s event on the team calendar.",
+        "activity": "Alerts & activity",
+        "activitySub": "Each line in a member’s activity and each alert, written in English and Arabic when it happens."
+      },
+      "when": {
+        "session_booked": "When a session is booked",
+        "session_moved": "When the time changes",
+        "session_reminder": "{hours} before",
+        "session_missed": "After a missed session",
+        "session_cancelled": "When it is cancelled",
+        "follow_up": "After the session",
+        "feedback_reminder": "{n} h after the link",
+        "link_extended": "When the Admin extends",
+        "team_welcome": "When the account is made",
+        "team_reset": "When the Admin resets it",
+        "team_email_changed": "When the email changes",
+        "alert": "When an alert happens",
+        "after": "When the customer opens the link",
+        "calendar_title": "When a session is booked"
+      },
+      "hour": "{n} h",
+      "alwaysSent": "Always sent",
+      "toWhom": {
+        "log": "A line in the member’s activity",
+        "alert": "An alert to the team",
+        "field": "A field’s name in “Changed …”"
+      },
+      "messages": {
+        "session_booked": "Session booked",
+        "session_moved": "Session moved",
+        "session_reminder": "Session reminder",
+        "session_missed": "No-show · “We missed you”",
+        "session_cancelled": "Session cancelled",
+        "follow_up": "Recording and feedback link",
+        "feedback_reminder": "Feedback reminder",
+        "link_extended": "Link extended",
+        "team_welcome": "Welcome · temporary password",
+        "team_reset": "New temporary password",
+        "team_email_changed": "Sign-in email changed",
+        "alert": "Alert email",
+        "after": "Customer feedback page",
+        "calendar_title": "Calendar event title"
+      },
+      "parts": {
+        "subject": "Subject",
+        "body": "Message",
+        "calendar_title": "Title",
+        "line": "Wording",
+        "after_title": "Title",
+        "after_intro": "Intro",
+        "after_open_until": "Open until",
+        "after_recording": "Recording",
+        "after_open_recording": "Open recording",
+        "after_no_recording": "No recording",
+        "after_rate": "Rate",
+        "after_comment": "Comment",
+        "after_send": "Send",
+        "after_thanks": "Thanks",
+        "after_closed_title": "Closed title",
+        "after_closed_body": "Closed body",
+        "after_not_found_title": "Not found title",
+        "after_not_found": "Not found"
+      },
+      "boxEn": "{part} in English",
+      "boxAr": "{part} in Arabic",
+      "cantFill": "Can’t be filled: {words}. Use the words above.",
+      "refused": "{title}: {words} can’t be filled. Use the words under the box.",
+      "saveFirst": "Save first to test your changes.",
+      "testHint": "Sends this email, as saved, to your own address.",
+      "testEn": "Send a test · English",
+      "testAr": "Send a test · Arabic",
+      "testSent": "Test email on its way to you.",
+      "preview": "Preview",
+      "sample": {
+        "name": "Noura",
+        "customer": "Najm Perfumes",
+        "email": "noura@example.com",
+        "oldEmail": "old.address@example.com",
+        "password": "Abcd-2345-Efgh",
+        "meetLink": "https://meet.google.com/abc-defg-hij",
+        "alert": "An example alert"
+      }
+    },
+    "docs": {
+      "add": "Add document",
+      "byType": "Documents by customer type",
+      "byTypeSub": "Tick what each customer type must send.",
+      "byIntegration": "Extra documents for integrations",
+      "byIntegrationSub": "Only asked for when the customer picks that integration.",
+      "document": "Document",
+      "file": "File",
+      "mustSend": "Must send?",
+      "required": "Required",
+      "optional": "Optional",
+      "fromAbove": "Same as above",
+      "ofAsked": "required of {n} asked",
+      "removeFromIntegrations": "Take off the integrations:",
+      "offIntegrations": "{name} is no longer asked for by integrations. Customer types still send it.",
+      "needs": "{type} must send {name}",
+      "edit": "Edit",
+      "editTitle": "Edit document",
+      "remove": "Remove",
+      "removeTitle": "Remove {name}?",
+      "removeText": "It won’t be asked for any more. Customers who already sent it keep the file.",
+      "removed": "{name} removed.",
+      "saved": "Saved.",
+      "needType": "Tick at least one customer type, or remove the document.",
+      "needIntegration": "Tick at least one integration, or remove the document.",
+      "noIntegrations": "No integration needs its own documents yet. Add one and tick the integration.",
+      "english": "What is it called?",
+      "arabic": "Name in Arabic (optional)",
+      "fileType": "What kind of file?",
+      "short": "Short name",
+      "shortAr": "Short name in Arabic",
+      "shortHint": "Used where space is tight, like the calendar.",
+      "whoSends": "Who must send it?",
+      "optionalBox": "Optional: ask for it, but don’t stop the hand-over",
+      "pickWho": "Tick at least one customer type or integration.",
+      "added": "{name} added.",
+      "types": {
+        "pdf": "PDF",
+        "image": "Image",
+        "excel": "Excel",
+        "any": "Any"
+      },
+      "badges": {
+        "pdf": "PDF",
+        "image": "IMG",
+        "excel": "XLS",
+        "any": "ANY"
+      }
+    },
+    "company": {
+      "groups": {
+        "brand": "Brand",
+        "product": "Product",
+        "contact": "Contact"
+      },
+      "empty": "Not set",
+      "fields": {
+        "name": "Company name",
+        "name_ar": "Company name in Arabic",
+        "legal_name": "Legal name",
+        "legal_name_ar": "Legal name in Arabic",
+        "vat_number": "VAT number",
+        "app_name": "App name",
+        "app_url": "App address, for links in emails (https://…)",
+        "product_name": "Product name",
+        "website": "Website",
+        "sender_email": "Emails come from",
+        "support_phone": "Support phone",
+        "address": "Address"
+      },
+      "notes": {
+        "name": "In emails",
+        "legal_name": "Email footer",
+        "vat_number": "On invoices",
+        "app_name": "Browser tab",
+        "product_name": "Customer account",
+        "website": "Email footer",
+        "sender_email": "Sender",
+        "support_phone": "Customers see it",
+        "address": "Invoices"
+      },
+      "key": {
+        "title": "Email sending",
+        "nothing": "Add the sender address above and the email service key to start sending.",
+        "noKey": "Sender is set. Add the email service key to start sending.",
+        "noSender": "The key is set. Add the sender address above to start sending.",
+        "sending": "Sending from {sender}.",
+        "add": "Add key",
+        "replace": "Replace key",
+        "label": "SendGrid key",
+        "hint": "Kept encrypted and never shown again. Replace or remove it any time.",
+        "saved": "Email key saved. Emails go out from now.",
+        "removed": "Email key removed. No emails go out until a new one is added.",
+        "removeTitle": "Remove the email key?",
+        "removeText": "No customer or team emails go out until a new key is added. They are noted as not sent.",
+        "placeholder": "SG.…"
+      }
+    },
+    "history": {
+      "couldntLoad": "Couldn’t load the history: {error}",
+      "empty": "Nothing has been changed yet.",
+      "someone": "Someone",
+      "holiday": "Holiday {item}",
+      "holidayAdded": "added: {name}",
+      "holidayRemoved": "removed: {name}",
+      "text": "Wording: {item}",
+      "langs": {
+        "en": "English",
+        "ar": "Arabic"
+      },
+      "option": "{list}: {name}",
+      "added": "added",
+      "moved": "moved",
+      "turnedOn": "turned on",
+      "turnedOff": "turned off",
+      "renamed": "renamed from {name}",
+      "changed": "{fields} changed",
+      "names": {
+        "buffer_days": "buffer days",
+        "files_ready_days": "files ready days",
+        "session_minutes": "session minutes",
+        "gap_minutes": "gap minutes",
+        "slot_step_minutes": "slot step minutes",
+        "book_ahead_days": "book ahead days",
+        "integration_due_days": "integration due days",
+        "setup_due_days": "setup due days",
+        "max_open_members": "max open members",
+        "no_show_limit": "no show limit",
+        "link_hours": "link hours",
+        "extend_hours": "extend hours",
+        "reminder_hours": "reminder hours",
+        "recording_alert_hours": "recording alert hours",
+        "feedback_reminder_hours": "feedback reminder hours",
+        "low_rating_max": "low rating max",
+        "due_soon_days": "due soon days",
+        "ahead_days": "ahead days",
+        "recent_days": "recent days",
+        "session_hours": "session hours",
+        "lock_tries": "lock tries",
+        "lock_window_minutes": "lock window minutes",
+        "lock_minutes": "lock minutes",
+        "phone_min_digits": "phone min digits",
+        "phone_prefix": "phone prefix",
+        "alerts_keep_days": "alerts keep days",
+        "emails_off": "emails off",
+        "office_hours": "office hours",
+        "company": "company",
+        "email_key": "email service key"
+      },
+      "emailKey": {
+        "set": "added",
+        "replaced": "replaced",
+        "none": "removed"
+      },
+      "lists": {
+        "business_type": "business type",
+        "document": "document",
+        "feature": "feature",
+        "integration": "integration",
+        "industry": "industry",
+        "size": "size",
+        "due_choice": "due choice",
+        "account_part": "account part",
+        "hardware_step": "hardware step",
+        "setup_check": "setup check",
+        "lost_reason": "lost reason",
+        "role": "role",
+        "step": "step"
+      },
+      "fields": {
+        "label": "label",
+        "label_ar": "Arabic name",
+        "active": "active",
+        "meta": "meta",
+        "name": "name",
+        "name_ar": "name ar",
+        "app_name": "app name",
+        "product_name": "product name",
+        "legal_name": "legal name",
+        "legal_name_ar": "legal name ar",
+        "sender_email": "sender email",
+        "support_phone": "support phone",
+        "app_url": "app url"
+      }
+    }
+  },
+  "team": {
+    "title": "Team",
+    "activeSub": "{n} active · who has what, and who is away",
+    "addPerson": "Add person",
+    "searchPlaceholder": "Name, email or role",
+    "searchLabel": "Search the team",
+    "couldntLoad": "Couldn’t load the team: {error}",
+    "loadingTeam": "Loading the team…",
+    "noMatch": "Nobody matches this search.",
+    "onTeam": "{name} is on the team",
+    "columns": {
+      "person": "Person",
+      "role": "Role",
+      "status": "Status"
+    },
+    "status": {
+      "inactive": "Inactive",
+      "notSignedIn": "Not signed in yet",
+      "onLeaveUntil": "On leave until {date}",
+      "lockedUntil": "Locked until {time}",
+      "leaveFrom": "Leave from {date}",
+      "active": "Active"
+    },
+    "add": {
+      "title": "Add a person",
+      "description": "They get a temporary password and choose their own when they first sign in",
+      "adding": "Adding…",
+      "submit": "Add person",
+      "name": "Name",
+      "email": "Work email (their username)",
+      "role": "Role",
+      "password": "Temporary password (optional)",
+      "passwordHint": "Left empty, one is made for them",
+      "hours": "Working hours",
+      "language": "Language",
+      "languages": {
+        "en": "English",
+        "ar": "العربية"
+      }
+    }
+  },
+  "person": {
+    "back": "{name} is back.",
+    "markBack": "Mark as back",
+    "setLeave": "Set leave",
+    "hoursSaved": "Hours saved.",
+    "noteSaved": "Note saved.",
+    "leaveAdded": "Leave added for {name}.",
+    "roleChanged": "{name} is now {role}.",
+    "newPassword": "New temporary password",
+    "canSignIn": "{name} can sign in again.",
+    "unlock": "Unlock",
+    "unlocked": "{name} can try again now.",
+    "emailChanged": "{name} now signs in with {email}. Both addresses were told.",
+    "emailChangedNotSent": "{name} now signs in with {email}. No email service is set up yet, so tell them yourself.",
+    "moved": "Members moved. Everyone involved has been told.",
+    "cantSignIn": "{name} can no longer sign in.",
+    "deactivateTitle": "Deactivate {name}?",
+    "deactivateOpen": {
+      "one": "They still have {n} open member. Move them first, or they wait with someone who can’t sign in. They are signed out at once.",
+      "other": "They still have {n} open members. Move them first, or they wait with someone who can’t sign in. They are signed out at once."
+    },
+    "deactivateNone": "They are signed out at once and can’t sign in until you reactivate them. Their history stays.",
+    "deactivate": "Deactivate",
+    "edit": {
+      "title": "Edit {name}",
+      "now": "Now {role}",
+      "changeRole": "Change role",
+      "newRole": "New role",
+      "email": "Sign-in email",
+      "changeEmail": "Change email",
+      "openWarn": {
+        "one": "{name} has {n} open member. Move them first, or they stay with someone who no longer has that role.",
+        "other": "{name} has {n} open members. Move them first, or they stay with someone who no longer has that role."
+      },
+      "account": "Account",
+      "reset": "Reset password",
+      "move": "Move their members ({n})",
+      "reactivate": "Reactivate"
+    },
+    "move": {
+      "title": "Move their members",
+      "description": {
+        "one": "{n} open member from {name}",
+        "other": "{n} open members from {name}"
+      },
+      "moving": "Moving…",
+      "submit": "Move",
+      "auto": "Pick again for each",
+      "one": "All to one person",
+      "toWhich": "To which {role}",
+      "autoNote": "Each member goes to whoever the automatic pick chooses (free, fewest open, waited longest), never {name}."
+    },
+    "hours": {
+      "title": "Working hours",
+      "days": {
+        "one": "{n} working day · {span}",
+        "other": "{n} working days · {span}"
+      },
+      "noDays": "no days",
+      "span": "{from} to {to}",
+      "editHours": "Edit hours",
+      "off": "Off",
+      "perWeek": "{hours} hours a week",
+      "riyadh": "Riyadh time · GMT+3",
+      "note": "Note for the team",
+      "notePlaceholder": "e.g. Leaves early on Thursdays for school pickup",
+      "onLeave": "On leave until {date}. New members won’t be given to {name} until then."
+    },
+    "members": {
+      "title": "Members with {name}",
+      "sub": "Who {name} is working with now, soonest session first",
+      "notBooked": "Not booked",
+      "nothing": "Nothing open with {name} right now.",
+      "placesFree": "{free} of {cap} places free",
+      "autoOnboarding": "New members are given to {name} automatically, as long as their hours have room for the session.",
+      "autoRoom": "New members are given to {name} automatically while there is room."
+    },
+    "tiles": {
+      "open": "Open members",
+      "now": "Now",
+      "member": {
+        "one": "member",
+        "other": "members"
+      },
+      "nothingOpen": "Nothing open",
+      "allIn": "All {n} in {step}",
+      "nIn": "{n} in {step}",
+      "thisWeek": "This week",
+      "booked": "Booked",
+      "session": {
+        "one": "session",
+        "other": "sessions"
+      },
+      "nothingWeek": "Nothing booked this week",
+      "next": "Next session",
+      "soon": "Soon",
+      "today": "Today",
+      "day": {
+        "one": "day",
+        "other": "days"
+      },
+      "nothingBooked": "Nothing booked",
+      "feedback": "Feedback",
+      "clients": "Clients",
+      "fromClients": {
+        "one": "From {n} client this month",
+        "other": "From {n} clients this month"
+      },
+      "noRatings": "No ratings this month"
+    },
+    "busy": {
+      "title": "Busy and free",
+      "sub": "This week · {from} – {to} · inside {name}’s working hours",
+      "session": "Session",
+      "free": "Free",
+      "off": "Off",
+      "freeTime": "Free time",
+      "onLeave": "On leave",
+      "hoursFree": "{h} h free",
+      "withSessions": {
+        "one": "{h} h free · {n} session",
+        "other": "{h} h free · {n} sessions"
+      }
+    }
+  }
+}

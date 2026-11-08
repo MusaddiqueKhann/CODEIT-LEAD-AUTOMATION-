@@ -3,11 +3,10 @@ import { useLang } from '../../../controllers/shared/LangContext.jsx'
 import { weekdayNames, formatStamp, fromDay, fromServer, riyadhNow, startOfDay } from '../../../models/rules/format.js'
 import { STEP_ROLE } from '../../../models/rules/stages.js'
 import { addDays } from '../../../models/rules/time.js'
-import { cx } from '../../../components/ui/index.js'
-import { Panel } from './Panel.jsx'
+import { cx, Panel } from '@/components'
 
 const DAY = 864e5
-const NOW_BAR = 'bg-[repeating-linear-gradient(90deg,#367b7f_0_3px,#3f8a8e_3px_6px)] rtl:bg-[repeating-linear-gradient(270deg,#367b7f_0_3px,#3f8a8e_3px_6px)]'
+const NOW_BAR = 'bg-[repeating-linear-gradient(90deg,var(--color-brand-700)_0_3px,var(--color-brand-600)_3px_6px)] rtl:bg-[repeating-linear-gradient(270deg,var(--color-brand-700)_0_3px,var(--color-brand-600)_3px_6px)]'
 
 /**
  * When each step ran, as bars over the days: done ones pale, the current one striped, the next
@@ -57,10 +56,10 @@ export function JourneyCard({ member: m, lines }) {
   const pct = (at) => `${Math.min(100, Math.max(0, ((at - start) / (cols * DAY)) * 100))}%`
   const dueDay = rows.find((r) => r.state === 'now' && r.due)?.due
   // The day lines run from the row's start: the right in Arabic.
-  const track = `repeating-linear-gradient(${dir === 'rtl' ? 270 : 90}deg, #f1f4f7 0 calc(${100 / cols}% - 1px), #e6e9ef calc(${100 / cols}% - 1px) ${100 / cols}%)`
+  const track = `repeating-linear-gradient(${dir === 'rtl' ? 270 : 90}deg, var(--color-track) 0 calc(${100 / cols}% - 1px), var(--color-chip) calc(${100 / cols}% - 1px) ${100 / cols}%)`
 
   return (
-    <Panel title={t('member.journey.title')} sub={t('member.journey.sub')} className="flex-[1.6_1_520px]">
+    <Panel id="journey-card-title" title={t('shared.member.journey.title')} sub={t('shared.member.journey.sub')} className="flex-[1.6_1_520px]">
       <div className="flex flex-col gap-3">
         <div className="grid grid-cols-[130px_minmax(0,1fr)] text-[11px] text-faint">
           <span />
@@ -78,7 +77,7 @@ export function JourneyCard({ member: m, lines }) {
             <div key={r.step} className="grid grid-cols-[130px_minmax(0,1fr)] items-center">
               <span className="flex min-w-0 flex-col">
                 <span className={cx('text-sm', r.state === 'next' ? 'text-soft' : 'text-ink')}>{label('step', r.step)}</span>
-                <span className="truncate text-[11px] text-faint">{who?.name ?? (r.state === 'next' ? t('member.journey.notPicked') : brand.app)}</span>
+                <span className="truncate text-[11px] text-faint">{who?.name ?? (r.state === 'next' ? t('shared.member.journey.notPicked') : brand.app)}</span>
               </span>
               <div className="relative h-5.5 rounded-full" style={{ background: track }}>
                 {r.state !== 'next' && r.from && (
@@ -89,14 +88,14 @@ export function JourneyCard({ member: m, lines }) {
                 )}
                 {r.state === 'next' && r.due && (
                   <span className="absolute top-0.75 flex h-4 items-center rounded-full bg-warn-bg px-1.5 text-[10px] text-warn-ink" style={{ insetInlineStart: `min(${pct(fromDay(r.due))}, calc(100% - 34px))` }}>
-                    {t('member.journey.due')}
+                    {t('shared.member.journey.due')}
                   </span>
                 )}
               </div>
             </div>
           )
         })}
-        <span className="text-xs text-faint">{t('member.journey.today', { at: formatStamp(now) })}</span>
+        <span className="text-xs text-faint">{t('shared.member.journey.today', { at: formatStamp(now) })}</span>
       </div>
     </Panel>
   )

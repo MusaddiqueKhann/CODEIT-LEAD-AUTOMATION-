@@ -1,11 +1,7 @@
-import { Link } from 'react-router-dom'
-import Icon from '../../../components/Icon.jsx'
-import { MemberAvatar, StepBadge } from '../../../components/shared/index.js'
-import { cx } from '../../../components/ui/index.js'
+import { Badge, cx, ListRow, MemberAvatar, RowArrow, StepBadge, TONES } from '@/components'
 import { useLang } from '../../../controllers/shared/LangContext.jsx'
 import { formatShort, fromDay } from '../../../models/rules/format.js'
 import { memberPath } from '../../../routes/paths.js'
-import { TONES } from '../../../components/tones.js'
 
 /** The list's columns, shared by the heading row and every task row. */
 export const COLUMNS = 'grid grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)_160px_150px_36px] items-center gap-6 px-4'
@@ -16,17 +12,13 @@ export function TaskRow({ task: t, today, index }) {
   const { member: m } = t
   const late = t.due && t.due < today
   const due = !t.due
-    ? [say('tasks.due.none'), 'neutral']
+    ? [say('shared.tasks.due.none'), 'neutral']
     : late
-      ? [say('tasks.due.late', { date: formatShort(fromDay(t.due)) }), 'danger']
-      : t.due === today ? [say('tasks.due.today'), 'warn'] : [formatShort(fromDay(t.due)), 'brand']
+      ? [say('shared.tasks.due.late', { date: formatShort(fromDay(t.due)) }), 'danger']
+      : t.due === today ? [say('shared.tasks.due.today'), 'warn'] : [formatShort(fromDay(t.due)), 'brand']
 
   return (
-    <Link
-      to={`${memberPath(m.code)}?tab=${t.tab}${t.at ? `#${t.at}` : ''}`}
-      style={{ animationDelay: `${0.12 + index * 0.04}s` }}
-      className={cx(COLUMNS, 'mx-3 animate-rise py-3 text-ink transition-colors hover:bg-wash', index > 0 && 'border-t border-line')}
-    >
+    <ListRow id={`task-row-${m.code}-${t.step}`} to={`${memberPath(m.code)}?tab=${t.tab}${t.at ? `#${t.at}` : ''}`} columns={COLUMNS} index={index} className="v-tasks__row py-3">
       <span className="flex min-w-0 items-center gap-3.5">
         <MemberAvatar name={m.name} size="size-10 rounded-[13px] text-[13px]" />
         <span className="flex min-w-0 flex-col gap-0.5">
@@ -36,14 +28,12 @@ export function TaskRow({ task: t, today, index }) {
       </span>
       <span className={cx('line-clamp-2 text-sm', late ? TONES.danger.text : 'text-ink')}>{t.todo}</span>
       <span>
-        <span className={cx('inline-flex h-7 items-center rounded-full px-3 text-xs whitespace-nowrap', TONES[due[1]].fill, TONES[due[1]].text)}>{due[0]}</span>
+        <Badge size="row" tone={due[1]}>{due[0]}</Badge>
       </span>
       <span>
         <StepBadge step={t.step} />
       </span>
-      <span className="grid size-9 place-items-center rounded-xl bg-surface text-soft">
-        <Icon name="chevronRight" className="size-3.5" strokeWidth={2} />
-      </span>
-    </Link>
+      <RowArrow />
+    </ListRow>
   )
 }

@@ -1,12 +1,9 @@
 import { useState } from 'react'
 import { Link, Navigate, useNavigate, useSearchParams } from 'react-router-dom'
-import { FullScreenMessage } from '../../components/layout/FullScreenMessage.jsx'
-import { SplashPanel } from '../../components/layout/SplashPanel.jsx'
-import { SplashCard } from '../../components/layout/SplashCard.jsx'
-import { Button, FormError } from '../../components/ui/index.js'
+import { Button, FullScreenMessage, Notice, SplashCard, SplashPanel } from '@/components'
 import { useAuth } from '../../controllers/shared/AuthContext.jsx'
 import { useLang } from '../../controllers/shared/LangContext.jsx'
-import { updatePassword, verifyRecovery } from '../../models/data/auth.js'
+import { updatePassword, verifyRecovery } from '../../controllers/signin.js'
 import { useBrand } from '../../controllers/shared/useBrand.js'
 import { PUBLIC, ROUTES } from '../../routes/paths.js'
 import { PasswordForm } from './PasswordForm.jsx'
@@ -23,7 +20,7 @@ export function SetPasswordPage() {
   const navigate = useNavigate()
   const tokenHash = params.get('token_hash')
 
-  if (!ready) return <FullScreenMessage title={t('common.loading')} />
+  if (!ready) return <FullScreenMessage title={t('shared.common.loading')} />
   if (!session && !tokenHash) return <Navigate to={PUBLIC.login} replace />
 
   const save = async (password) => {
@@ -34,11 +31,11 @@ export function SetPasswordPage() {
 
   const first = profile?.mustChangePassword
   return (
-    <SplashPanel>
+    <SplashPanel page="set-password">
       {session ? (
         <PasswordForm
-          title={first ? t('auth.newPassword.welcome', { name: profile.name.split(' ')[0] }) : t('auth.newPassword.choose')}
-          sub={t(first ? 'auth.newPassword.firstSub' : 'auth.newPassword.nextSub')}
+          title={first ? t('signin.newPassword.welcome', { name: profile.name.split(' ')[0] }) : t('signin.newPassword.choose')}
+          sub={t(first ? 'signin.newPassword.firstSub' : 'signin.newPassword.nextSub')}
           onSave={save}
           onCancel={signOut}
         />
@@ -66,15 +63,15 @@ function RecoveryStart({ onContinue }) {
   }
 
   return (
-    <SplashCard title={t('auth.recovery.title')} sub={t('auth.recovery.sub', { app: brand.app })}>
+    <SplashCard title={t('signin.recovery.title')} sub={t('signin.recovery.sub', { app: brand.app })}>
       <div className="mt-7 flex flex-col gap-4">
-        <FormError>{error}</FormError>
-        <Button size="lg" fullWidth onClick={go} disabled={busy}>
-          {busy ? t('auth.recovery.checking') : t('auth.recovery.continue')}
+        <Notice role="alert">{error}</Notice>
+        <Button id="set-password-page-checking" size="lg" fullWidth onClick={go} disabled={busy}>
+          {busy ? t('signin.recovery.checking') : t('signin.recovery.continue')}
         </Button>
         {error && (
-          <Link to={PUBLIC.forgot} className="text-center text-sm font-medium text-brand-700 hover:text-brand-800">
-            {t('auth.recovery.newLink')}
+          <Link id="set-password-page-new-link" to={PUBLIC.forgot} className="v-set-password-page__new-link text-center text-sm font-medium text-brand-700 hover:text-brand-800">
+            {t('signin.recovery.newLink')}
           </Link>
         )}
       </div>

@@ -1,7 +1,7 @@
 import { useConfig } from '../../controllers/shared/ConfigContext.jsx'
 import { STEP_TONE, statusOf } from '../../models/rules/stages.js'
 import { TONES } from '../tones.js'
-import { cx } from '../ui/index.js'
+import { cx } from '../cx.js'
 
 /**
  * Where a member is now: its step, or Lost / Cancelled, as the design's fixed-width pill. The

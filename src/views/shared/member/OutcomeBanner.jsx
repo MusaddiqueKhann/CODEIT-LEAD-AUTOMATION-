@@ -1,8 +1,6 @@
-import Icon from '../../../components/Icon.jsx'
-import { Button, cx } from '../../../components/ui/index.js'
+import { Button, cx, Icon, TONES } from '@/components'
 import { useConfig } from '../../../controllers/shared/ConfigContext.jsx'
 import { useLang } from '../../../controllers/shared/LangContext.jsx'
-import { TONES } from '../../../components/tones.js'
 
 /** Lost or Cancelled: the reason, and the Admin's Reopen for a Lost member. */
 export function OutcomeBanner({ member: m, can, act }) {
@@ -16,8 +14,8 @@ export function OutcomeBanner({ member: m, can, act }) {
         <span className="font-medium">{label('step', m.outcome)}.</span> {m.outcomeReason}
       </p>
       {can.has('reopen') && (
-        <Button variant="outline" onClick={act.reopen} disabled={act.busy}>
-          {t('member.outcome.reopen')}
+        <Button id="outcome-banner-reopen" variant="outline" onClick={act.reopen} disabled={act.busy}>
+          {t('shared.member.outcome.reopen')}
         </Button>
       )}
     </div>

@@ -28,10 +28,10 @@ for (const [, m] of previewed) for (const p of m.placeholders) assert.ok(v[p] !=
 assert.equal(fill('{company} · {product}', v), 'كوديت · CODEIT')
 // Every message has a name in both languages (an alert or activity line is named by its own wording).
 for (const [key] of previewed) {
-  assert.ok(translate('en', `settings.texts.messages.${key}`), `${key} has an English name`)
-  assert.ok(translate('ar', `settings.texts.messages.${key}`) !== translate('en', `settings.texts.messages.${key}`), `${key} has an Arabic name`)
+  assert.ok(translate('en', `admin.settings.texts.messages.${key}`), `${key} has an English name`)
+  assert.ok(translate('ar', `admin.settings.texts.messages.${key}`) !== translate('en', `admin.settings.texts.messages.${key}`), `${key} has an Arabic name`)
 }
-assert.equal(translate('ar', 'settings.texts.messages.session_missed'), 'عدم الحضور · «افتقدناك»')
+assert.equal(translate('ar', 'admin.settings.texts.messages.session_missed'), 'عدم الحضور · «افتقدناك»')
 assert.equal(messageOf('log_transferred'), 'log_transferred')
 assert.ok(MESSAGES.alert_given.placeholders.includes('role'), 'alerts are in the catalogue with their placeholders')
 console.log('placeholders.js ok')

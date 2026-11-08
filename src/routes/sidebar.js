@@ -6,7 +6,7 @@ const TABS = ['', ...STEPS]
 const TEAMS = ['admin', 'sales', 'account', 'onboarding', 'integration']
 const TASK_STEPS = ['sales', 'setup', 'integration', 'onboarding']
 const OTHER_STEPS = ['sales', 'setup', 'integration']
-/* Company settings' pages in the sidebar, grouped by what they're about (layout.tree.companyGroups.<group>);
+/* Company settings' pages in the sidebar, grouped by what they're about (shared.layout.tree.companyGroups.<group>);
    a group of one is just its page. Their order on the full page is COMPANY_PARTS. */
 const COMPANY_TREE = [
   ['scheduling', ['timing', 'week', 'holidays']],
@@ -36,48 +36,48 @@ export function sidebarTree({ role, me, opened, label, meta, t, types }) {
         `${prefix}:${m.code}`,
         m.name,
         // A member with no integrations has no Integration tab to open.
-        TABS.filter((tab) => tab !== 'integration' || m.integrations?.length).map((tab) => leaf(`${prefix}:${m.code}:${tab}`, tab ? label('step', tab) : t('layout.tree.overview'), tab ? `${memberPath(m.code)}?tab=${tab}` : memberPath(m.code))),
+        TABS.filter((tab) => tab !== 'integration' || m.integrations?.length).map((tab) => leaf(`${prefix}:${m.code}:${tab}`, tab ? label('step', tab) : t('shared.layout.tree.overview'), tab ? `${memberPath(m.code)}?tab=${tab}` : memberPath(m.code))),
       ),
     )
   const M = ROUTES.members
 
   const children = {
     tasks: [
-      leaf('tasks:all', t('layout.tree.allTasks'), ROUTES.tasks),
-      group('tasks:filter', t('layout.tree.filter'), TASK_STEPS.map((s) => leaf(`tasks:${s}`, label('step', s), `${ROUTES.tasks}?step=${s}`))),
+      leaf('tasks:all', t('shared.layout.tree.allTasks'), ROUTES.tasks),
+      group('tasks:filter', t('shared.layout.tree.filter'), TASK_STEPS.map((s) => leaf(`tasks:${s}`, label('step', s), `${ROUTES.tasks}?step=${s}`))),
     ],
     calendar: [
-      !admin && leaf('cal:mine', t(role === 'onboarding' ? 'layout.tree.mySessions' : 'layout.tree.myMembers'), ROUTES.calendar),
-      leaf('cal:all', t('layout.tree.onboardingSessions'), admin ? ROUTES.calendar : `${ROUTES.calendar}?who=all`),
-      group('cal:filter', t('layout.tree.filter'), [
-        leaf('cal:other', t('layout.tree.allSteps'), `${ROUTES.calendar}?mode=other`),
+      !admin && leaf('cal:mine', t(role === 'onboarding' ? 'shared.layout.tree.mySessions' : 'shared.layout.tree.myMembers'), ROUTES.calendar),
+      leaf('cal:all', t('shared.layout.tree.onboardingSessions'), admin ? ROUTES.calendar : `${ROUTES.calendar}?who=all`),
+      group('cal:filter', t('shared.layout.tree.filter'), [
+        leaf('cal:other', t('shared.layout.tree.allSteps'), `${ROUTES.calendar}?mode=other`),
         ...OTHER_STEPS.map((s) => leaf(`cal:${s}`, label('step', s), `${ROUTES.calendar}?mode=other&step=${s}`)),
       ]),
     ],
     members: [
-      !admin && page('mem:mine', t('layout.tree.myMembers'), `${M}?show=mine`, memberRows('mine', opened.filter(isMine))),
-      page('mem:all', t('layout.tree.allMembers'), M, memberRows('all', opened.filter((m) => !isMine(m)))),
-      group('mem:step', t('layout.tree.byStep'), [leaf('mem:step:all', t('layout.tree.allSteps'), `${M}?step=`), ...[...STEPS, 'closed'].map((s) => leaf(`mem:step:${s}`, label('step', s), `${M}?step=${s}`))]),
-      group('mem:type', t('layout.tree.byType'), [
-        leaf('mem:type:all', t('layout.tree.allTypes'), `${M}?plan=`),
+      !admin && page('mem:mine', t('shared.layout.tree.myMembers'), `${M}?show=mine`, memberRows('mine', opened.filter(isMine))),
+      page('mem:all', t('shared.layout.tree.allMembers'), M, memberRows('all', opened.filter((m) => !isMine(m)))),
+      group('mem:step', t('shared.layout.tree.byStep'), [leaf('mem:step:all', t('shared.layout.tree.allSteps'), `${M}?step=`), ...[...STEPS, 'closed'].map((s) => leaf(`mem:step:${s}`, label('step', s), `${M}?step=${s}`))]),
+      group('mem:type', t('shared.layout.tree.byType'), [
+        leaf('mem:type:all', t('shared.layout.tree.allTypes'), `${M}?plan=`),
         ...types.map((o) => leaf(`mem:type:${o.key}`, label('business_type', o.key), `${M}?plan=${o.key}`)),
       ]),
-      group('mem:team', t('layout.tree.byTeam'), [
-        leaf('mem:team:all', t('layout.tree.allTeams'), `${M}?team=`),
+      group('mem:team', t('shared.layout.tree.byTeam'), [
+        leaf('mem:team:all', t('shared.layout.tree.allTeams'), `${M}?team=`),
         ...TEAMS.map((r) => leaf(`mem:team:${r}`, meta('role', r, 'team') || label('role', r), `${M}?team=${r}`)),
       ]),
     ],
     settings: [
-      leaf('set:personal', t('layout.tree.personalSettings'), `${ROUTES.settings}?part=personal`),
+      leaf('set:personal', t('shared.layout.tree.personalSettings'), `${ROUTES.settings}?part=personal`),
       admin &&
         group(
           'set:company',
-          t('layout.tree.companySettings'),
+          t('shared.layout.tree.companySettings'),
           COMPANY_TREE.flatMap(([name, parts]) => {
             const pages = parts.map((part) =>
-              leaf(`set:company:${part}`, part === 'company' ? t('layout.tree.companyDetails') : t(`settings.sections.${part}.title`), `${COMPANY_SETTINGS}?part=${part}`),
+              leaf(`set:company:${part}`, part === 'company' ? t('shared.layout.tree.companyDetails') : t(`admin.settings.sections.${part}.title`), `${COMPANY_SETTINGS}?part=${part}`),
             )
-            return name ? [group(`set:company:${name}`, t(`layout.tree.companyGroups.${name}`), pages)] : pages
+            return name ? [group(`set:company:${name}`, t(`shared.layout.tree.companyGroups.${name}`), pages)] : pages
           }),
         ),
     ],
@@ -87,7 +87,7 @@ export function sidebarTree({ role, me, opened, label, meta, t, types }) {
     .filter((item) => item.section !== 'primary')
     .map((item) => ({
       key: item.key,
-      label: t(`layout.nav.${item.key}`),
+      label: t(`shared.layout.nav.${item.key}`),
       icon: item.icon,
       badge: item.badge,
       section: item.section,

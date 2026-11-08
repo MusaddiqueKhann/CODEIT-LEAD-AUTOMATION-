@@ -1,7 +1,4 @@
-import { Link } from 'react-router-dom'
-import Icon from '../../../components/Icon.jsx'
-import { MemberAvatar, StepBadge } from '../../../components/shared/index.js'
-import { Avatar, cx } from '../../../components/ui/index.js'
+import { Avatar, cx, ListRow, MemberAvatar, RowArrow, StepBadge } from '@/components'
 import { useConfig } from '../../../controllers/shared/ConfigContext.jsx'
 import { useLang } from '../../../controllers/shared/LangContext.jsx'
 import { nobodyLabel } from '../../../models/rules/members.js'
@@ -18,11 +15,7 @@ export function MemberRow({ member: m, index }) {
   const holder = person(m.holderId)
 
   return (
-    <Link
-      to={memberPath(m.code)}
-      style={{ animationDelay: `${0.12 + index * 0.04}s` }}
-      className={cx(COLUMNS, 'mx-3 animate-rise py-3 text-ink transition-colors hover:bg-wash', index > 0 && 'border-t border-line')}
-    >
+    <ListRow id={`member-row-${m.code}`} to={memberPath(m.code)} columns={COLUMNS} index={index} className="v-members__row py-3">
       <span className="flex min-w-0 items-center gap-3.5">
         <MemberAvatar name={m.name} size="size-10 rounded-[13px] text-[13px]" />
         <span className="flex min-w-0 flex-col gap-0.5">
@@ -40,9 +33,7 @@ export function MemberRow({ member: m, index }) {
         {holder && <Avatar initials={initials(holder.name)} size="sm" className="size-8.5 text-[11px]" />}
         <span className={cx('truncate text-sm', holder ? 'text-ink' : 'text-faint')}>{holder?.name ?? nobodyLabel(m, t)}</span>
       </span>
-      <span className="grid size-9 place-items-center rounded-xl bg-surface text-soft">
-        <Icon name="chevronRight" className="size-3.5" strokeWidth={2} />
-      </span>
-    </Link>
+      <RowArrow />
+    </ListRow>
   )
 }

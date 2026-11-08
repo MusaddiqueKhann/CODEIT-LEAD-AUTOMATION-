@@ -6,6 +6,7 @@ import { supabase } from './client.js'
 import { uploadDocument } from './files.js'
 import { rows } from './rows.js'
 import { toError } from './errors.js'
+import { FORM_FIELDS } from '../rules/memberDraft.js'
 
 const DOCUMENT_COLUMNS = 'member_id, kind, name, size, path, uploaded_by, uploaded_at'
 
@@ -63,20 +64,10 @@ export async function listRecentActivity(since) {
   return lines.map((l) => ({ ...camelKeys(l), at: fromServer(l.at) }))
 }
 
-/* The fields the member form edits, as the app names them; the server takes them snake_cased. */
-const FORM_FIELDS = ['firstName', 'lastName', 'email', 'phone', 'language', 'company', 'cr', 'vat', 'city', 'website',
-  'industry', 'size', 'plan', 'branches', 'users', 'features', 'integrations', 'hardware']
 const snake = (k) => k.replace(/[A-Z]/g, (c) => `_${c.toLowerCase()}`)
 /** An empty field is "nothing"; counts are numbers. */
 const tidy = (k, v) => (v === '' || v == null ? null : k === 'branches' || k === 'users' ? Number(v) : v)
 const same = (a, b) => JSON.stringify(a ?? null) === JSON.stringify(b ?? null)
-
-/** A member as the form's draft (the same keys Add a member uses). */
-export const toDraft = (m) => ({
-  ...Object.fromEntries(FORM_FIELDS.map((k) => [k, m[k] ?? ''])),
-  files: m.files,
-  due: m.due,
-})
 
 /** "Due in N days" → the dates the server keeps. */
 /* A file already attached beats its promised date, so only the ones still to come are sent. */
