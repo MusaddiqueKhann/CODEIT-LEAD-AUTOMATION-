@@ -25,7 +25,7 @@ const WIDTHS = {
  * Focus moves to the panel on open and returns to the trigger on close, which
  * is what keyboard users need to not be dumped at the top of the document.
  */
-export function Modal({ id, open, onClose, title, description, media, footer, size = 'md', children }) {
+export function Modal({ id, open, onClose, title, heading, description, media, footer, size = 'md', children }) {
   const { t } = useLang()
   const panelRef = useRef(null)
   const restoreRef = useRef(null)
@@ -91,7 +91,8 @@ export function Modal({ id, open, onClose, title, description, media, footer, si
           {/* `media` is an optional leading tile — the lead's initials, say. */}
           {media}
           <div className="min-w-0 flex-1">
-            <h2 className="ui-modal__title text-lg tracking-[-0.02em] text-ink">{title}</h2>
+            {/* `heading` takes the title's place on screen (a step bar); `title` still names the dialog. */}
+            {heading ?? <h2 className="ui-modal__title text-lg tracking-[-0.02em] text-ink">{title}</h2>}
             {description && <p className="truncate text-sm text-muted">{description}</p>}
           </div>
           <button

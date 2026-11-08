@@ -658,20 +658,45 @@
     },
     "add": {
       "title": "Add a person",
-      "description": "They get a temporary password and choose their own when they first sign in",
       "adding": "Adding…",
       "submit": "Add person",
       "name": "Name",
       "email": "Work email (their username)",
       "role": "Role",
-      "password": "Temporary password (optional)",
-      "passwordHint": "Left empty, one is made for them",
-      "hours": "Working hours",
+      "password": "Temporary password",
+      "passwordHint": "Made for them. They choose their own the first time they sign in.",
       "language": "Language",
       "languages": {
         "en": "English",
         "ar": "العربية"
-      }
+      },
+      "steps": {
+        "details": "Details",
+        "role": "Role and language",
+        "hours": "Working hours"
+      },
+      "makeAnother": "Make another",
+      "username": "Username",
+      "copyUsername": "Copy username",
+      "copyPassword": "Copy password",
+      "usernameCopied": "Username copied to clipboard.",
+      "signsIn": "{name} signs in with this username and temporary password, then chooses their own.",
+      "stepOf": "Step {n} of {total} · {name}",
+      "ask": {
+        "details": {
+          "title": "Who are you adding?",
+          "sub": "Their name, work email and a temporary password made for them."
+        },
+        "role": {
+          "title": "What will they do?",
+          "sub": "Their role decides what they work on. The language is for the app, their alerts and team emails."
+        },
+        "hours": {
+          "title": "When do they work?",
+          "sub": "Office hours, or hours of their own."
+        }
+      },
+      "google": "They can also sign in with Google using this email."
     }
   },
   "person": {

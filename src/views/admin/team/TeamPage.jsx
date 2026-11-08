@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Button, Card, Icon, PageHeader, PasswordResult, SearchBox } from '@/components'
+import { Button, Card, Icon, PageHeader, SearchBox } from '@/components'
 import { useConfig } from '../../../controllers/shared/ConfigContext.jsx'
 import { useLang } from '../../../controllers/shared/LangContext.jsx'
 import * as team from '../../../controllers/admin/team.js'
@@ -18,14 +18,16 @@ export function TeamPage() {
     config.reload()
   })
   const [adding, setAdding] = useState(false)
-  const [password, setPassword] = useState(null)
   const [query, setQuery] = useState('')
 
-  const add = (form) =>
-    run(async () => {
-      const r = await team.addPerson({ ...form, password: form.password || undefined })
-      setPassword({ ...r, title: t('admin.team.onTeam', { name: form.name }), name: form.name, email: form.email.trim().toLowerCase() })
+  /* The dialog shows the username and password itself once they are on the team: the server's answer, or null when refused. */
+  const add = async (form) => {
+    let added = null
+    await run(async () => {
+      added = await team.addPerson(form)
     })
+    return added
+  }
 
   /* Search finds a name, an email or a role's name. */
   const q = query.trim().toLowerCase()
@@ -55,7 +57,6 @@ export function TeamPage() {
       </Card>
 
       <AddPersonDialog open={adding} onClose={() => setAdding(false)} onSave={add} />
-      <PasswordResult result={password} onClose={() => setPassword(null)} />
     </div>
   )
 }

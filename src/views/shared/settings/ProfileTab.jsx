@@ -71,7 +71,7 @@ export function ProfileTab({ after }) {
         </div>
         <div className={FIELDS}>
           <TextField id="profile-tab-name" label={t('shared.settings.profile.name')} value={form.name} onChange={(e) => set({ name: e.target.value })} />
-          <TextField id="profile-tab-phone" label={t('shared.settings.profile.phone')} type="tel" dir="ltr" placeholder={[settings.phonePrefix, '5X XXX XXXX'].filter(Boolean).join(' ')} value={form.phone} onChange={(e) => set({ phone: e.target.value })} />
+          <TextField id="profile-tab-phone" label={t('shared.settings.profile.phone')} type="tel" dir="ltr" placeholder={[settings.phonePrefix?.trim(), '5X XXX XXXX'].filter(Boolean).join(' ')} value={form.phone} onChange={(e) => set({ phone: e.target.value })} />
           <ReadField label={t('shared.settings.profile.email')} dir="ltr">
             {profile.email}
           </ReadField>

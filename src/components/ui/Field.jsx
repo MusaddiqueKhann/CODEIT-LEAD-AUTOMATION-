@@ -2,7 +2,7 @@ import { useId } from 'react'
 import Icon from '../Icon.jsx'
 import { cx } from '../cx.js'
 
-/* The design's field: a borderless grey box that turns white with a teal inset ring on focus. */
+/* The design's field: a grey box with a hairline edge that turns white with a teal inset ring on focus. */
 const CONTROL = cx(
   'w-full rounded-[14px] bg-field px-4 text-sm text-ink outline-none transition',
   'placeholder:text-ghost',
@@ -10,7 +10,8 @@ const CONTROL = cx(
   'disabled:cursor-not-allowed disabled:bg-surface-2 disabled:text-ghost',
 )
 
-const OK = ''
+/* At rest a hairline edge, so the box shows on a white panel and on the glass sign-in card alike. */
+const OK = 'ring-1 ring-edge ring-inset'
 /* An error rings the box in red, the control boundary WCAG 1.4.11 asks 3:1 of. */
 const BAD = 'ring-[1.5px] ring-danger ring-inset'
 
